@@ -1,0 +1,9 @@
+{
+  "name": "boobastudio-foundry-module",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check-package.mjs",
+    "build": "node scripts/build.mjs"
+  }
+}
