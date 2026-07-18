@@ -1,0 +1,9 @@
+<div class="cibola8 cibola8-dark-theme standard-form flexcol">
+  {{#if hint}}
+  <div class="cibola8-intro-text cibola8-mb-2">
+    <i class="fas {{#if icon}}{{icon}}{{else}}fa-wand-magic-sparkles{{/if}} cibola8-intro-icon"></i>
+    <span>{{{hint}}}</span>
+  </div>
+  {{/if}}
+  <textarea class="textarea cibola8-prompt-textarea" name="command" placeholder="{{#if placeholder}}{{placeholder}}{{else}}{{localize 'cibola8.promptImprovise'}}{{/if}}"></textarea>
+</div>

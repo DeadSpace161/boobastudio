@@ -1,0 +1,58 @@
+{{!-- Pack Library Catalog - shows tag-grouped sections with search --}}
+<div class="pack-catalog">
+  {{!-- Top bar - search + My Packs toggle --}}
+  <div class="gallery-filters pack-catalog-search">
+    <div class="gallery-search">
+      <i class="fas fa-search"></i>
+      <input type="text" name="packSearch" 
+             placeholder="{{localize 'cibola8.packs.searchPlaceholder'}}" 
+             data-tooltip="cibola8.packs.searchHint"
+             value="{{searchQuery}}" />
+    </div>
+    <button class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm" 
+            data-action="showMyPacks" data-tooltip="cibola8.packs.myPacksHint" type="button">
+      <i class="fas fa-folder-open"></i>
+      {{localize 'cibola8.packs.myPacks'}}
+    </button>
+  </div>
+
+  {{!-- Featured packs row --}}
+  {{#if featured.length}}
+  <div class="pack-tag-group pack-tag-group--featured">
+    <h3 class="pack-tag-group-title">
+      <i class="fas fa-star"></i>
+      {{localize 'cibola8.packs.featured'}}
+      <span class="cibola8-text-muted">({{featured.length}})</span>
+    </h3>
+    <div class="gallery-masonry pack-grid">
+      {{#each featured}}
+        {{> modules/cibola8/templates/packs/pack_card.hbs this}}
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Tag-grouped rows --}}
+  {{#each groups}}
+  <div class="pack-tag-group" data-tag="{{this.tag}}">
+    <h3 class="pack-tag-group-title">
+      <i class="fas fa-tag"></i>
+      {{this.tag}}
+      <span class="cibola8-text-muted">({{this.packs.length}})</span>
+    </h3>
+    <div class="gallery-masonry pack-grid">
+      {{#each this.packs}}
+        {{> modules/cibola8/templates/packs/pack_card.hbs this}}
+      {{/each}}
+    </div>
+  </div>
+  {{/each}}
+
+  {{!-- Empty state - reuses gallery-empty --}}
+  {{#unless hasAnyPacks}}
+  <div class="gallery-empty">
+    <i class="fas fa-box-open"></i>
+    <p>{{localize 'cibola8.packs.noPacks'}}</p>
+  </div>
+  {{/unless}}
+</div>

@@ -1,0 +1,89 @@
+{
+  "title": "Cibola 8 - Master Ai Integration",
+  "description": "Cibola 8 is the Foundry-Module for VTT Masters that will truly change your world! Working with every virtual tabletop System, it helps you to prepare next-level adventures, great-master your library and create universes out of your imagination within the drop of a dice! tep through the gate and enter the hidden realms of Cibola 8, where powerful AI tools converge into a creative arsenal that transcends the boundaries of imagination in Virtual Tabletops. With its magical Foundry integration, it opens a gateway to all your favorite systems, granting you access to a world where every adventure turns to legacies. With a single thought, conjure images, in-game assets, and texts that breathe life into your stories. Break the barriers of language, uncover the hidden, and craft new universes where every detail has become reality!",
+  "version": "2.2.0",
+  "url": "https://cibola.world",
+  "manifest": "https://raw.githubusercontent.com/Cibola8/cibola8/main/module.json",
+  "download": "https://github.com/Cibola8/cibola8/releases/download/2.2.0/cibola8-2.2.0.zip",
+  "languages": [
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    },
+    {
+      "lang": "es",
+      "name": "Español",
+      "path": "lang/es.json"
+    }
+  ],
+  "esmodules": [
+    "bundle/modules/init.js"
+  ],
+  "styles": [
+    "styles/css/css.css"
+  ],
+  "packs": [
+    {
+      "name": "documentation",
+      "label": "Cibola 8 Documentation",
+      "path": "packs/documentation",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
+  "socket": true,
+  "id": "cibola8",
+  "authors": [
+    {
+      "name": "Cibola8"
+    }
+  ],
+  "persistentStorage": true,
+  "compatibility": {
+    "minimum": "12",
+    "verified": "14",
+    "maximum": "14"
+  },
+  "documentTypes": {
+    "JournalEntryPage": {
+      "threadgpt": {}
+    }
+  },
+  "media": [
+    {
+      "type": "setup",
+      "url": "modules/cibola8/templates/assets/setup.webp",
+      "thumbnail": "modules/cibola8/templates/assets/setup-thumb.webp"
+    }
+  ],
+  "flags": {
+    "hotReload": {
+      "extensions": [
+        "css",
+        "html",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "templates",
+        "styles/css",
+        "lang"
+      ]
+    }
+  }
+}

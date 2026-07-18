@@ -1,0 +1,5903 @@
+@use "sass:color";
+
+/**
+ * Cibola8 Reusable Components
+ * Modern design system scoped to .cibola8 namespace
+ * 
+ * Usage: Add `.cibola8` class to a parent container to scope these styles
+ * Components: buttons, cards, notices, tooltips, forms, tabs, progress, utilities
+ * 
+ * Design Philosophy:
+ * 1. Dark Theme First - All apps enforce dark mode
+ * 2. Warm Gold Accents - Signature palette using gold highlights
+ * 3. Subtle Motion - Animations that feel responsive (200-300ms)
+ * 4. Glass Morphism - Frosted glass effects for modern look
+ * 5. Visual Hierarchy - Clear distinction between elements
+ */
+
+// ============================================================
+// Variables - Design Tokens
+// ============================================================
+
+// Primary brand colors (warm gold)
+$cibola-primary: #c9a46a !default; // Gold base (--color-warm-2)
+$cibola-primary-dark: #a88a3d !default;
+$cibola-primary-light: #f0d78c !default; // Gold highlight (--color-warm-1)
+$cibola-primary-gradient: linear-gradient(135deg, $cibola-primary, $cibola-primary-light) !default;
+
+// Dark theme backgrounds
+$cibola-bg-darkest: #0f0f23 !default;
+$cibola-bg-dark: #1a1a2e !default;
+$cibola-bg-medium: #16213e !default;
+$cibola-bg-darker: #0d0d0d !default;
+$cibola-bg-card: rgba(30, 30, 50, 0.7) !default;
+$cibola-bg-surface: rgba(30, 30, 50, 0.7) !default;
+$cibola-bg-input: rgba(0, 0, 0, 0.3) !default;
+
+// Text colors
+$cibola-text: #ffffff !default;
+$cibola-text-secondary: rgba(255, 255, 255, 0.7) !default;
+$cibola-text-muted: rgba(255, 255, 255, 0.5) !default;
+$cibola-text-disabled: rgba(255, 255, 255, 0.3) !default;
+
+// Borders
+$cibola-border: rgba(201, 164, 106, 0.3) !default;
+$cibola-border-subtle: rgba(255, 255, 255, 0.08) !default;
+$cibola-border-medium: rgba(255, 255, 255, 0.15) !default;
+$cibola-border-hover: rgba(201, 164, 106, 0.6) !default;
+$cibola-border-accent: rgba(201, 164, 106, 0.3) !default;
+
+// Semantic colors
+$cibola-success: #28a745 !default;
+$cibola-warning: #ffc107 !default;
+$cibola-error: #dc3545 !default;
+$cibola-info: #17a2b8 !default;
+
+// Transitions
+$cibola-transition-fast: 0.15s ease !default;
+$cibola-transition-normal: 0.2s ease !default;
+$cibola-transition-slow: 0.3s ease !default;
+$cibola-transition-bounce: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !default;
+
+// Border radius
+$cibola-border-radius: 8px !default;
+$cibola-border-radius-sm: 4px !default;
+$cibola-border-radius-lg: 12px !default;
+$cibola-border-radius-xl: 16px !default;
+
+// Shadows
+$cibola-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2) !default;
+$cibola-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3) !default;
+$cibola-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4) !default;
+$cibola-shadow-glow: 0 0 20px rgba(201, 164, 106, 0.3) !default;
+
+// ============================================================
+// Placeholder Selectors - Use @extend for zero-duplication CSS
+// These compile to comma-separated selectors, not duplicated rules
+// ============================================================
+
+// Layout utilities (use @extend %flex-center etc.)
+%flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+%flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+%flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+%flex-row {
+  display: flex;
+  align-items: center;
+}
+
+%flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+%flex-start {
+  display: flex;
+  align-items: flex-start;
+}
+
+// Button base - extend for any button-like element
+%btn-base {
+  @extend %flex-center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border-radius: $cibola-border-radius;
+  transition: all $cibola-transition-fast;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Badge base - extend this for any badge-like element
+%badge-base {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  border-radius: $cibola-border-radius-sm;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all $cibola-transition-fast;
+}
+
+// Glass card base - extend for frosted glass panels
+%glass-card {
+  background: $cibola-bg-card;
+  border: 1px solid $cibola-border-subtle;
+  border-radius: $cibola-border-radius;
+  backdrop-filter: blur(8px);
+}
+
+// Card base - extend for card components
+%card-base {
+  background: $cibola-bg-card;
+  border: 1px solid $cibola-border;
+  border-radius: $cibola-border-radius-lg;
+  transition: all $cibola-transition-normal;
+}
+
+// Input base - extend for form elements
+%input-base {
+  background: $cibola-bg-input;
+  border: 1px solid $cibola-border-subtle;
+  border-radius: $cibola-border-radius;
+  color: $cibola-text;
+  transition: border-color $cibola-transition-fast;
+
+  &::placeholder {
+    color: $cibola-text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba($cibola-primary, 0.5);
+    box-shadow: 0 0 0 2px rgba($cibola-primary, 0.1);
+  }
+}
+
+// Interactive - extend for clickable elements
+%interactive {
+  cursor: pointer;
+  transition: all $cibola-transition-fast;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Hover lift - extend for cards that lift on hover
+%hover-lift {
+  transition: transform $cibola-transition-fast, box-shadow $cibola-transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $cibola-shadow-md;
+  }
+}
+
+// Notice/alert base - for status messages
+%notice-base {
+  @extend %flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: $cibola-border-radius;
+  border: 1px solid;
+}
+
+// Hint box base - extend for info/tip containers
+%hint-box {
+  @extend %flex-row;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba($cibola-primary, 0.08);
+  border: 1px solid rgba($cibola-primary, 0.2);
+  border-radius: $cibola-border-radius;
+  font-size: 0.85rem;
+  color: $cibola-text-secondary;
+
+  i {
+    color: $cibola-primary;
+  }
+}
+
+// Empty state - extend for empty/placeholder content areas
+%empty-state {
+  @extend %flex-col;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  gap: 1rem;
+}
+
+// Icon container - circular icon holder
+%icon-circle {
+  @extend %flex-center;
+  border-radius: $cibola-border-radius;
+  flex-shrink: 0;
+}
+
+// Large header icon (48x48 gradient box)
+%header-icon-lg {
+  @extend %flex-center;
+  width: 48px;
+  height: 48px;
+  border-radius: $cibola-border-radius-lg;
+  flex-shrink: 0;
+
+  i {
+    font-size: 1.5rem;
+    color: $cibola-primary;
+  }
+}
+
+// Page/section header with icon
+%page-header {
+  @extend %flex-start;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  h2 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $cibola-text;
+    border: none;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $cibola-text-muted;
+    line-height: 1.4;
+  }
+}
+
+// Section header - for titled sections
+%section-header {
+  @extend %flex-between;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid $cibola-border-subtle;
+  margin-bottom: 1rem;
+}
+
+// Truncate text
+%text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ============================================================
+// Color variant function - generates consistent color variants
+// Usage: @include color-variant(success, $cibola-success);
+// ============================================================
+@mixin color-variant($name, $color) {
+  &--#{$name} {
+    --variant-color: #{$color};
+    --variant-bg: #{rgba($color, 0.1)};
+    --variant-border: #{rgba($color, 0.3)};
+    --variant-text: #{color.adjust($color, $lightness: 20%)};
+    background: var(--variant-bg);
+    border-color: var(--variant-border);
+    color: var(--variant-text);
+  }
+}
+
+// ============================================================
+// CSS Custom Properties for Badge Colors (use in HTML via style attribute)
+// Example: <span class="badge" style="--badge-color: #28a745">New</span>
+// ============================================================
+// Badge colors are defined as CSS variables for dynamic theming
+// --badge-color: base color
+// --badge-text: text color (optional, defaults to lightened base)
+
+// ============================================================
+// Helper Mixins - Only for cases where @extend won't work (dynamic values)
+// ============================================================
+
+// Focus ring - use when custom color needed
+@mixin focus-ring($color: $cibola-primary) {
+  &:focus {
+    outline: none;
+    border-color: rgba($color, 0.5);
+    box-shadow: 0 0 0 2px rgba($color, 0.1);
+  }
+}
+
+// Flex with custom gap - use when gap value varies
+@mixin flex-gap($gap) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+}
+
+// ============================================================
+// Animations & Keyframes
+// ============================================================
+
+@keyframes cibola-fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cibola-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cibola-fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cibola-slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cibola-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes cibola-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(201, 164, 106, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(201, 164, 106, 0.6);
+  }
+}
+
+@keyframes cibola-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes cibola-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cibola-ambientGlow {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes cibola-progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes cibola-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// ============================================================
+// Root Scoping Class
+// ============================================================
+
+.cibola8 {
+  // Force dark theme colors
+  color: $cibola-text;
+
+  // ============================================================
+  // Utility Classes - Use directly in HTML for zero-duplication
+  // ============================================================
+
+  // Flex utilities
+  .flex-center {
+    @extend %flex-center;
+  }
+
+  .flex-between {
+    @extend %flex-between;
+  }
+
+  .flex-col {
+    @extend %flex-col;
+  }
+
+  .flex-row {
+    @extend %flex-row;
+  }
+
+  .flex-wrap {
+    @extend %flex-wrap;
+  }
+
+  // Text utilities
+  .text-muted {
+    color: $cibola-text-muted;
+  }
+
+  .text-secondary {
+    color: $cibola-text-secondary;
+  }
+
+  .text-primary {
+    color: $cibola-primary;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-sm {
+    font-size: 0.85rem;
+  }
+
+  .text-xs {
+    font-size: 0.7rem;
+  }
+
+  // Card base - use @extend %glass-card in your component
+  .glass-card {
+    @extend %glass-card;
+  }
+
+  // ============================================================
+  // UNIFIED BADGE SYSTEM
+  // Usage: <span class="cibola8-badge cibola8-badge--success">New</span>
+  // ============================================================
+
+  .cibola8-badge {
+    @extend %badge-base;
+
+    // CSS custom properties for easy theming
+    --badge-bg: #{rgba($cibola-primary, 0.15)};
+    --badge-text: #{$cibola-primary-light};
+    --badge-border: #{rgba($cibola-primary, 0.3)};
+    --badge-hover-bg: #{rgba($cibola-primary, 0.25)};
+    --badge-hover-border: #{rgba($cibola-primary, 0.5)};
+
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    border-color: var(--badge-border);
+
+    &:hover {
+      background: var(--badge-hover-bg);
+      border-color: var(--badge-hover-border);
+      box-shadow: 0 0 8px var(--badge-bg);
+    }
+
+    // === Color Variants ===
+    &--success,
+    &.badge-new {
+      --badge-bg: #{rgba($cibola-success, 0.2)};
+      --badge-text: #4ade80;
+      --badge-border: #{rgba($cibola-success, 0.4)};
+      --badge-hover-bg: #{rgba($cibola-success, 0.3)};
+      --badge-hover-border: #{rgba($cibola-success, 0.6)};
+    }
+
+    &--danger,
+    &.badge-outdated {
+      --badge-bg: #{rgba($cibola-error, 0.2)};
+      --badge-text: #f87171;
+      --badge-border: #{rgba($cibola-error, 0.4)};
+      --badge-hover-bg: #{rgba($cibola-error, 0.3)};
+      --badge-hover-border: #{rgba($cibola-error, 0.6)};
+    }
+
+    &--warning,
+    &.badge-warning {
+      --badge-bg: #{rgba($cibola-warning, 0.2)};
+      --badge-text: #fbbf24;
+      --badge-border: #{rgba($cibola-warning, 0.4)};
+      --badge-hover-bg: #{rgba($cibola-warning, 0.3)};
+      --badge-hover-border: #{rgba($cibola-warning, 0.6)};
+    }
+
+    &--info,
+    &.badge-nsfw {
+      --badge-bg: #{rgba($cibola-info, 0.2)};
+      --badge-text: #60a5fa;
+      --badge-border: #{rgba($cibola-info, 0.4)};
+      --badge-hover-bg: #{rgba($cibola-info, 0.3)};
+      --badge-hover-border: #{rgba($cibola-info, 0.6)};
+    }
+
+    &--muted,
+    &.badge-no-rating {
+      --badge-bg: #{rgba(255, 255, 255, 0.05)};
+      --badge-text: #{$cibola-text-muted};
+      --badge-border: #{rgba(255, 255, 255, 0.2)};
+      --badge-hover-bg: #{rgba(255, 255, 255, 0.1)};
+      --badge-hover-border: #{rgba(255, 255, 255, 0.3)};
+      border-style: dashed;
+    }
+
+    &--featured,
+    &.badge-featured {
+      --badge-bg: #{rgba(#ffd700, 0.2)};
+      --badge-text: #ffd700;
+      --badge-border: #{rgba(#ffd700, 0.4)};
+      --badge-hover-bg: #{rgba(#ffd700, 0.3)};
+      --badge-hover-border: #{rgba(#ffd700, 0.6)};
+    }
+
+    &--client-only,
+    &.badge-clientOnly {
+      --badge-bg: #{rgba(#6366f1, 0.2)};
+      --badge-text: #a5b4fc;
+      --badge-border: #{rgba(#6366f1, 0.45)};
+      --badge-hover-bg: #{rgba(#6366f1, 0.3)};
+      --badge-hover-border: #{rgba(#6366f1, 0.65)};
+    }
+
+    // === Size Variants ===
+    &--sm {
+      padding: 0.15rem 0.35rem;
+      font-size: 0.6rem;
+    }
+
+    &--lg {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    // === Special States ===
+    &.pulsing {
+      background: transparent;
+      color: inherit;
+      border-color: transparent;
+      animation: cibola-pulse 2s ease-in-out infinite;
+    }
+  }
+
+  // ============================================================
+  // Buttons
+  // ============================================================
+
+  .cibola8-btn {
+    @extend %btn-base;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid $cibola-border;
+    background: rgba($cibola-primary, 0.1);
+    color: $cibola-primary;
+
+    &:hover,
+    &:focus {
+      background: rgba($cibola-primary, 0.2);
+      border-color: $cibola-primary;
+      color: $cibola-primary-light;
+      transform: translateY(-1px);
+      box-shadow: $cibola-shadow-sm;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+
+    // Size variants
+    &--sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+
+      i {
+        font-size: 0.85rem;
+      }
+    }
+
+    &--lg {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+
+    // Style variants
+    &--primary {
+      background: $cibola-primary-gradient;
+      border-color: $cibola-primary;
+      color: #1a1a1a;
+      font-weight: 600;
+
+      &:hover,
+      &:focus {
+        background: linear-gradient(135deg, $cibola-primary-light, $cibola-primary);
+        color: #1a1a1a;
+        box-shadow: $cibola-shadow-glow;
+      }
+    }
+
+    // Accent variant (orange) - for onboarding and special actions
+    &--accent {
+      background: linear-gradient(135deg, #ff9300 0%, #ff5309 100%);
+      border-color: #ff9300;
+      color: #000;
+      font-weight: 600;
+
+      &:hover,
+      &:focus {
+        background: linear-gradient(135deg, #ffaa33 0%, #ff6620 100%);
+        color: #000;
+        box-shadow: 0 4px 15px rgba(255, 147, 0, 0.4);
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    &--secondary {
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: $cibola-text;
+      font-size: 0.875rem;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+    }
+
+    &--outline {
+      background: transparent;
+
+      &:hover {
+        background: rgba($cibola-primary, 0.15);
+      }
+    }
+
+    &--ghost {
+      background: transparent;
+      border-color: transparent;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: transparent;
+      }
+    }
+
+    // Color variants using mixin
+    @include color-variant(success, $cibola-success);
+    @include color-variant(warning, $cibola-warning);
+
+    &--danger {
+      padding: 0.5rem 1rem;
+      background: rgba($cibola-error, 0.15);
+      border: 1px solid rgba($cibola-error, 0.3);
+      color: color.adjust($cibola-error, $lightness: 15%);
+
+      &:hover {
+        background: rgba($cibola-error, 0.25);
+        border-color: rgba($cibola-error, 0.5);
+      }
+    }
+
+    // Icon-only button (square)
+    &--icon {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      background: transparent;
+      border: 1px solid transparent;
+      color: $cibola-text-muted;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: $cibola-text;
+      }
+
+      &.cibola8-btn--sm {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      &.cibola8-btn--lg {
+        width: 3rem;
+        height: 3rem;
+      }
+
+      // Icon button color variants on hover
+      &.cibola8-btn--success:hover {
+        background: rgba($cibola-success, 0.15);
+        color: $cibola-success;
+        border-color: rgba($cibola-success, 0.3);
+      }
+
+      &.cibola8-btn--danger:hover {
+        background: rgba($cibola-error, 0.15);
+        color: $cibola-error;
+        border-color: rgba($cibola-error, 0.3);
+      }
+    }
+
+    // Draggable variant
+    &--draggable {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    // Disabled state
+    &:disabled,
+    &--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &--full {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  // Button group
+  .cibola8-btn-group {
+    @extend %flex-row;
+    gap: 0.5rem;
+
+    &--vertical {
+      flex-direction: column;
+    }
+
+    &--stretch {
+
+      .cibola8-btn,
+      .cibola8-btn--primary,
+      .cibola8-btn--secondary {
+        flex: 1;
+      }
+    }
+  }
+
+  // ============================================================
+  // Cards
+  // ============================================================
+
+  .cibola8-card {
+    @extend %card-base;
+    padding: 1.5rem;
+
+    &:hover {
+      border-color: $cibola-border-hover;
+    }
+
+    // Clickable card
+    &--clickable {
+      @extend %interactive;
+      @extend %hover-lift;
+    }
+
+    &--glow {
+      &:hover {
+        box-shadow: $cibola-shadow-glow;
+      }
+    }
+
+    // Card sections
+    &__header {
+      @extend %flex-row;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    &__icon {
+      @extend %icon-circle;
+      width: 3rem;
+      height: 3rem;
+      background: $cibola-primary-gradient;
+      color: #000;
+      font-size: 1.25rem;
+    }
+
+    &__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $cibola-text;
+      margin: 0;
+    }
+
+    &__subtitle {
+      font-size: 0.85rem;
+      color: $cibola-text-muted;
+      margin: 0.25rem 0 0;
+    }
+
+    &__body {
+      color: $cibola-text-muted;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    &__footer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid $cibola-border-subtle;
+    }
+
+    // Compact variant
+    &--compact {
+      padding: 1rem;
+
+      .cibola8-card__icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+      }
+    }
+
+    &--featured {
+      background: linear-gradient(135deg, rgba($cibola-primary, 0.1), $cibola-bg-surface);
+      border-color: rgba($cibola-primary, 0.5);
+    }
+  }
+
+  // Card grid
+  .cibola8-card-grid {
+    display: grid;
+    gap: 1rem;
+
+    &--2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    &--auto {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
+
+  // Field grid — 2-column auto-fill for form configuration fields
+  .cibola8-field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.5rem 0.75rem;
+    align-items: start;
+  }
+
+  // Span full row in any grid
+  .cibola8-col-full {
+    grid-column: 1 / -1;
+  }
+
+  // ============================================================
+  // Notices & Alerts
+  // ============================================================
+
+  .cibola8-notice {
+    @extend %notice-base;
+
+    &__icon {
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+
+    &__content {
+      flex: 1;
+    }
+
+    &__title {
+      font-weight: 600;
+      margin: 0 0 0.25rem;
+    }
+
+    &__text {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    // Variants using mixin
+    @include color-variant(info, $cibola-info);
+    @include color-variant(warning, $cibola-warning);
+    @include color-variant(error, $cibola-error);
+    @include color-variant(success, $cibola-success);
+
+    &--info .cibola8-notice__icon {
+      color: $cibola-info;
+    }
+
+    &--warning .cibola8-notice__icon {
+      color: $cibola-warning;
+    }
+
+    &--error .cibola8-notice__icon {
+      color: $cibola-error;
+    }
+
+    &--success .cibola8-notice__icon {
+      color: $cibola-success;
+    }
+
+    // Compact variant
+    &--compact {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  // ============================================================
+  // Tooltips (CSS-only)
+  // ============================================================
+
+  .cibola8-tooltip {
+    position: relative;
+
+    &__content {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid $cibola-border;
+      border-radius: $cibola-border-radius-sm;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+      color: $cibola-text;
+      white-space: nowrap;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity $cibola-transition-fast, visibility $cibola-transition-fast;
+      pointer-events: none;
+
+      // Position variants
+      &--top {
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 0.5rem;
+      }
+
+      &--bottom {
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0.5rem;
+      }
+
+      &--left {
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-right: 0.5rem;
+      }
+
+      &--right {
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-left: 0.5rem;
+      }
+    }
+
+    &:hover .cibola8-tooltip__content {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  // ============================================================
+  // Form Elements
+  // ============================================================
+
+  .cibola8-input {
+    @extend %input-base;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    &--lg {
+      padding: 1rem 1.25rem;
+      font-size: 1.1rem;
+    }
+  }
+
+  // Note: .cibola8-select styling is handled in .cibola8-dark-theme section
+  // since we always apply both .cibola8 and .cibola8-dark-theme classes
+
+  select,
+  select option {
+    color: $cibola-text;
+  }
+
+  .select2-container,
+  .select2-selection,
+  .select2-selection__rendered,
+  .select2-dropdown,
+  .select2-results__option,
+  .select2-search__field {
+    color: $cibola-text;
+  }
+
+  .cibola8-textarea {
+    @extend .cibola8-input;
+    resize: vertical;
+    min-height: 6rem;
+  }
+
+  .cibola8-checkbox {
+    @extend %flex-row;
+    gap: 0.75rem;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      width: 1.25rem;
+      height: 1.25rem;
+      accent-color: $cibola-primary;
+      cursor: pointer;
+    }
+
+    &__label {
+      color: $cibola-text;
+      font-size: 0.95rem;
+    }
+  }
+
+  .cibola8-form-group {
+    margin-bottom: 1rem;
+
+    &__label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: $cibola-text;
+    }
+
+    &__hint {
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
+      color: $cibola-text-muted;
+    }
+
+    &__error {
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
+      color: $cibola-error;
+    }
+  }
+
+  // ============================================================
+  // Action Bars & Toolbars
+  // ============================================================
+
+  .cibola8-action-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+
+    .cibola8-tool-btn {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: $cibola-border-radius-sm;
+      color: $cibola-text-secondary;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      transition: all $cibola-transition-fast;
+
+      &:hover:not(:disabled) {
+        background: rgba($cibola-primary, 0.2);
+        border-color: $cibola-primary;
+        color: $cibola-primary;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+
+    .cibola8-btn--primary,
+    .cibola8-btn--secondary {
+      margin-left: auto;
+    }
+  }
+
+  .cibola8-validation-row {
+    @extend %flex-row;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+
+  // ============================================================
+  // Warning & Info Boxes
+  // ============================================================
+
+  .cibola8-warning-box {
+    @extend %notice-base;
+    background: rgba($cibola-warning, 0.1);
+    border-color: rgba($cibola-warning, 0.3);
+    margin-bottom: 1rem;
+
+    .cibola8-warning-icon {
+      font-size: 1.5rem;
+      color: $cibola-warning;
+      flex-shrink: 0;
+    }
+
+    .cibola8-warning-content {
+      flex: 1;
+
+      h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: $cibola-warning;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: $cibola-text-secondary;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  // ============================================================
+  // No Account / Connection States
+  // ============================================================
+
+  .cibola8-noaccount-container {
+    padding: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+    animation: cibola-fadeIn 0.3s ease;
+  }
+
+  .cibola8-options-section {
+    margin-top: 1rem;
+  }
+
+  .cibola8-action-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $cibola-border-radius;
+    margin-bottom: 0.75rem;
+    transition: all $cibola-transition-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba($cibola-primary, 0.3);
+    }
+
+    &.cibola8-action-card-secondary {
+      background: rgba(0, 0, 0, 0.2);
+      border-style: dashed;
+      opacity: 0.85;
+    }
+
+    .cibola8-action-card-icon {
+      font-size: 1.75rem;
+      color: $cibola-primary;
+      flex-shrink: 0;
+      width: 50px;
+      text-align: center;
+    }
+
+    .cibola8-action-card-content {
+      flex: 1;
+      min-width: 0;
+
+      h4 {
+        margin: 0 0 0.25rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: $cibola-text;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: $cibola-text-muted;
+        line-height: 1.4;
+      }
+    }
+
+    .cibola8-btn.cibola8-btn--primary {
+      flex-shrink: 0;
+    }
+  }
+
+  // ============================================================
+  // Link Lists (External Resources)
+  // ============================================================
+
+  .cibola8-link-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    &.cibola8-resources-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+  }
+
+  .cibola8-link-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $cibola-border-radius;
+    color: $cibola-text-secondary !important;
+    font-size: 0.875rem;
+    text-decoration: none !important;
+    transition: all $cibola-transition-fast;
+
+    i {
+      color: $cibola-primary;
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: rgba($cibola-primary, 0.15);
+      border-color: rgba($cibola-primary, 0.4);
+      color: $cibola-text !important;
+
+      i {
+        color: $cibola-primary-light;
+      }
+    }
+  }
+
+  // ============================================================
+  // Configuration App Styles
+  // ============================================================
+
+  .cibola8-config-form {
+    padding: 1rem;
+  }
+
+  .cibola8-config-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    margin: -1rem -1rem 1rem -1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .cibola8-config-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $cibola-text;
+
+    i {
+      font-size: 1.5rem;
+      color: $cibola-primary;
+    }
+  }
+
+  .cibola8-config-api-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .cibola8-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .cibola8-quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .cibola8-quick-action-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $cibola-border-radius-lg;
+    color: $cibola-text;
+    cursor: pointer;
+    transition: all $cibola-transition-fast;
+    text-align: left;
+    min-height: 48px;
+
+    >i {
+      font-size: 1.25rem;
+      color: $cibola-primary;
+      flex-shrink: 0;
+      width: 24px;
+      text-align: center;
+    }
+
+    .cibola8-quick-action-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    &:hover {
+      background: rgba($cibola-primary, 0.15);
+      border-color: rgba($cibola-primary, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+      >i {
+        color: $cibola-primary-light;
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // ============================================================
+  // Lists
+  // ============================================================
+
+  .cibola8-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    &--compact {
+      .cibola8-list__item {
+        padding: 0.5rem 0;
+      }
+    }
+
+    &--styled {
+      .cibola8-list__item {
+        padding-left: 1.5rem;
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 1rem;
+          width: 6px;
+          height: 6px;
+          background: $cibola-primary;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // Tabs Component
+  // ============================================================
+
+  .cibola8-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    // Inline variant (horizontal button bar)
+    &--inline {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    &__nav {
+      display: flex;
+      gap: 0.25rem;
+      border-bottom: 1px solid $cibola-border-subtle;
+      padding-bottom: 0.25rem;
+    }
+
+    &__tab {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: $cibola-text-secondary;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all $cibola-transition-fast;
+      position: relative;
+      margin-bottom: -1px;
+
+      i {
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      &:hover {
+        color: $cibola-text;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      &--active,
+      &.active {
+        color: $cibola-primary-light;
+        border-bottom-color: $cibola-primary;
+
+        i {
+          opacity: 1;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: $cibola-primary-gradient;
+        }
+      }
+    }
+
+    &__content {
+      animation: cibola-fadeIn 0.2s ease;
+    }
+
+    &__panel {
+      display: none;
+
+      &--active,
+      &.active {
+        display: block;
+        animation: cibola-fadeInUp 0.25s ease;
+      }
+    }
+
+    // Pill variant
+    &--pills {
+      .cibola8-tabs__nav {
+        border-bottom: none;
+        padding-bottom: 0;
+        gap: 0.5rem;
+      }
+
+      .cibola8-tabs__tab {
+        border-radius: $cibola-border-radius;
+        border-bottom: none;
+        margin-bottom: 0;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        &--active,
+        &.active {
+          background: rgba(201, 168, 87, 0.2);
+          color: $cibola-primary-light;
+
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  // Standalone tab button (for inline filter bars)
+  .cibola8-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $cibola-border-radius;
+    background: transparent;
+    color: $cibola-text-secondary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $cibola-transition-fast;
+    white-space: nowrap;
+
+    i {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: $cibola-text;
+    }
+
+    &.active {
+      background: $cibola-primary-gradient;
+      color: #1a1a1a;
+      border-color: transparent;
+      font-weight: 600;
+
+      i {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Tab divider (vertical separator)
+  .cibola8-tab-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 0.25rem;
+  }
+
+
+  // ============================================================
+  // Glass Morphism Utilities
+  // ============================================================
+
+  .cibola8-glass {
+    @extend %glass-card;
+    background: rgba(30, 30, 50, 0.6);
+    backdrop-filter: blur(10px);
+
+    &--light {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &--dark {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    &--strong {
+      backdrop-filter: blur(20px);
+    }
+
+    &--muted {
+      opacity: 0.85;
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+  }  
+
+  // ============================================================
+  // Empty States - Unified (use modifiers for variants)
+  // ============================================================
+
+  .cibola8-empty-state {
+    @extend %empty-state;
+
+    // BEM elements for structured content
+    &__icon {
+      font-size: 3rem;
+      color: $cibola-text-muted;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+
+    &__title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $cibola-text;
+      margin: 0 0 0.5rem;
+    }
+
+    &__description {
+      color: $cibola-text-muted;
+      font-size: 0.95rem;
+      max-width: 300px;
+      margin: 0 0 1.5rem;
+      line-height: 1.5;
+    }
+
+    &__action {
+      margin-top: 0.5rem;
+    }
+
+    &__help {
+      @extend %hint-box;
+      text-align: left;
+      max-width: 400px;
+    }
+
+    // Direct element styling (for simpler templates)
+    i:not([class*="__"]) {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+      color: $cibola-text-muted;
+    }
+
+    h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $cibola-text;
+    }
+
+    p:not([class*="__"]) {
+      margin: 0;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    // Icon circle variant (for radial menu etc)
+    .cibola8-empty-icon {
+      @extend %icon-circle;
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.05);
+      margin-bottom: 1rem;
+
+      i {
+        font-size: 1.75rem;
+        color: $cibola-text-muted;
+      }
+    }
+
+    // Size modifiers
+    &--small {
+      padding: 1.5rem 1rem;
+
+      i,
+      .cibola8-empty-state__icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      p,
+      .cibola8-empty-state__description {
+        font-size: 0.875rem;
+        margin: 0;
+      }
+    }
+  }
+
+  // ============================================================
+  // Section Headers
+  // ============================================================
+
+  .cibola8-section-header {
+    @extend %section-header;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    &__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $cibola-text;
+      margin: 0;
+
+      &--lg {
+        font-size: 1.35rem;
+      }
+    }
+
+    &__line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, $cibola-border 0%, transparent 100%);
+    }
+
+    &__actions {
+      @extend %flex-row;
+      gap: 0.5rem;
+    }
+
+    &--centered {
+      justify-content: center;
+
+      .cibola8-section-header__line {
+        &:first-of-type {
+          background: linear-gradient(90deg,
+              transparent 0%,
+              $cibola-border 100%);
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // Hint / Tip Box - Reusable info callout
+  // ============================================================
+
+  .cibola8-hint {
+    @extend %hint-box;
+    line-height: 1.5;
+
+    &--compact {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    &--warning {
+      background: rgba($cibola-warning, 0.08);
+      border-color: rgba($cibola-warning, 0.2);
+
+      i:first-child {
+        color: $cibola-warning;
+      }
+    }
+
+    &--error {
+      background: rgba($cibola-error, 0.08);
+      border-color: rgba($cibola-error, 0.2);
+
+      i:first-child {
+        color: $cibola-error;
+      }
+    }
+  }
+
+  // ============================================================
+  // Portrait / Thumbnail - Reusable image container
+  // ============================================================
+
+  .cibola8-portrait {
+    flex-shrink: 0;
+    border-radius: $cibola-border-radius;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all $cibola-transition-fast;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border: none !important;
+    }
+
+    &:hover {
+      border-color: rgba($cibola-primary, 0.5);
+      box-shadow: 0 0 10px rgba($cibola-primary, 0.3);
+    }
+
+    // Size modifiers
+    &--sm {
+      width: 32px;
+      height: 32px;
+    }
+
+    &--md {
+      width: 50px;
+      height: 50px;
+    }
+
+    &--lg {
+      width: 64px;
+      height: 64px;
+    }
+
+    &--xl {
+      width: 80px;
+      height: 80px;
+    }
+
+    // Shape modifiers
+    &--circle {
+      border-radius: 50%;
+    }
+
+    // Clickable modifier
+    &--clickable {
+      cursor: pointer;
+    }
+  }
+
+  // ============================================================
+  // Toggle Button - Checkbox/radio styled as icon button
+  // ============================================================
+
+  .cibola8-toggle-btn {
+    @extend %flex-center;
+    @extend %interactive;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid $cibola-border-subtle;
+    border-radius: $cibola-border-radius-sm;
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      display: none;
+    }
+
+    i {
+      font-size: 1rem;
+      transition: color $cibola-transition-fast;
+      opacity: 0.5;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    &:has(input:checked),
+    &.active {
+      border-color: rgba($cibola-primary, 0.4);
+      background: rgba($cibola-primary, 0.1);
+
+      i {
+        opacity: 1;
+      }
+    }
+
+    // Color variants
+    &--female {
+      i { color: rgba(255, 105, 180, 0.5); }
+      &:has(input:checked) i,
+      &.active i { color: #ff69b4; }
+    }
+
+    &--male {
+      i { color: rgba(100, 149, 237, 0.5); }
+      &:has(input:checked) i,
+      &.active i { color: #6495ed; }
+    }
+
+    &--primary {
+      &:has(input:checked),
+      &.active {
+        border-color: rgba($cibola-primary, 0.6);
+        background: rgba($cibola-primary, 0.2);
+        i { color: $cibola-primary-light; }
+      }
+    }
+  }
+
+  // ============================================================
+  // List Item - Reusable interactive row
+  // ============================================================
+
+  .cibola8-list-item {
+    @extend %flex-row;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid transparent;
+    border-radius: $cibola-border-radius;
+    transition: all $cibola-transition-fast;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: $cibola-border-subtle;
+    }
+
+    &--selected,
+    &.active {
+      background: rgba($cibola-primary, 0.1);
+      border-color: rgba($cibola-primary, 0.3);
+    }
+
+    &__content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &__actions {
+      @extend %flex-row;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+  }
+
+  // ========================================================================
+  // INTRO TEXT STYLING
+  // ========================================================================
+  .cibola8-intro-text {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: rgba(201, 164, 106, 0.08);
+    border: 1px solid rgba(201, 164, 106, 0.2);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.875rem;
+    line-height: 1.5;
+
+    .cibola8-intro-icon {
+      color: var(--color-warm-1, #f0d78c);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+  }
+
+  // ============================================================
+  // Mask Preview Thumbnail
+  // ============================================================
+  .cibola8-mask-preview {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid rgba(201, 164, 106, 0.3);
+    background: rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+    margin-left: auto;
+    transition: opacity 0.2s ease;
+
+    &.hidden {
+      display: none;
+    }
+  }
+
+  .cibola8-mask-note-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // ============================================================
+  // Legend Button - Collapsible section header
+  // ============================================================
+
+  .cibola8-legend {
+    @extend %flex-row;
+    @extend %interactive;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, rgba($cibola-primary, 0.15), rgba($cibola-primary, 0.08));
+    border: 1px solid rgba($cibola-primary, 0.3);
+    border-radius: $cibola-border-radius;
+    font-weight: 600;
+    color: $cibola-primary-light;
+
+    i {
+      color: $cibola-primary;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba($cibola-primary, 0.25), rgba($cibola-primary, 0.15));
+      border-color: rgba($cibola-primary, 0.5);
+    }
+
+    &__count {
+      font-weight: 400;
+      font-size: 0.85em;
+      color: $cibola-text-muted;
+    }
+  }
+
+  // ============================================================
+  // Prompt Section - Labeled input area with actions
+  // ============================================================
+
+  .cibola8-prompt-section {
+    margin: 1rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $cibola-border-subtle;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+
+  .cibola8-prompt-header {
+    @extend %flex-between;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    label {
+      @extend %flex-row;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: $cibola-text-secondary;
+
+      i {
+        color: $cibola-primary;
+      }
+    }
+  }
+
+  .cibola8-prompt-actions {
+    @extend %flex-row;
+    gap: 0.5rem;
+  }
+
+  // ============================================================
+  // Page Header - Section/page header with icon and actions
+  // ============================================================
+
+  .cibola8-page-header {
+    @extend %flex-between;
+    gap: 1.5rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    &__content {
+      @extend %flex-start;
+      gap: 1rem;
+    }
+
+    &__icon {
+      @extend %header-icon-lg;
+      background: var(--color-warm-gradient, linear-gradient(135deg, $cibola-primary, $cibola-primary-light));
+
+      i {
+        font-size: 1.5rem;
+        color: #1a1a1a;
+      }
+
+      // Variants
+      &--info {
+        background: linear-gradient(135deg, rgba($cibola-info, 0.2), rgba($cibola-info, 0.1));
+        i { color: $cibola-info; }
+      }
+
+      &--success {
+        background: linear-gradient(135deg, rgba($cibola-success, 0.2), rgba($cibola-success, 0.1));
+        i { color: $cibola-success; }
+      }
+
+      &--warning {
+        background: linear-gradient(135deg, rgba($cibola-warning, 0.2), rgba($cibola-warning, 0.1));
+        i { color: $cibola-warning; }
+      }
+    }
+
+    &__text {
+      h3 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $cibola-text;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: $cibola-text-muted;
+      }
+    }
+
+    &__actions {
+      @extend %flex-row;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+  }
+
+  // ============================================================
+  // Progress Bar - Reusable progress indicator
+  // ============================================================
+
+  .cibola8-progress {
+    @extend %flex-row;
+    gap: 0.75rem;
+
+    &__bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    &__fill {
+      height: 100%;
+      background: var(--color-warm-gradient, linear-gradient(90deg, $cibola-primary, $cibola-primary-light));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    &__text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: $cibola-primary;
+      min-width: 3rem;
+      text-align: right;
+    }
+
+    // Size modifiers
+    &--sm {
+      .cibola8-progress__bar { height: 4px; }
+      .cibola8-progress__text { font-size: 0.7rem; min-width: 2.5rem; }
+    }
+
+    &--lg {
+      .cibola8-progress__bar { height: 8px; }
+      .cibola8-progress__text { font-size: 0.85rem; }
+    }
+
+    // Color variants
+    &--success .cibola8-progress__fill {
+      background: linear-gradient(90deg, $cibola-success, color.adjust($cibola-success, $lightness: 15%));
+    }
+
+    &--warning .cibola8-progress__fill {
+      background: linear-gradient(90deg, $cibola-warning, color.adjust($cibola-warning, $lightness: 10%));
+    }
+
+    &--danger .cibola8-progress__fill {
+      background: linear-gradient(90deg, $cibola-error, color.adjust($cibola-error, $lightness: 15%));
+    }
+  }
+
+  // ============================================================
+  // Detail Item - Small info item with icon
+  // ============================================================
+
+  .cibola8-detail {
+    @extend %flex-row;
+    gap: 0.375rem;
+    font-size: 0.8rem;
+    color: $cibola-text-muted;
+
+    i {
+      font-size: 0.75rem;
+      color: $cibola-primary;
+    }
+
+    &--success i { color: $cibola-success; }
+    &--warning i { color: $cibola-warning; }
+    &--danger i { color: $cibola-error; }
+  }
+
+  // ============================================================
+  // Stats Breakdown - Inline statistics display
+  // ============================================================
+
+  .cibola8-stats {
+    @extend %flex-row;
+    gap: 0.25rem;
+
+    &__item {
+      font-weight: 500;
+
+      &--success { color: color.adjust($cibola-success, $lightness: 10%); }
+      &--danger { color: color.adjust($cibola-error, $lightness: 10%); }
+      &--warning { color: color.adjust($cibola-warning, $lightness: 5%); }
+    }
+
+    &__sep {
+      color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  // ============================================================
+  // Link - Styled clickable link
+  // ============================================================
+
+  .cibola8-link {
+    color: $cibola-text;
+    text-decoration: none;
+    transition: color $cibola-transition-fast;
+
+    &:hover {
+      color: $cibola-primary-light;
+    }
+
+    &--primary {
+      color: $cibola-primary-light;
+      &:hover { color: #fff; }
+    }
+
+    &--muted {
+      color: $cibola-text-muted;
+      &:hover { color: $cibola-text; }
+    }
+  }
+
+  // ============================================================
+  // Spinners & Loaders
+  // ============================================================
+
+  .cibola8-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: $cibola-primary;
+    border-radius: 50%;
+    animation: cibola-spin 0.8s linear infinite;
+
+    &--sm {
+      width: 16px;
+      height: 16px;
+      border-width: 2px;
+    }
+
+    &--lg {
+      width: 40px;
+      height: 40px;
+      border-width: 3px;
+    }
+  }
+
+  // Dots loader
+  .cibola8-loader-dots {
+    display: flex;
+    gap: 0.25rem;
+
+    span {
+      width: 8px;
+      height: 8px;
+      background: $cibola-primary;
+      border-radius: 50%;
+      animation: cibola-pulse 1s infinite;
+
+      &:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+    }
+  }
+  
+  
+  // ============================================================
+  // Dividers
+  // ============================================================
+
+  .cibola8-divider {
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(201, 168, 87, 0.3) 20%,
+        rgba(201, 168, 87, 0.3) 80%,
+        transparent 100%);
+    margin: 1.5rem 0;
+    border: none;
+  }
+
+  // ============================================================
+  // Utility Classes
+  // ============================================================
+
+  // Text alignment
+  .cibola8-text-left {
+    text-align: left;
+  }
+
+  .cibola8-text-center {
+    text-align: center;
+  }
+
+  .cibola8-text-right {
+    text-align: right;
+  }
+
+  // Text colors
+  .cibola8-text-muted {
+    color: $cibola-text-muted;
+  }
+
+  .cibola8-text-primary {
+    color: $cibola-primary;
+  }
+
+  .cibola8-text-success {
+    color: $cibola-success;
+  }
+
+  .cibola8-text-warning {
+    color: $cibola-warning;
+  }
+
+  .cibola8-text-error {
+    color: $cibola-error;
+  }
+
+  // Spacing utilities
+  .cibola8-mt-0 {
+    margin-top: 0;
+  }
+
+  .cibola8-mt-1 {
+    margin-top: 0.5rem;
+  }
+
+  .cibola8-mt-2 {
+    margin-top: 1rem;
+  }
+
+  .cibola8-mt-3 {
+    margin-top: 1.5rem;
+  }
+
+  .cibola8-mt-4 {
+    margin-top: 2rem;
+  }
+
+  .cibola8-mb-0 {
+    margin-bottom: 0;
+  }
+
+  .cibola8-mb-1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .cibola8-mb-2 {
+    margin-bottom: 1rem;
+  }
+
+  .cibola8-mb-3 {
+    margin-bottom: 1.5rem;
+  }
+
+  .cibola8-mb-4 {
+    margin-bottom: 2rem;
+  }
+
+  .cibola8-p-0 {
+    padding: 0;
+  }
+
+  .cibola8-p-1 {
+    padding: 0.5rem;
+  }
+
+  .cibola8-p-2 {
+    padding: 1rem;
+  }
+
+  .cibola8-p-3 {
+    padding: 1.5rem;
+  }
+
+  .cibola8-p-4 {
+    padding: 2rem;
+  }
+
+  // Flexbox utilities
+  .cibola8-flex {
+    display: flex;
+  }
+
+  .cibola8-flex-col {
+    flex-direction: column;
+  }
+
+  .cibola8-flex-wrap {
+    flex-wrap: wrap;
+  }
+
+  .cibola8-items-center {
+    align-items: center;
+  }
+
+  .cibola8-items-start {
+    align-items: flex-start;
+  }
+
+  .cibola8-items-end {
+    align-items: flex-end;
+  }
+
+  .cibola8-justify-center {
+    justify-content: center;
+  }
+
+  .cibola8-justify-between {
+    justify-content: space-between;
+  }
+
+  .cibola8-justify-end {
+    justify-content: flex-end;
+  }
+
+  .cibola8-gap-0 {
+    gap: 0;
+  }
+
+  .cibola8-gap-1 {
+    gap: 0.5rem;
+  }
+
+  .cibola8-gap-2 {
+    gap: 1rem;
+  }
+
+  .cibola8-gap-3 {
+    gap: 1.5rem;
+  }
+
+  // Display utilities
+  .cibola8-hidden {
+    display: none;
+  }
+
+  .cibola8-block {
+    display: block;
+  }
+
+  .cibola8-inline {
+    display: inline;
+  }
+
+  .cibola8-inline-block {
+    display: inline-block;
+  }
+
+  // Width utilities
+  .cibola8-w-full {
+    width: 100%;
+  }
+
+  .cibola8-w-auto {
+    width: auto;
+  }
+
+
+  // ============================================================
+  // Dark Theme Enforcement (for light Foundry themes)
+  // ============================================================
+
+  .cibola8-dark-theme {
+    // Create stacking context so z-index: -1 backgrounds work
+    isolation: isolate;
+
+    // Variables for dark theme
+    --cibola-bg: #1a1a2e;
+    --cibola-bg-darker: #0f0f23;
+    --cibola-bg-surface: #252538;
+    --cibola-bg-input: rgba(0, 0, 0, 0.4);
+    --cibola-text: #e8e8e8;
+    --cibola-text-muted: rgba(255, 255, 255, 0.65);
+    --cibola-border: rgba(201, 168, 87, 0.3);
+    --cibola-border-subtle: rgba(255, 255, 255, 0.1);
+    --cibola-primary: #c9a46a;
+    --cibola-primary-light: #f0d78c;
+
+    // Reset any light theme overrides
+    background-color: var(--cibola-bg) !important;
+    color: var(--cibola-text) !important;
+
+    // Entry animation for the whole window
+    animation: cibola-fadeInScale 0.25s ease;
+
+    // Ensure all child text inherits
+    * {
+      color: inherit;
+    }
+
+    // ============================================================
+    // Window Chrome Enhancement
+    // ============================================================
+
+    // Enhanced window header
+    &.application>header,
+    .window-header {
+      background: linear-gradient(135deg, rgba(201, 168, 87, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%) !important;
+      border-bottom: 1px solid var(--cibola-border) !important;
+      padding: 0.5rem 1rem !important;
+
+      .window-title {
+        color: var(--cibola-primary-light) !important;
+        font-weight: 600 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .header-control,
+      .close {
+        color: var(--cibola-text-muted) !important;
+        transition: color 0.2s ease, transform 0.2s ease;
+
+        &:hover {
+          color: var(--cibola-primary-light) !important;
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    // Enhanced window content area
+    .window-content {
+      background: var(--cibola-bg) !important;
+      padding: 1rem !important;
+    }
+
+    // ============================================================
+    // Foundry Tab Navigation Enhancement
+    // ============================================================
+
+    nav.sheet-tabs,
+    .sheet-tabs {
+      border-bottom: 1px solid var(--cibola-border-subtle) !important;
+      margin-bottom: 1rem;
+
+      .item {
+        color: var(--cibola-text-muted) !important;
+        border-bottom: 2px solid transparent;
+        padding: 0.5rem 1rem !important;
+        transition: all 0.2s ease;
+
+        &:hover {
+          color: var(--cibola-text) !important;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        &.active {
+          color: var(--cibola-primary-light) !important;
+          border-bottom-color: var(--cibola-primary) !important;
+        }
+      }
+    }
+
+    // ============================================================
+    // Select Dropdown Styling for Dark Theme
+    // ============================================================
+
+    select,
+    .cibola8-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: var(--cibola-bg-input) !important;
+      color: var(--cibola-text) !important;
+      border: 1px solid var(--cibola-border-subtle);
+      border-radius: 6px;
+      padding: 0.5rem 2.25rem 0.5rem 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      height: auto !important;
+      min-height: 36px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+
+      // Custom dropdown arrow (gold)
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f0d78c' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 0.75rem center !important;
+
+      &:hover {
+        border-color: var(--cibola-border);
+        background-color: rgba(0, 0, 0, 0.5) !important;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--cibola-primary-light);
+        box-shadow: 0 0 0 2px rgba(201, 164, 106, 0.2);
+      }
+
+      // Style dropdown options
+      option {
+        background-color: #1a1a2e !important;
+        color: var(--cibola-text) !important;
+        padding: 0.5rem;
+
+        &:hover,
+        &:focus,
+        &:checked {
+          background-color: #2a2a3e !important;
+        }
+      }
+
+      // Disabled state
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    // Also style any select in forms
+    .form-group select,
+    .form-fields select,
+    form select {
+      background-color: var(--cibola-bg-input) !important;
+      color: var(--cibola-text) !important;
+      border: 1px solid var(--cibola-border-subtle);
+      border-radius: 6px;
+      padding: 0.5rem 2.25rem 0.5rem 0.75rem;
+
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f0d78c' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 0.75rem center !important;
+
+      option {
+        background-color: #1a1a2e !important;
+        color: var(--cibola-text) !important;
+      }
+    }
+
+    // ============================================================
+    // Input Styling Consistency
+    // ============================================================
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="email"],
+    input[type="search"],
+    input[type="url"],
+    textarea {
+      background-color: var(--cibola-bg-input) !important;
+      color: var(--cibola-text) !important;
+      border: 1px solid var(--cibola-border-subtle);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &::placeholder {
+        color: var(--cibola-text-secondary, rgba(255, 255, 255, 0.6)) !important;
+        opacity: 1;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--cibola-primary-light);
+        box-shadow: 0 0 0 2px rgba(201, 164, 106, 0.2);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    // ============================================================
+    // Checkbox & Radio Enhancements
+    // ============================================================
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      accent-color: var(--cibola-primary);
+
+      &:focus {
+        outline: 2px solid rgba(201, 164, 106, 0.3);
+        outline-offset: 2px;
+      }
+    }
+
+    // ============================================================
+    // Button Enhancements
+    // ============================================================
+
+    button,
+    .button,
+    input[type="submit"],
+    input[type="button"] {
+      background: rgba(201, 168, 87, 0.15) !important;
+      color: var(--cibola-primary-light) !important;
+      border: 1px solid var(--cibola-border) !important;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: rgba(201, 168, 87, 0.25) !important;
+        border-color: var(--cibola-primary) !important;
+        transform: translateY(-1px);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      // Primary button style
+      &.primary,
+      &[type="submit"] {
+        background: linear-gradient(135deg, #c9a46a 0%, #a88a3d 100%) !important;
+        color: #000 !important;
+        border-color: #c9a46a !important;
+
+        &:hover:not(:disabled) {
+          background: linear-gradient(135deg, #f0d78c 0%, #c9a46a 100%) !important;
+        }
+      }
+    }
+
+    // ============================================================
+    // Labels & Text
+    // ============================================================
+
+    label {
+      color: var(--color-form-label, #e0e0e0) !important;
+      font-weight: 500;
+
+      &:hover {
+        color: var(--color-form-label-hover, #ffffff) !important;
+      }
+    }
+
+    .hint,
+    .notes,
+    p.notes {
+      color: var(--color-form-hint, #a0a0a0) !important;
+      font-size: 0.85rem;
+
+      &:hover {
+        color: var(--color-form-hint-hover, #c0c0c0) !important;
+      }
+    }
+
+    // Ensure placeholder text is readable - must be on specific elements
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--input-placeholder-color, #a0a0a0) !important;
+      opacity: 1;
+    }
+
+    // Select elements - fix text visibility in both collapsed and expanded states
+    select {
+      color: var(--cibola-text, #ffffff) !important;
+      background-color: var(--cibola-bg-input, rgba(0, 0, 0, 0.3)) !important;
+      padding: 0.25rem 0.5rem !important;
+      line-height: 1.4 !important;
+
+      option {
+        background-color: var(--cibola-bg-dark, #1a1a2e) !important;
+        color: var(--cibola-text, #ffffff) !important;
+        padding: 0.25rem 0.5rem;
+      }
+
+      optgroup {
+        background-color: var(--cibola-bg-darkest, #0f0f23) !important;
+        color: var(--cibola-text, #ffffff) !important;
+      }
+    }
+
+    // Foundry label override for nested elements
+    .form-group label,
+    fieldset label,
+    .form-fields label {
+      color: var(--color-form-label, #e0e0e0) !important;
+    }
+
+    // ============================================================
+    // Scrollbar Styling
+    // ============================================================
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(201, 168, 87, 0.3);
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(201, 168, 87, 0.5);
+      }
+    }
+
+    // ============================================================
+    // Form Group Styling
+    // ============================================================
+
+    .form-group {
+      margin-bottom: 1rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-weight: 500;
+      }
+
+      .form-fields {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+    }
+
+    // ============================================================
+    // Fieldset & Legend
+    // ============================================================
+
+    fieldset {
+      border: 1px solid var(--cibola-border-subtle);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+
+      legend {
+        color: var(--cibola-primary-light);
+        font-weight: 600;
+        padding: 0 0.5rem;
+
+        i {
+          margin-right: 0.5rem;
+        }
+      }
+
+      &.cibola8-glass {
+        padding: 1.25rem;
+
+        legend {
+          background: var(--cibola-bg-dark, #1a1a2e);
+          padding: 0.25rem 0.75rem;
+          border-radius: 4px;
+          font-size: 0.95rem;
+        }
+
+        .cibola8-hint {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          padding: 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 6px;
+          font-size: 0.875rem;
+          color: $cibola-text-secondary;
+          line-height: 1.5;
+
+          >i:first-child {
+            color: $cibola-primary;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+          }
+
+          a {
+            color: $cibola-primary-light;
+            text-decoration: underline;
+
+            &:hover {
+              color: #fff;
+            }
+          }
+        }
+
+        .form-group {
+          margin-bottom: 0.75rem;
+
+          label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: $cibola-text;
+
+            i {
+              color: $cibola-primary;
+            }
+          }
+
+          .form-fields {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+        }
+
+        .cibola8-divider {
+          margin: 1rem 0;
+        }
+      }
+    }
+
+    // ============================================================
+    // Links
+    // ============================================================
+
+    a {
+      color: var(--cibola-primary-light) !important;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #fff !important;
+        text-decoration: underline;
+      }
+    }
+
+    // ============================================================
+    // Tables
+    // ============================================================
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th,
+      td {
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--cibola-border-subtle);
+      }
+
+      th {
+        color: var(--cibola-primary-light);
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    }
+  }
+
+  // ============================================================
+  // UNIFIED TOOLBAR SYSTEM
+  // Base toolbar styles for all toolbar variants:
+  // - Top toolbar (.cibola8-toolbar-container)
+  // - Overlay toolbar (.cibola8-toolbar--overlay)
+  // - Compact toolbar (.cibola8-toolbar--compact) for wall detection
+  // ============================================================
+
+  // === TOOLBAR CONTAINER ===
+  // Wrapper for multiple toolbar rows
+  .cibola8-toolbar-container {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);    
+    overflow: visible; // Allow dropdowns to extend outside
+    position: relative;
+    z-index: 10;
+
+    &.imagegentoolbar {
+      margin-bottom: -8rem;
+      top: -20px;
+    }
+
+    &.cibola8-toolbar-container--overlay {
+      position: absolute;
+      bottom: 20px;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  // === TOOLBAR ROW ===
+  // Single toolbar row containing groups and buttons
+  .cibola8-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0;
+    flex-wrap: nowrap;
+
+    // Compact variant - denser padding, wrapping
+    &--compact {
+      gap: 8px;
+      padding: 6px 8px;
+      flex-wrap: wrap;
+    }
+  }
+
+  // === TOOLBAR GROUP ===
+  // Logical grouping of related buttons
+  .cibola8-toolbar__group {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  // === TOOLBAR SEPARATOR ===
+  // Vertical divider between groups
+  .cibola8-toolbar__separator {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 0.375rem;
+    flex-shrink: 0;
+
+    // Smaller separator for compact toolbars
+    .cibola8-toolbar--compact & {
+      height: 20px;
+      margin: 0 4px;
+    }
+  }
+
+  // === TOOLBAR SPACER ===
+  // Flexible space to push groups apart
+  .cibola8-toolbar__spacer {
+    flex: 1 1 auto;
+    min-width: 0.5rem;
+  }
+
+  // === TOOLBAR LABEL ===
+  // Text label within toolbar
+  .cibola8-toolbar__label {
+    font-size: 0.75em;
+    color: #ccc;
+    margin-right: 4px;
+  }
+
+  // === TOOLBAR BUTTON ===
+  // Icon-only button, 28px square
+  .cibola8-tool-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px;
+    height: 28px !important;
+    padding: 0 !important;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    flex-grow: 0;
+    line-height: 1;
+    font-size: 0 !important; // Hide any text - icon only
+    overflow: hidden;
+
+    i {
+      font-size: 0.8rem !important;
+      line-height: 1;
+      margin: 0;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #c9a46a;
+      color: #f0d78c;
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+  }
+
+  // Button variants - semantic colors
+  .cibola8-tool-btn--primary {
+    background: rgba(201, 164, 106, 0.2);
+    border-color: rgba(201, 164, 106, 0.5);
+    color: #f0d78c;
+  }
+
+  .cibola8-tool-btn--success {
+    background: rgba(40, 167, 69, 0.2);
+    border-color: rgba(40, 167, 69, 0.5);
+    color: #5cd88b;
+  }
+
+  .cibola8-tool-btn--danger {
+    background: rgba($cibola-error, 0.15);
+    border-color: rgba($cibola-error, 0.3);
+    color: color.adjust($cibola-error, $lightness: 15%);
+
+    &:hover:not(:disabled) {
+      background: rgba($cibola-error, 0.25);
+      border-color: $cibola-error;
+      box-shadow: 0 0 12px rgba($cibola-error, 0.2);
+    }
+  }
+
+  .cibola8-tool-btn--active {
+    background: rgba(201, 164, 106, 0.25);
+    border-color: #c9a46a;
+    color: #f0d78c;
+    box-shadow: 0 0 8px rgba(201, 164, 106, 0.2);
+  }
+
+  // === WALL TYPE BUTTON ===
+  // Special variant for wall type selection (uses CSS custom property for color)
+  .cibola8-tool-btn--wall-type {
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px;
+    height: 24px !important;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--wt-color, #888);
+    color: var(--wt-color, #888);
+
+    i {
+      font-size: 11px !important;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+      border-color: var(--wt-color, #888);
+      color: var(--wt-color, #888);
+    }
+
+    &.cibola8-tool-btn--active {
+      background: var(--wt-color, #888);
+      color: #000;
+      box-shadow: none;
+    }
+  }
+
+  // === BRUSH SIZE CONTROLS ===
+  // Slider and value display for brush/eraser size
+  .cibola8-toolbar__range {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    input[type="range"] {
+      width: 60px;
+      height: 4px;
+    }
+
+    .cibola8-toolbar__range-value {
+      font-family: monospace;
+      font-size: 0.75em;
+      color: var(--color-warm-1);
+      min-width: 24px;
+    }
+  }
+
+  // Dropdown at root level
+  .cibola8-dropdown {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .cibola8-dropdown__trigger {
+    width: auto !important;
+    min-width: 36px !important;
+    max-width: none !important;
+    padding: 0 6px !important;
+    gap: 2px;
+  }
+
+  .cibola8-dropdown__caret {
+    font-size: 0.55rem !important;
+    margin-left: 2px;
+    opacity: 0.7;
+  }
+
+  .cibola8-dropdown__menu {
+    display: none;
+    position: absolute;
+    top: calc(100% - 2px); // Overlap slightly to prevent gap
+    left: 0;
+    min-width: 180px;
+    padding: 6px 0.375rem 0.375rem 0.375rem; // Extra top padding to account for overlap
+    background: rgba(20, 20, 30, 0.97);
+    backdrop-filter: blur(12px);
+    border-radius: 8px;
+    border: 1px solid rgba(201, 164, 106, 0.3);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
+
+  .cibola8-dropdown:hover .cibola8-dropdown__menu {
+    display: block;
+  }
+
+  // Dropdown on the right side opens to the left
+  .cibola8-dropdown[data-group="output"] .cibola8-dropdown__menu {
+    left: auto;
+    right: 0;
+  }
+
+  .cibola8-dropdown__item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    font-size: 0.85rem !important;
+
+    i {
+      width: 1rem;
+      text-align: center;
+      color: #c9a46a;
+      font-size: 0.85rem;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(201, 164, 106, 0.15);
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  .cibola8-dropdown__divider {
+    height: 1px;
+    margin: 0.375rem 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  // ============================================================
+  // Image Editor Components
+  // ============================================================
+
+  &.cibola8-dark-theme {
+
+    // ===========================================
+    // Image Editor Toolbar - Additional Dark Theme Styles
+    // Base toolbar styles are defined at root level in .cibola8
+    // ===========================================
+
+    // Toggleable group active state
+    .cibola8-toolbar__group--toggleable {
+      .cibola8-tool-btn--active {
+        background: rgba($cibola-primary, 0.25);
+        border-color: $cibola-primary;
+        color: $cibola-primary-light;
+        box-shadow: 0 0 8px rgba($cibola-primary, 0.2);
+      }
+    }
+
+    // Higher specificity overrides for Foundry buttons
+    .cibola8-toolbar button.cibola8-tool-btn,
+    button.cibola8-tool-btn {
+      // Disabled state - "never hide, always explain"
+      &:disabled,
+      &[disabled] {
+        pointer-events: auto; // Allow tooltip to show
+      }
+
+      // Danger variant
+      &--danger {
+        background: rgba($cibola-error, 0.15);
+        border-color: rgba($cibola-error, 0.3);
+        color: color.adjust($cibola-error, $lightness: 15%);
+
+        &:hover:not(:disabled) {
+          background: rgba($cibola-error, 0.25);
+          border-color: $cibola-error;
+          box-shadow: 0 0 12px rgba($cibola-error, 0.2);
+        }
+      }
+    }
+
+    // Context label (for brush size, etc.)
+    .cibola8-context-label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: $cibola-text-secondary;
+      font-size: 0.8rem;
+      margin-right: 0.25rem;
+
+      i {
+        color: $cibola-primary;
+        font-size: 0.85rem;
+      }
+    }
+
+    // Brush size slider
+    .cibola8-brush-size-slider {
+      width: 100px;
+      height: 4px;
+      background: $cibola-bg-input;
+      border-radius: 2px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        background: $cibola-primary;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform $cibola-transition-fast;
+      }
+
+      &::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+
+      &::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        background: $cibola-primary;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .cibola8-brush-size-value {
+      color: $cibola-text;
+      font-weight: 500;
+      font-size: 0.8rem;
+      min-width: 35px;
+      text-align: center;
+    }
+
+    // Selection actions row - button styles
+    .cibola8-selection-actions {
+      .cibola8-tool-btn--primary {
+        background: rgba($cibola-primary, 0.2);
+        border-color: rgba($cibola-primary, 0.4);
+
+        &:hover {
+          background: rgba($cibola-primary, 0.3);
+        }
+      }
+
+      .cibola8-tool-btn--danger {
+        background: rgba($cibola-error, 0.2);
+        border-color: rgba($cibola-error, 0.4);
+
+        &:hover {
+          background: rgba($cibola-error, 0.3);
+        }
+      }
+    }
+
+    // Submenus
+    .cibola8-submenu {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(20, 20, 30, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: $cibola-border-radius;
+      border: 1px solid $cibola-border;
+      box-shadow: $cibola-shadow-lg;
+      z-index: 100;
+      min-width: 150px;
+
+      &.hidden {
+        display: none;
+      }
+    }
+
+    .cibola8-submenu-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      background: transparent;
+      border: none;
+      border-radius: $cibola-border-radius-sm;
+      color: $cibola-text-secondary;
+      text-align: left;
+      cursor: pointer;
+      transition: all $cibola-transition-fast;
+      white-space: nowrap;
+
+      i {
+        width: 1.2rem;
+        text-align: center;
+        color: $cibola-primary;
+      }
+
+      &:hover {
+        background: rgba($cibola-primary, 0.15);
+        color: $cibola-text;
+      }
+    }
+
+    // Canvas wrapper for proper toolbar positioning
+    .cibola8-canvas-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 300px;
+      overflow: visible;
+    }
+
+    // Image canvas container
+    .cibola8-image-canvas {
+      position: relative;
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: $cibola-border-radius;
+      overflow: hidden;
+      min-height: 300px;
+
+      // PIXI canvas element - fill container absolutely
+      .cibola8-canvas__pixi {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      // Hide fallback image when canvas is active
+      .cibola8-canvas-fallback.hidden {
+        display: none;
+      }
+    }
+
+    // Zoom controls inline in toolbar
+    .cibola8-zoom-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: auto; // Push to right side of toolbar
+
+      .cibola8-zoom-value {
+        min-width: 2.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: $cibola-text-secondary;
+        padding: 0 0.25rem;
+      }
+    }
+
+    // Main image display
+    .cibola8-main-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: $cibola-border-radius-sm;
+    }
+
+    // History sidebar - compact history panel with border
+    .cibola8-history-sidebar {
+      min-width: 120px;
+      max-width: 180px;
+      flex: 0 0 auto !important;
+      align-self: stretch;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid $cibola-border-subtle;
+      border-radius: $cibola-border-radius;
+      padding: 0.5rem;
+
+      &.songhistory {
+        max-width: 120px;
+      }
+
+      legend {
+        font-size: 0.8rem;
+        display: inline-flex; // Use inline-flex to keep on one line
+        align-items: center;
+        gap: 0.375rem;
+        color: $cibola-text-secondary;
+        white-space: nowrap; // Prevent wrapping
+        padding: 0 0.25rem;
+
+        i {
+          font-size: 0.75rem;
+          flex-shrink: 0; // Prevent icon from shrinking
+        }
+      }
+
+      >div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      img,
+      audio {
+        width: 100%;
+        max-width: 100%;
+        border-radius: $cibola-border-radius-sm;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all $cibola-transition-fast;
+
+        &:hover {
+          border-color: $cibola-primary;
+          box-shadow: $cibola-shadow-glow;
+        }
+
+        &.selected {
+          border-color: $cibola-primary-light;
+        }
+      }
+
+      // Hide when empty (no children in inner div)
+      &.hidden {
+        display: none !important;
+      }
+    }
+
+    // Sidebar tabs for switching between History and Gallery
+    .cibola8-sidebar-tabs {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: $cibola-border-radius;
+      margin-bottom: 0.5rem;
+
+      .cibola8-sidebar-tab {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.5rem;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: $cibola-border-radius-sm;
+        color: $cibola-text-muted;
+        font-size: 0.7rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all $cibola-transition-fast;
+        white-space: nowrap;
+
+        i {
+          font-size: 0.75rem;
+        }
+
+        &:hover {
+          color: $cibola-text-secondary;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        &.active {
+          color: $cibola-text;
+          background: rgba($cibola-primary, 0.15);
+          border-color: rgba($cibola-primary, 0.3);
+
+          i {
+            color: $cibola-primary;
+          }
+        }
+      }
+    }
+
+    // Sidebar content container
+    .cibola8-sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      &.hidden {
+        display: none !important;
+      }
+    }
+
+    // Shared history grid - used by image history, TTS history, and any history container
+    .cibola8-history-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: min-content;
+      align-items: start;
+      gap: 0.375rem;
+      padding: 0.25rem;
+      width: 100%;
+
+      .cibola8-history-item {
+        aspect-ratio: 1;
+        min-height: 48px;
+        width: 100%;
+
+        img,
+        .cibola8-history-audio-icon {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .cibola8-history-audio-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+
+    // Song history uses a single column - one column is enough
+    .songhistory .cibola8-history-grid {
+      grid-template-columns: 1fr;
+    }
+
+    // Sidebar history panel
+    .cibola8-sidebar-history {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+
+      // History items use gallery item styling (defined in .cibola8-gallery-embedded)
+      .cibola8-history-item {
+        // Audio icon styling for TTS/music history
+        .cibola8-history-audio-icon {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-size: cover;
+          background-position: center;
+          background-color: rgba(0, 0, 0, 0.3);
+
+          i {
+            font-size: 1.25rem;
+            color: $cibola-text-muted;
+          }
+        }
+      }
+    }
+
+    // Sidebar gallery panel (embedded gallery view)
+    .cibola8-sidebar-gallery {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    // Canvas loading state
+    .cibola8-canvas-wrapper {
+      position: relative;
+
+      &.cibola8-loading {
+
+        // Overlay
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.6);
+          z-index: 100;
+        }
+
+        // Pure CSS spinner (no Font Awesome dependency)
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 2.5rem;
+          height: 2.5rem;
+          margin: -1.25rem 0 0 -1.25rem;
+          border: 3px solid rgba(255, 255, 255, 0.2);
+          border-top-color: $cibola-primary-light;
+          border-radius: 50%;
+          z-index: 101;
+          animation: cibola-spin 0.8s linear infinite;
+        }
+      }
+    }
+
+    // Embedded gallery component styles
+    .cibola8-gallery-embedded {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+
+      .cibola8-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: min-content;
+        align-items: start;
+        gap: 0.375rem;
+        padding: 0.25rem;
+      }
+
+      .cibola8-gallery-item {
+        position: relative;
+        height: fit-content;
+        border-radius: $cibola-border-radius-sm;
+        overflow: hidden;
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0.2);
+        transition: all $cibola-transition-fast;
+
+        // Loading spinner overlay
+        .cibola8-gallery-item-loader {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.4);
+          z-index: 4;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity $cibola-transition-fast;
+
+          i {
+            font-size: 1.25rem;
+            color: $cibola-primary-light;
+          }
+        }
+
+        // Show loader when item is loading
+        &--loading {
+          .cibola8-gallery-item-loader {
+            opacity: 1;
+          }
+
+          img {
+            opacity: 0.3;
+          }
+        }
+
+        &:hover {
+          transform: scale(1.03);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+          z-index: 5;
+
+          .cibola8-gallery-item-overlay {
+            opacity: 1;
+          }
+        }
+
+        img {
+          width: 100%;
+          height: auto;
+          display: block;
+          transition: opacity $cibola-transition-fast;
+
+          &[data-src]:not([src]) {
+            opacity: 0;
+          }
+        }
+
+        // Badges positioned absolutely over the image
+        .cibola8-gallery-badges {
+          position: absolute;
+          top: 4px;
+          left: 4px;
+          display: flex;
+          flex-direction: row;
+          gap: 3px;
+          z-index: 3;
+          pointer-events: none;
+
+          .cibola8-gallery-badge {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+
+            &--featured {
+              background: linear-gradient(135deg, #ffd700, #ff8c00);
+              color: #1a1a1a;
+            }
+
+            &--publicelement {
+              background: linear-gradient(135deg, $cibola-primary, $cibola-primary-light);
+              color: #1a1a1a;
+            }
+          }
+        }
+
+        // Hover overlay with plus icon
+        .cibola8-gallery-item-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          transition: opacity $cibola-transition-fast;
+          z-index: 2;
+
+          i {
+            font-size: 1.5rem;
+            color: $cibola-primary-light;
+          }
+        }
+      }
+
+      .cibola8-gallery-loading,
+      .cibola8-gallery-empty {
+        @extend %flex-center;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        color: $cibola-text-muted;
+
+        i {
+          font-size: 1.5rem;
+          opacity: 0.5;
+        }
+
+        span {
+          font-size: 0.75rem;
+        }
+      }
+
+      .cibola8-gallery-loading i {
+        animation: cibola-spin 1s linear infinite;
+      }
+
+      // Infinite scroll sentinel
+      .cibola8-gallery-sentinel {
+        height: 20px;
+        width: 100%;
+      }
+    }
+
+    // Image workspace container
+    .cibola8-image-workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      overflow: visible; // Allow dropdowns to extend outside
+
+      // Ensure toolbar container can show dropdowns
+      .cibola8-toolbar-container {
+        overflow: visible;
+      }
+    }
+
+    // Badge container
+    .cibola8-badges {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      display: flex;
+      gap: 0.25rem;
+      z-index: 5;
+    }
+
+    // Warning box
+    .cibola8-warning-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba($cibola-warning, 0.1);
+      border: 1px solid rgba($cibola-warning, 0.3);
+      border-radius: $cibola-border-radius;
+      color: $cibola-warning;
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+
+    // Localizer specific styles
+    .cibola8-translation-panel {
+      fieldset {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: $cibola-border-subtle;
+      }
+    }
+
+    .cibola8-translation-flow {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .cibola8-source-panel,
+    .cibola8-target-panel {
+      min-width: 200px;
+      text-align: center;
+
+      .form-fields {
+        justify-content: center;
+      }
+    }
+
+    .cibola8-scroll-icon {
+      opacity: 0.7;
+      margin: 0.5rem auto;
+      display: block;
+    }
+
+    .cibola8-flow-arrow {
+      position: absolute;
+      right: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.6;
+    }
+
+    .cibola8-batch-option {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid $cibola-border-subtle;
+
+      .form-fields {
+        gap: 0.75rem;
+      }
+    }
+
+    .cibola8-select-enhanced {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid $cibola-border-subtle;
+      border-radius: $cibola-border-radius-sm;
+      padding: 0.5rem 0.75rem;
+      color: $cibola-text;
+      cursor: pointer;
+      transition: all $cibola-transition-fast;
+
+      &:hover,
+      &:focus {
+        border-color: $cibola-primary;
+        outline: none;
+      }
+    }
+
+    .cibola8-action-section {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid $cibola-border-subtle;
+      text-align: center;
+    }
+
+    // ============================================================
+    // Name Generator Components
+    // ============================================================
+
+    .cibola8-prompt-row {
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid $cibola-border-subtle;
+      margin-bottom: 0.75rem;
+    }
+
+    .cibola8-token-row {
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: $cibola-border-radius-sm;
+      transition: background $cibola-transition-fast;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    }
+
+    .cibola8-token-portrait {
+      img {
+        border-radius: 50%;
+        border: 2px solid $cibola-border-subtle;
+        transition: all $cibola-transition-fast;
+      }
+
+      &:hover img {
+        border-color: $cibola-primary;
+        box-shadow: $cibola-shadow-glow;
+      }
+    }
+
+    .cibola8-gender-selector {
+      .cibola8-gender-icon {
+        color: $cibola-text-muted;
+        margin-right: 0.25rem;
+      }
+    }
+
+    .cibola8-name-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid $cibola-border-subtle;
+      border-radius: $cibola-border-radius-sm;
+      padding: 0.5rem;
+      color: $cibola-text;
+
+      &:focus {
+        border-color: $cibola-primary;
+        outline: none;
+      }
+    }
+
+    .cibola8-textarea {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid $cibola-border-subtle;
+      border-radius: $cibola-border-radius-sm;
+      padding: 0.5rem;
+      color: $cibola-text;
+      resize: vertical;
+      min-height: 60px;
+
+      &:focus {
+        border-color: $cibola-primary;
+        outline: none;
+      }
+    }
+
+    // ============================================================
+    // Sample/Audio Card
+    // ============================================================
+
+    .cibola8-sample-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid $cibola-border-subtle;
+      margin-bottom: 0.5rem;
+
+      legend {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+
+    .cibola8-sample-controls {
+      gap: 0.5rem;
+      justify-content: center;
+      padding: 0.25rem;
+    }
+
+    // ============================================================
+    // Queue/Table Components
+    // ============================================================
+
+    .cibola8-table-container {
+      overflow-x: auto;
+    }
+
+    .cibola8-queue-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead tr {
+        background: rgba(0, 0, 0, 0.3);
+
+        th {
+          padding: 0.75rem;
+          text-align: center;
+          color: $cibola-primary-light;
+          font-weight: 600;
+          border-bottom: 2px solid $cibola-border;
+        }
+      }
+
+      tbody tr {
+        border-bottom: 1px solid $cibola-border-subtle;
+        transition: background $cibola-transition-fast;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.03);
+        }
+      }
+
+      td {
+        padding: 0.5rem;
+      }
+    }
+
+    .cibola8-queue-row {
+      animation: cibola-fadeIn 0.2s ease;
+    }
+
+    .cibola8-queue-thumbnail {
+      border-radius: $cibola-border-radius-sm;
+      border: 1px solid $cibola-border-subtle;
+    }
+
+    .cibola8-doc-link {
+      color: $cibola-primary-light !important;
+      text-decoration: none;
+
+      &:hover {
+        color: #fff !important;
+        text-decoration: underline;
+      }
+    }
+
+    .cibola8-progress-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      background: rgba($cibola-primary, 0.2);
+      border-radius: $cibola-border-radius-sm;
+      font-size: 0.85rem;
+      color: $cibola-primary-light;
+    }
+
+    .cibola8-status-breakdown {
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+
+    .cibola8-status-success {
+      color: $cibola-success;
+    }
+
+    .cibola8-status-error {
+      color: $cibola-error;
+    }
+
+    .cibola8-empty-row {
+      padding: 2rem !important;
+    }
+
+    // ============================================================
+    // Dictionary/Editor Components
+    // ============================================================
+
+    .cibola8-dictionary-section {
+      margin-bottom: 1rem;
+
+      legend {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+
+    .cibola8-add-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: rgba($cibola-success, 0.2);
+      border-radius: 50%;
+      color: $cibola-success;
+      cursor: pointer;
+      transition: all $cibola-transition-fast;
+      margin-left: 0.5rem;
+
+      &:hover {
+        background: rgba($cibola-success, 0.3);
+        transform: scale(1.1);
+      }
+    }
+
+    .cibola8-dict-entry {
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: $cibola-border-radius-sm;
+      margin-bottom: 0.25rem;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .form-group {
+        flex: 1;
+        margin: 0;
+      }
+    }
+
+    .cibola8-dict-key {
+      font-family: monospace;
+      color: $cibola-primary;
+    }
+
+    .cibola8-dict-input {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid $cibola-border-subtle;
+      border-radius: $cibola-border-radius-sm;
+      padding: 0.35rem 0.5rem;
+      color: $cibola-text;
+
+      &:focus {
+        border-color: $cibola-primary;
+        outline: none;
+      }
+    }
+
+    // ============================================================
+    // Generator Layout Components
+    // ============================================================
+
+    .cibola8-settings-row {
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .cibola8-generator-layout {
+      gap: 1rem;
+    }
+
+    .cibola8-prompt-panel,
+    .cibola8-result-panel {
+      min-height: 200px;
+
+      textarea {
+        flex: 1;
+        min-height: 150px;
+      }
+    }
+
+    .cibola8-result-content {
+      flex: 1;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: $cibola-border-radius-sm;
+      line-height: 1.6;
+    }
+
+    // ============================================================
+    // Horde Container
+    // ============================================================
+
+    .cibola8-horde-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      >div {
+        flex: 0 0 calc(25% - 0.5rem);
+        min-width: 100px;
+      }
+    }
+
+    // ============================================================
+    // Utility Classes
+    // ============================================================
+
+    .cibola8-text-muted {
+      color: $cibola-text-muted;
+    }
+
+    .cibola8-input {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid $cibola-border-subtle;
+      border-radius: $cibola-border-radius-sm;
+      padding: 0.5rem;
+      color: $cibola-text;
+
+      &:focus {
+        border-color: $cibola-primary;
+        outline: none;
+      }
+    }
+
+    // ============================================================
+    // Vector Store Styles
+    // ============================================================
+
+    .cibola8-vector-store {
+      @extend %flex-col;
+      box-sizing: border-box;
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 0;
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden auto;
+      padding: 1.25rem;
+      gap: 1.25rem;
+
+      > .cibola8-vector-header,
+      > .cibola8-info-card,
+      > .cibola8-vector-section {
+        flex: 0 0 auto;
+        min-width: 0;
+        max-width: 100%;
+      }
+    }
+
+    .cibola8-vector-header {
+      @extend %page-header;
+
+      .cibola8-vector-header-icon {
+        @extend %header-icon-lg;
+        background: linear-gradient(135deg, rgba($cibola-primary, 0.2), rgba($cibola-info, 0.1));
+      }
+
+      .cibola8-vector-header-content {
+        flex: 1;
+      }
+    }
+
+    .cibola8-info-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: $cibola-border-radius;
+      overflow: hidden;
+
+      .cibola8-info-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $cibola-text;
+
+        i {
+          color: $cibola-warning;
+        }
+      }
+
+      .cibola8-info-card-body {
+        padding: 1rem;
+      }
+    }
+
+    .cibola8-feature-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.875rem;
+        color: $cibola-text-secondary;
+
+        i {
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 6px;
+          background: rgba($cibola-primary, 0.1);
+          color: $cibola-primary;
+          font-size: 0.75rem;
+          flex-shrink: 0;
+        }
+      }
+    }
+
+    .cibola8-info-note {
+      margin-top: 1rem !important;
+      padding: 0.75rem;
+      background: rgba($cibola-info, 0.08);
+      border-radius: 6px;
+      font-size: 0.8rem !important;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      i {
+        color: $cibola-info;
+        margin-top: 0.15rem;
+      }
+    }
+
+    .cibola8-vector-section {
+      .cibola8-section-header {
+        margin-bottom: 1rem;
+
+        h3 {
+          margin: 0;
+          font-size: 1rem;
+          font-weight: 600;
+          color: $cibola-text;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          border: none;
+
+          i {
+            color: $cibola-text-muted;
+          }
+        }
+      }
+    }
+
+    .cibola8-vector-store-group {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: $cibola-border-radius;
+      margin-bottom: 1rem;
+      overflow: hidden;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .cibola8-vector-store-group-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $cibola-text;
+
+        i {
+          color: $cibola-primary;
+        }
+
+        .cibola8-badge {
+          margin-left: auto;
+        }
+      }
+
+      .cibola8-vector-store-group-files {
+        padding: 0.5rem;
+      }
+    }
+
+    .cibola8-vector-file {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      transition: all 0.2s ease;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .cibola8-vector-file-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba($cibola-info, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i {
+          font-size: 1rem;
+          color: $cibola-info;
+        }
+      }
+
+      .cibola8-vector-file-info {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 0;
+
+        .cibola8-vector-file-name {
+          font-size: 0.875rem;
+          color: $cibola-text;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .cibola8-vector-file-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+
+    // Empty state modifiers
+    .cibola8-empty-state--small {
+      padding: 1.5rem 1rem;
+
+      i {
+        font-size: 1.5rem;
+        color: $cibola-text-muted;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 0.875rem;
+        margin: 0;
+      }
+    }
+
+    // ============================================================
+    // Radial Menu Configurator Styles
+    // ============================================================
+
+    .cibola8-radial-config {
+      @extend %flex-col;
+      padding: 1.25rem;
+      gap: 1.25rem;
+    }
+
+    .cibola8-radial-header {
+      @extend %page-header;
+
+      .cibola8-radial-header-icon {
+        @extend %header-icon-lg;
+        background: linear-gradient(135deg, rgba($cibola-primary, 0.2), rgba($cibola-warning, 0.1));
+      }
+
+      .cibola8-radial-header-content {
+        flex: 1;
+      }
+    }
+
+    .cibola8-radial-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .cibola8-btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: $cibola-border-radius;
+      color: $cibola-text;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all $cibola-transition-fast;
+
+      i {
+        font-size: 0.9rem;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &--primary {
+        background: rgba($cibola-primary, 0.15);
+        border-color: rgba($cibola-primary, 0.3);
+
+        i {
+          color: $cibola-primary;
+        }
+
+        &:hover {
+          background: rgba($cibola-primary, 0.25);
+          border-color: rgba($cibola-primary, 0.5);
+        }
+      }
+
+      &--success {
+        background: rgba($cibola-success, 0.12);
+        border-color: rgba($cibola-success, 0.25);
+
+        i {
+          color: $cibola-success;
+        }
+
+        &:hover {
+          background: rgba($cibola-success, 0.2);
+          border-color: rgba($cibola-success, 0.4);
+        }
+      }
+
+      &.dragMe {
+        cursor: grab;
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+    }
+
+    .cibola8-info-card--compact {
+      .cibola8-info-card-body {
+        padding: 0.75rem 1rem;
+      }
+    }
+
+    .cibola8-feature-list--compact {
+      gap: 0.5rem;
+
+      li {
+        font-size: 0.8rem;
+
+        i {
+          width: 24px;
+          height: 24px;
+          font-size: 0.7rem;
+        }
+      }
+    }
+
+    .cibola8-radial-section {
+      .cibola8-section-header {
+        margin-bottom: 1rem;
+
+        h3 {
+          margin: 0;
+          font-size: 1rem;
+          font-weight: 600;
+          color: $cibola-text;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          border: none;
+
+          i {
+            color: $cibola-text-muted;
+          }
+        }
+      }
+    }
+
+    .cibola8-radial-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .cibola8-radial-group {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: $cibola-border-radius;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+
+      &.dragover {
+        border-color: $cibola-primary;
+        background: rgba($cibola-primary, 0.05);
+      }
+
+      &--locked {
+        .cibola8-radial-group-header {
+          background: rgba(255, 255, 255, 0.03);
+        }
+      }
+
+      .cibola8-radial-group-header {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .cibola8-radial-group-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .cibola8-radial-group-input {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: 0;
+
+        .cibola8-input {
+          flex: 1;
+          min-width: 0;
+          padding: 0.5rem 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 6px;
+          color: $cibola-text;
+          font-size: 0.875rem;
+
+          &::placeholder {
+            color: $cibola-text-muted;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: rgba($cibola-primary, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+          }
+        }
+      }
+
+      .cibola8-radial-group-thumb {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .cibola8-radial-group-icon-placeholder {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i {
+          font-size: 0.875rem;
+          color: $cibola-text-muted;
+        }
+      }
+
+      .cibola8-radial-group-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .cibola8-radial-group-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $cibola-text;
+
+        i {
+          color: $cibola-primary;
+        }
+      }
+
+      .cibola8-radial-group-content {
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .cibola8-radial-group {
+          margin: 0;
+        }
+      }
+    }
+
+    .cibola8-radial-drop-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: $cibola-text-muted;
+      font-size: 0.8rem;
+      text-align: center;
+
+      i {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.5;
+      }
+    }
+
+    .cibola8-radial-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.1);
+
+        .cibola8-radial-item-actions {
+          opacity: 1;
+        }
+      }
+
+      .cibola8-radial-item-link {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: $cibola-text;
+        cursor: pointer;
+        min-width: 0;
+
+        &:hover {
+          color: $cibola-primary-light;
+        }
+      }
+
+      .cibola8-radial-item-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        object-fit: cover;
+        flex-shrink: 0;
+
+        &--fa {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba($cibola-primary, 0.1);
+
+          i {
+            font-size: 0.8rem;
+            color: $cibola-primary;
+          }
+        }
+      }
+
+      .cibola8-radial-item-name {
+        font-size: 0.875rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cibola8-radial-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+    }
+
+    // Link styling
+    .cibola8-link {
+      color: $cibola-text;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: $cibola-primary-light;
+      }
+    }
+
+    // ============================================================
+    // Dialog Styles (Grudge, Save As, etc.)
+    // ============================================================
+
+    &.cibola8-dialog {
+      .window-content {
+        padding: 0;
+      }
+    }
+
+    .cibola8-dialog-content {
+      @extend %flex-col;
+      padding: 1.25rem;
+      gap: 1.25rem;
+    }
+
+    .cibola8-dialog-header {
+      @extend %flex-start;
+      gap: 1rem;
+
+      .cibola8-dialog-header-icon {
+        @extend %header-icon-lg;
+        background: linear-gradient(135deg, rgba($cibola-primary, 0.2), rgba($cibola-warning, 0.1));
+
+        &--feedback {
+          background: linear-gradient(135deg, rgba($cibola-info, 0.2), rgba($cibola-primary, 0.1));
+
+          i {
+            color: $cibola-info;
+          }
+        }
+
+        &--warning {
+          background: linear-gradient(135deg, rgba($cibola-warning, 0.2), rgba($cibola-error, 0.1));
+
+          i {
+            color: $cibola-warning;
+          }
+        }
+      }
+
+      .cibola8-dialog-header-content {
+        flex: 1;
+
+        h2 {
+          margin: 0 0 0.25rem 0;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: $cibola-text;
+          border: none;
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.875rem;
+          color: $cibola-text-muted;
+          line-height: 1.5;
+        }
+      }
+    }
+
+    .cibola8-contact-section {
+      .cibola8-section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0 0 1rem 0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $cibola-text;
+
+        i {
+          color: $cibola-text-muted;
+        }
+      }
+    }
+
+    .cibola8-contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .cibola8-contact-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: $cibola-border-radius;
+      color: $cibola-text;
+      text-decoration: none;
+      transition: all $cibola-transition-fast;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
+
+        .cibola8-contact-card-arrow {
+          opacity: 1;
+          transform: translateX(2px);
+        }
+      }
+
+      .cibola8-contact-card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i {
+          font-size: 1.1rem;
+        }
+      }
+
+      .cibola8-contact-card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+        min-width: 0;
+      }
+
+      .cibola8-contact-card-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .cibola8-contact-card-desc {
+        font-size: 0.75rem;
+        color: $cibola-text-muted;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cibola8-contact-card-arrow {
+        font-size: 0.7rem;
+        color: $cibola-text-muted;
+        opacity: 0;
+        transition: all 0.2s ease;
+      }
+
+      // Platform-specific colors
+      &--discord {
+        .cibola8-contact-card-icon {
+          background: rgba(#5865F2, 0.15);
+
+          i {
+            color: #5865F2;
+          }
+        }
+
+        &:hover {
+          border-color: rgba(#5865F2, 0.4);
+        }
+      }
+
+      &--github {
+        .cibola8-contact-card-icon {
+          background: rgba(#ffffff, 0.1);
+
+          i {
+            color: #ffffff;
+          }
+        }
+
+        &:hover {
+          border-color: rgba(#ffffff, 0.3);
+        }
+      }
+
+      &--patreon {
+        .cibola8-contact-card-icon {
+          background: rgba(#FF424D, 0.15);
+
+          i {
+            color: #FF424D;
+          }
+        }
+
+        &:hover {
+          border-color: rgba(#FF424D, 0.4);
+        }
+      }
+
+      &--youtube {
+        .cibola8-contact-card-icon {
+          background: rgba(#FF0000, 0.15);
+
+          i {
+            color: #FF0000;
+          }
+        }
+
+        &:hover {
+          border-color: rgba(#FF0000, 0.4);
+        }
+      }
+    }
+
+    .cibola8-changelog-link {
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+      p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: $cibola-text-muted;
+        text-align: center;
+
+        a {
+          color: $cibola-primary;
+          text-decoration: none;
+
+          &:hover {
+            color: $cibola-primary-light;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    // Form Group for dialogs
+    .cibola8-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .cibola8-form-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $cibola-text;
+
+        i {
+          color: $cibola-text-muted;
+          font-size: 0.8rem;
+        }
+      }
+
+      .cibola8-input,
+      input[type="text"],
+      input[type="number"],
+      select {
+        padding: 0.625rem 0.875rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: $cibola-border-radius;
+        color: $cibola-text;
+        font-size: 0.875rem;
+        transition: all $cibola-transition-fast;
+
+        &::placeholder {
+          color: $cibola-text-muted;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: rgba($cibola-primary, 0.5);
+          background: rgba(255, 255, 255, 0.08);
+          box-shadow: 0 0 0 3px rgba($cibola-primary, 0.1);
+        }
+      }
+
+      file-picker {
+        button {
+          padding: 0.625rem 0.875rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: $cibola-border-radius;
+          color: $cibola-text;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all $cibola-transition-fast;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+          }
+        }
+      }
+    }
+
+    // ============================================================
+    // Context Menu (Header Icon Dropdowns)
+    // ============================================================
+
+    .controls-dropdown {
+      background: $cibola-bg-dark;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: $cibola-border-radius;
+      box-shadow: $cibola-shadow-lg;
+      color: white;
+      overflow: hidden;      
+    }
+
+    // ============================================================
+    // Localizer Application Styles
+    // ============================================================
+
+    .cibola8-localizer-tab {
+      box-sizing: border-box;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden auto;
+
+      &.active {
+        flex-direction: column;
+      }
+    }
+
+    .cibola8-localizer,
+    .cibola8-translations {
+      @extend %flex-col;
+      box-sizing: border-box;
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: 100%;
+      width: 100%;
+      padding: 1.25rem;
+      gap: 1.25rem;
+    }
+
+    .cibola8-localizer-header {
+      @extend %page-header;
+
+      .cibola8-localizer-header-icon {
+        @extend %header-icon-lg;
+        background: linear-gradient(135deg, rgba($cibola-primary, 0.2), rgba($cibola-info, 0.1));
+      }
+
+      .cibola8-localizer-header-content {
+        flex: 1;
+      }
+    }
+
+    .cibola8-localizer-panel {
+      @extend %flex-col;
+      gap: 1.25rem;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .cibola8-translation-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 1rem;
+      min-width: 0;
+      max-width: 100%;
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+      }
+    }
+
+    .cibola8-translation-card {
+      flex: 1;
+      min-width: 0;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: $cibola-border-radius;
+      overflow: hidden;
+
+      &--source {
+        .cibola8-translation-card-header {
+          background: rgba($cibola-info, 0.1);
+
+          i {
+            color: $cibola-info;
+          }
+        }
+      }
+
+      &--target {
+        .cibola8-translation-card-header {
+          background: rgba($cibola-success, 0.1);
+
+          i {
+            color: $cibola-success;
+          }
+        }
+      }
+    }
+
+    .cibola8-translation-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: $cibola-text;
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+
+    .cibola8-translation-card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 0;
+      max-width: 100%;
+
+      .cibola8-form-group {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .cibola8-select {
+        box-sizing: border-box;
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+
+    .cibola8-translation-card-visual {
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0;
+
+      img {
+        max-width: 80px;
+        height: auto;
+        opacity: 0.8;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      }
+    }
+
+    .cibola8-translation-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1rem 0.5rem;
+      min-width: 100px;
+    }
+
+    .cibola8-flow-icon {
+      font-size: 1.25rem;
+      color: $cibola-primary;
+    }
+
+    .cibola8-batch-toggle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+
+      input[type="checkbox"] {
+        display: none;
+      }
+
+      .cibola8-batch-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        i {
+          font-size: 1rem;
+          color: $cibola-warning;
+        }
+      }
+
+      .cibola8-batch-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+      }
+
+      .cibola8-batch-savings {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: $cibola-success;
+        font-weight: 600;
+      }
+    }
+
+    .cibola8-localizer-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+      .cibola8-hint {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: $cibola-text-secondary;
+
+        i {
+          color: $cibola-primary;
+        }
+      }
+    }
+
+    // Section Cards (for translations page)
+    .cibola8-section-card {
+      min-width: 0;
+      max-width: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: $cibola-border-radius;
+      overflow: hidden;
+    }
+
+    .cibola8-section-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $cibola-text;
+
+      i {
+        color: $cibola-text-muted;
+      }
+
+      .cibola8-btn--icon {
+        margin-left: auto;
+      }
+    }
+
+    .cibola8-section-card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cibola8-language-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .cibola8-add-language-form {
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+      .cibola8-hint {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+        color: $cibola-text-secondary;
+
+        i {
+          color: $cibola-primary;
+        }
+      }
+    }
+
+    .cibola8-form-group--inline {
+      flex-direction: row !important;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .cibola8-form-label {
+        white-space: nowrap;
+      }
+
+      .cibola8-select {
+        flex: 1;
+        min-width: 12rem;
+      }
+    }
+
+    // Translation table styles
+    .cibola8-translation-table-header {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $cibola-text-muted;
+    }
+
+    .cibola8-translation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .cibola8-translation-row {
+      display: flex;
+      align-items: center;
+      padding: 0.625rem 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 6px;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    .cibola8-translation-col {
+      &--module {
+        flex: 2;
+        min-width: 0;
+
+        .cibola8-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          i {
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+          }
+
+          &:hover i {
+            opacity: 1;
+          }
+        }
+      }
+
+      &--lang {
+        flex: 1;
+        text-align: center;
+      }
+
+      &--status {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+
+      &--actions {
+        width: 40px;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .cibola8-status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+
+      &--processing {
+        color: $cibola-info;
+      }
+    }
+
+    .cibola8-progress-mini {
+      width: 50px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+
+      .cibola8-progress-mini-bar {
+        height: 100%;
+        background: $cibola-info;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+    }
+
+    // Toggle switch
+    .cibola8-toggle {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+
+      input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:checked+.cibola8-toggle-slider {
+          background: $cibola-success;
+
+          &::before {
+            transform: translateX(18px);
+          }
+        }
+      }
+
+      .cibola8-toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 22px;
+        transition: all 0.2s ease;
+
+        &::before {
+          content: '';
+          position: absolute;
+          height: 16px;
+          width: 16px;
+          left: 3px;
+          bottom: 3px;
+          background: white;
+          border-radius: 50%;
+          transition: all 0.2s ease;
+        }
+      }
+    }
+
+    // Select styling
+    .cibola8-select {
+      padding: 0.625rem 2rem 0.625rem 0.875rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: $cibola-border-radius;
+      color: $cibola-text;
+      font-size: 0.875rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' fill-opacity='0.5' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      transition: all $cibola-transition-fast;
+
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: rgba($cibola-primary, 0.5);
+        box-shadow: 0 0 0 3px rgba($cibola-primary, 0.1);
+      }
+
+      option {
+        background: $cibola-bg-dark;
+        color: $cibola-text;
+      }
+    }
+
+  }
+
+  // ============================================================
+  // Cibola8 Injected Buttons (Sidebar & Scene Config)
+  // ============================================================
+  // These buttons are injected into Foundry's native UI and need
+  // to work outside of the .cibola8 namespace
+
+  // Header button in document sheets (Actor, Item, Journal, etc.)
+  .AiBothGen.header-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    background: linear-gradient(135deg, rgba($cibola-primary, 0.15), rgba($cibola-primary, 0.05));
+    border: 1px solid rgba($cibola-primary, 0.4);
+    border-radius: $cibola-border-radius;
+    color: $cibola-primary-light;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $cibola-transition-fast;
+    position: relative;
+
+    .cib8-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba($cibola-primary, 0.25), rgba($cibola-primary, 0.1));
+      border-color: rgba($cibola-primary, 0.6);
+      color: $cibola-primary-light;
+      box-shadow: 0 0 12px rgba($cibola-primary, 0.2);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 0 8px rgba($cibola-primary, 0.15);
+    }
+  }
+
+  // Save button for temporary items (in document sheets)
+  .cibsavebutton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    margin: 0.75rem;
+    background: linear-gradient(135deg, rgba(#ff6b35, 0.9), rgba(#ff9500, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $cibola-border-radius;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $cibola-transition-fast;
+    position: relative;
+    z-index: 1;
+    max-height: 50px;
+
+    .cib8-icon {
+      flex: 0 0 25px;
+      width: 25px;
+      height: 25px;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(#ff7b45, 1), rgba(#ffa520, 1));
+      box-shadow: 0 4px 16px rgba(#ff6b35, 0.35);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(#ff6b35, 0.25);
+    }
+  }
+
+  // Journal sidebar variant
+  .journal-sidebar .cibsavebutton {
+    max-height: 70px;
+    flex: 1;
+    margin: 0.5rem;
+  }
+
+  // Cibola injected button (used in scene config, etc.)
+  // Works with Foundry's native form-group structure
+  .cibola8-inject-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, $cibola-bg-dark, $cibola-bg-darkest);
+    border: 1px solid rgba($cibola-primary, 0.5);
+    border-radius: $cibola-border-radius;
+    color: $cibola-primary-light;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $cibola-transition-fast;
+
+    .cib8-icon,
+    .icon-cibola8 {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, color.adjust($cibola-bg-dark, $lightness: 5%), $cibola-bg-dark);
+      border-color: rgba($cibola-primary, 0.7);
+      box-shadow: 0 0 12px rgba($cibola-primary, 0.25);
+      color: $cibola-primary-light;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  // Generic cibola8button class (used in various places)
+  .cibola8button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: linear-gradient(135deg, rgba($cibola-primary, 0.2), rgba($cibola-primary, 0.08));
+    border: 1px solid rgba($cibola-primary, 0.4);
+    border-radius: $cibola-border-radius;
+    color: $cibola-primary-light;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $cibola-transition-fast;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba($cibola-primary, 0.3), rgba($cibola-primary, 0.15));
+      border-color: rgba($cibola-primary, 0.6);
+      box-shadow: 0 0 10px rgba($cibola-primary, 0.2);
+    }
+
+    &.active {
+      background: linear-gradient(135deg, rgba($cibola-primary, 0.4), rgba($cibola-primary, 0.25));
+      border-color: $cibola-primary;
+      color: $cibola-text;
+    }
+  }
+}

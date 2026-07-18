@@ -1,0 +1,77 @@
+{{#if (or button.buttons button.isSection)}}
+    <div class="cibola8-radial-group {{ifThen button.isSection 'cibola8-radial-group--editable' 'cibola8-radial-group--locked'}}" data-button="{{button.id}}">
+        <div class="cibola8-radial-group-header">
+            {{#if button.editable}}
+            <div class="cibola8-radial-group-controls">
+                <div class="cibola8-radial-group-input">
+                    {{#if button.img}}
+                    <img src="{{button.img}}" class="cibola8-radial-group-thumb" alt="" />
+                    {{else}}
+                    <div class="cibola8-radial-group-icon-placeholder">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    {{/if}}
+                    <input type="text" name="content_{{button.id}}" class="sectionchange cibola8-input" value="{{button.content}}" placeholder="{{localize 'cibola8.radialMenu.placeholderContent'}}" />
+                </div>
+                <div class="cibola8-radial-group-actions">
+                    <button type="button" name="img_{{button.id}}" data-tooltip="{{localize 'cibola8.radialMenu.editImage'}}" class="cibola8-btn cibola8-btn--icon" data-action="editImage">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    {{#if button.img}}
+                    <button type="button" name="textHidden_{{button.id}}" data-tooltip="{{localize 'cibola8.radialMenu.hideText'}}" class="cibola8-btn cibola8-btn--icon" data-action="hideText">
+                        <i class="fas fa-eye{{ifThen button.textHidden '-slash' ''}}"></i>
+                    </button>
+                    {{/if}}
+                    <button type="button" data-tooltip="{{localize 'cibola8.radialMenu.addSection'}}" class="cibola8-btn cibola8-btn--icon cibola8-btn--success" data-action="addSection">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button type="button" data-tooltip="{{localize 'cibola8.radialMenu.removeSection'}}" class="cibola8-btn cibola8-btn--icon cibola8-btn--danger" data-action="removeSection">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {{else}}
+            <div class="cibola8-radial-group-title">
+                <i class="fas {{button.icon}}"></i>
+                <span>{{localize button.content}}</span>
+            </div>
+            {{/if}}            
+        </div>
+        <div class="cibola8-radial-group-content">
+            {{#each button.buttons as |subButton|}}
+                {{> modules/cibola8/templates/radial/submenu.hbs button=subButton}}
+            {{/each}}
+            {{#unless button.buttons.length}}
+            <div class="cibola8-radial-drop-zone">
+                <i class="fas fa-arrow-down"></i>
+                <span>{{localize 'cibola8.radialMenu.dropHere'}}</span>
+            </div>
+            {{/unless}}
+        </div>
+    </div>
+{{else}}
+    <div class="cibola8-radial-item">
+        <a class="cibola8-radial-item-link" data-uuid="{{button.uuid}}" data-action="runFunction">
+            {{#if button.icon}}
+                <div class="cibola8-radial-item-icon cibola8-radial-item-icon--fa">
+                    <i class="fas {{button.icon}}"></i>
+                </div>
+                <span class="cibola8-radial-item-name">{{localize button.content}}</span>
+            {{else}}
+                <img class="cibola8-radial-item-icon" src="{{button.img}}" alt="" />
+                <span class="cibola8-radial-item-name">{{button.content}}</span>
+            {{/if}}            
+        </a>
+        {{#if button.editable}}
+        <div class="cibola8-radial-item-actions">
+            <button type="button" data-uuid="{{button.uuid}}" data-tooltip="{{localize 'cibola8.radialMenu.hideText'}}" class="cibola8-btn cibola8-btn--icon" data-action="hideTextElement">
+                <i class="fas fa-eye{{ifThen button.textHidden '-slash' ''}}"></i>
+            </button>
+            <button type="button" class="cibola8-btn cibola8-btn--icon cibola8-btn--danger" data-uuid="{{button.uuid}}" data-tooltip="{{localize 'cibola8.delete'}}" data-action="removeElement">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        {{/if}}
+    </div>    
+{{/if}}
+

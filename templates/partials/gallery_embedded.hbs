@@ -1,0 +1,54 @@
+{{!-- Embedded gallery for sidebar --}}
+<div class="cibola8-gallery-embedded">
+  {{#if isLoading}}
+    <div class="cibola8-gallery-loading">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>{{localize 'cibola8.AiBrowser.loading'}}</span>
+    </div>
+  {{/if}}
+  
+  {{#if items.length}}
+    <div class="cibola8-gallery-grid">
+      {{#each items}}
+        <div class="cibola8-gallery-item cibola8-gallery-item--loading" data-id="{{this.id}}">
+          <div class="cibola8-gallery-item-loader">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+          <img 
+            data-src="{{this.attributes.thumbnail}}"
+            data-origin="{{this.attributes.result}}"
+            src="modules/cibola8/templates/assets/placeholder_item.webp"
+            alt="{{this.attributes.prompt}}"
+            loading="lazy"
+          />
+          {{#if this.badges.length}}
+            <div class="cibola8-gallery-badges">
+              {{#each this.badges}}
+                <span class="cibola8-gallery-badge cibola8-gallery-badge--{{this.class}}" data-tooltip="{{localize this.label}}">
+                  <i class="{{this.icon}}"></i>
+                </span>
+              {{/each}}
+            </div>
+          {{/if}}
+          <div class="cibola8-gallery-item-overlay">
+            <i class="fas fa-plus"></i>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    {{#unless isLoading}}
+      <div class="cibola8-gallery-empty">
+        <i class="fas fa-images"></i>
+        <span>{{localize 'cibola8.AiBrowser.noImages'}}</span>
+      </div>
+    {{/unless}}
+  {{/if}}
+  
+  {{!-- Sentinel for infinite scroll --}}
+  {{#if hasMore}}
+    <div class="cibola8-gallery-sentinel">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+  {{/if}}
+</div>

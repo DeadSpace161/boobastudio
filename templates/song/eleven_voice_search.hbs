@@ -1,0 +1,71 @@
+<div class="flexrow">
+    <ul class="voicepreview">
+        <li class="flexrow" style="align-items: center; gap: 0.5rem;">
+            <audio class="voiceSamplePlayer" style="display: none;"></audio>
+        </li>
+    </ul>
+</div>
+
+<fieldset class="eleven_voice_search">
+    <legend>{{localize 'cibola8.musicgen.searchVoice'}}</legend>
+
+    {{!-- Favorites section --}}
+    <details class="voice-favorites-section" open>
+        <summary class="voice-section-header"><i class="fas fa-star"></i> {{localize 'cibola8.musicgen.favorites'}}</summary>
+        <ul class="voiceresults voicefavorites wrapping"></ul>
+        <div class="voice-favorites-empty"><i class="fas fa-star"></i> {{localize 'cibola8.musicgen.favoritesEmpty'}}</div>
+    </details>
+
+    {{!-- Comparison bar (hidden until 2+ favorites selected) --}}
+    <div class="voice-compare-bar" style="display: none;">
+        <button type="button" class="voice-compare-btn" data-action="compareVoices"><i class="fas fa-exchange-alt"></i> {{localize 'cibola8.musicgen.compareVoices'}}</button>
+        <span class="voice-compare-count"></span>
+    </div>
+
+    {{!-- Search + filters --}}
+    <input type="search" name="search" placeholder="{{localize 'cibola8.musicgen.searchVoice'}}">
+
+    {{!-- Category tabs --}}
+    <div class="voice-category-tabs">
+        {{#each useCase as |name key|}}
+        <input type="radio" class="hidden" id="usecase_{{key}}_{{../randomID}}" name="use_cases" value="{{key}}">
+        <label for="usecase_{{key}}_{{../randomID}}" class="voice-category-tab">{{name}}</label>
+        {{/each}}
+    </div>
+
+    <div class="flexrow wrapping t-spacer">
+    <div class="form-group">
+        <label>{{localize 'cibola8.AiTranslator.language'}}</label>
+        <div class="form-fields">
+            <select name="language">
+                {{selectOptions languages}}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>{{localize 'cibola8.musicgen.age'}}</label>
+        <div class="form-fields">
+            <select name="age">
+                {{selectOptions age}}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>{{localize 'cibola8.musicgen.gender'}}</label>
+        <div class="form-fields">
+            <select name="gender">
+                {{selectOptions gender}}
+            </select>
+        </div>
+    </div>
+    </div>
+    <ul class="flexrow pagination">
+
+    </ul>
+    <ul class="voiceresults wrapping">
+
+    </ul>
+    <ul class="flexrow pagination">
+
+    </ul>
+</fieldset>

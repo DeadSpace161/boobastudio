@@ -1,0 +1,24 @@
+{{#each voices.voices as |voice|}}
+  <li class="flexrow handcursor voicepick" data-public-user-id="{{voice.public_owner_id}}" data-id="{{voice.voice_id}}" data-rate="{{voice.rate}}" data-name="{{voice.name}}" data-preview-url="{{voice.preview_url}}" data-category="{{voice.use_case}}">
+    <div class="degrowth voice-actions">
+        <a class="smallbutton playSample" data-action="playSample" data-url="{{voice.preview_url}}" data-voice-id="{{voice.voice_id}}">
+            <i class="fas fa-play"></i>
+            <span class="waveform-bars">
+                <span class="wv-bar"></span><span class="wv-bar"></span><span class="wv-bar"></span><span class="wv-bar"></span><span class="wv-bar"></span>
+            </span>
+        </a>
+        <a class="voice-fav-btn{{#if voice.isFavorite}} active{{/if}}" data-action="toggleFavorite" data-voice-id="{{voice.voice_id}}" data-tooltip="cibola8.musicgen.toggleFavorite"><i class="fa{{#if voice.isFavorite}}s{{else}}r{{/if}} fa-star"></i></a>
+    </div>
+    <div class="flexcol">
+        <div>
+            <b>{{voice.name}}</b>           
+        </div>
+        <div>
+            <small>{{{voice.cost}}}{{#each voice.badges as |badge|}}<span class="cibola8-badge">{{badge.name}}</span>{{/each}}</small>
+        </div>
+        <div>
+            <small>{{voice.description}}</small> 
+        </div>
+    </div>    
+  </li>
+{{/each}}

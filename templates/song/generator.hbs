@@ -1,0 +1,111 @@
+<section class="tab standard-form scrollable {{tabs.generator.cssClass}}" data-tab="generator"
+    data-group="{{tabs.generator.group}}">
+    <div class="flexcol" style="flex: 1">
+        <div class="cibola8-intro-text cibola8-mb-3">
+            <i class="fas fa-music cibola8-intro-icon"></i>
+            <span>{{localize 'cibola8.musicgen.description'}}</span>
+        </div>
+
+        {{#unless userInfo.alive}}
+            {{{patreon}}}
+        {{else}}
+        <div class="flexrow align-child-top stretch" style="gap: 0.75rem;">
+            <div class="flexcol stretch" style="flex: 1;">
+        <fieldset class="flexcol playerblock hidden stretch cibola8-player-panel cibola8-glass">
+            <legend class="songNameLegend"><i class="fas fa-play-circle"></i></legend>
+            <div class="flexrow cibola8-player-controls">
+                <div></div>
+                <button data-tooltip="cibola8.musicgen.saveToPlaylist" data-action="saveToPlaylist" class="imgControls cibola8button smallbutton cibola8-btn cibola8-btn--primary"><i class="fas fa-save"></i></button>
+                <button type="button" data-tooltip="cibola8.musicgen.hideSongs" data-action="hideSongs" class="imgControls smallbutton"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="flexrow align-child-top cibola8-player-content">
+                <div class="showImage cibola8-album-art">
+                    <div class="showImageContainer">
+                        <img/>
+                        <div class="iContainer cibola8-loading-overlay">
+                            <div class="cibola8-spinner cibola8-spinner-lg"></div>
+                        </div>
+                    </div>                    
+                    <audio controls class="cibola8-audio-player"></audio>
+                    <p class="hint cibola8-hint">{{localize 'cibola8.musicgen.previewNote'}}</p>
+                </div>
+                <div class="cibola8-lyrics-container">                    
+                    <div class="showLyrics scrollable cibola8-lyrics-text" style="max-height: 420px;"></div>
+                </div>                
+            </div>
+        </fieldset>
+        
+        <fieldset class="flexcol promptblock stretch cibola8-prompt-panel">
+            <legend><i class="fas fa-music"></i> {{localize 'cibola8.prompt'}}</legend>
+            {{#if songModels.length}}
+            <div class="form-group">
+                <label>{{localize 'cibola8.musicgen.model'}}</label>
+                <div class="form-fields">
+                    <select name="songmodel">
+                        {{#each songModels}}
+                        <option value="{{this.id}}" data-per-length="{{this.perLength}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+            {{/if}}
+            <div class="form-group">
+                <label>{{localize 'cibola8.musicgen.songtitle'}}</label>
+                <div class="form-fields">
+                    <input type="text" name="songtitle" placeholder="{{localize 'cibola8.musicgen.songtitlehint'}}" class="cibola8-input-enhanced">
+                </div>
+            </div>
+            <div class="form-group stretch">
+                <label>{{localize 'cibola8.musicgen.lyrics'}}
+                    <button type="button" class="smallbutton cibola8button" data-action="generateLyrics" data-tooltip="cibola8.musicgen.generateLyricsHint"><i class="fas fa-wand-magic-sparkles"></i></button>
+                </label>
+                <div class="form-fields">
+                    <textarea name="lyrics" placeholder="{{localize 'cibola8.musicgen.lyricshint'}}" class="cibola8-textarea-enhanced"></textarea>
+                </div>                
+            </div>
+             <div class="form-group" data-tooltip="cibola8.musicgen.createLyricsHint">
+                <label for="createLyricscb">{{localize 'cibola8.musicgen.createLyrics'}}</label>
+                <input type="checkbox" id="createLyricscb" name="createLyrics" checked>
+            </div>
+            <div class="form-group">
+                <label>{{localize 'cibola8.musicgen.style'}}
+                    <button type="button" class="smallbutton cibola8button" data-action="enhanceStyle" data-tooltip="cibola8.improvisePromptHint"><i class="fas fa-wrench"></i></button>
+                </label>
+                <div class="form-fields">
+                    <textarea name="style" class="smallone cibola8-textarea-enhanced" placeholder="{{localize 'cibola8.musicgen.stylehint'}}"></textarea>
+                </div>
+            </div>           
+            <div class="form-group" data-tooltip="cibola8.musicgen.instrumentalhint">
+                <label for="instrumentalcb">{{localize 'cibola8.musicgen.instrumental'}}</label>
+                <input type="checkbox" id="instrumentalcb" name="instrumental">
+            </div>
+            <details class="cibola8-advanced-panel" open>
+                <summary><i class="fas fa-sliders-h"></i> {{localize 'cibola8.musicgen.advanced'}}</summary>
+                <div class="songmodelcontainer">
+                    {{{songModelFields}}}
+                </div>
+            </details>
+            <div class="flexcol cibola8-mt-2 cibola8-mb-2 cibola8-price-preview-panel">
+                <div class="manaheader songpricepreview">{{{songPricePreview}}}</div>
+                <p class="hint cibola8-hint"><i class="fas fa-clock"></i> {{localize 'cibola8.musicgen.timeHint'}}</p>
+            </div>
+            <div class="flexrow mt-2">
+                <button type="button" class="cibola8-btn cibola8-btn--primary cibola8-btn--lg" data-action="generate" data-tooltip="cibola8.spinner">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    {{localize 'cibola8.musicgen.title'}}
+                </button>
+            </div>
+        </fieldset>
+            </div>
+
+            <fieldset class="flexcol imageHistory songhistory hidden cibola8-history-sidebar">
+                <legend><i class="fas fa-clock-rotate-left"></i> {{localize 'cibola8.history'}}</legend>
+                <div class="cibola8-history-grid"></div>
+            </fieldset>
+        </div>
+        {{/unless}}       
+   
+    </div>
+
+</section>

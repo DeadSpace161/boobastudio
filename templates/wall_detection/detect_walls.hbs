@@ -1,0 +1,275 @@
+<section class="cibola8 wall-detection compact-layout scrollable">
+  
+  {{!-- Top Toolbar Row 1 --}}
+  <div class="cibola8-toolbar-container cibola8-toolbar-container--compact">
+    <div class="cibola8-toolbar cibola8-toolbar--compact">
+      {{!-- Preset Icons --}}
+      <div class="cibola8-toolbar__group presets-bar">
+        <button type="button" data-action="loadPresetDefault" class="cibola8-tool-btn {{#if (eq selectedPreset 'default')}}cibola8-tool-btn--active{{/if}}" data-tooltip="{{localize 'cibola8.wallDetection.presets.custom'}} - Default">
+          <i class="fas fa-sliders-h"></i>
+        </button>
+        <button type="button" data-action="loadPresetDetailed" class="cibola8-tool-btn {{#if (eq selectedPreset 'detailed')}}cibola8-tool-btn--active{{/if}}" data-tooltip="High Detail">
+          <i class="fas fa-microscope"></i>
+        </button>
+        <button type="button" data-action="loadPresetSimple" class="cibola8-tool-btn {{#if (eq selectedPreset 'simple')}}cibola8-tool-btn--active{{/if}}" data-tooltip="Simple/Clean">
+          <i class="fas fa-broom"></i>
+        </button>
+        <button type="button" data-action="loadPresetDungeon" class="cibola8-tool-btn {{#if (eq selectedPreset 'dungeon')}}cibola8-tool-btn--active{{/if}}" data-tooltip="Dungeon Map">
+          <i class="fas fa-dungeon"></i>
+        </button>
+        <button type="button" data-action="loadPresetBlackWalls" class="cibola8-tool-btn {{#if (eq selectedPreset 'blackWalls')}}cibola8-tool-btn--active{{/if}}" data-tooltip="Solid Black Walls">
+          <i class="fas fa-fill-drip"></i>
+        </button>
+        <button type="button" data-action="loadPresetHatchedMap" class="cibola8-tool-btn {{#if (eq selectedPreset 'hatchedMap')}}cibola8-tool-btn--active{{/if}}" data-tooltip="B/W with Hatching">
+          <i class="fas fa-border-all"></i>
+        </button>
+        <span class="cibola8-toolbar__separator"></span>
+        <button type="button" data-action="savePreset" class="cibola8-tool-btn" data-tooltip="{{localize 'cibola8.wallDetection.presets.save'}}">
+          <i class="fas fa-save"></i>
+        </button>
+      </div>
+
+      {{!-- Tools --}}
+      <div class="cibola8-toolbar__group tools-bar">
+        <button type="button" data-action="toolSelect" class="cibola8-tool-btn {{#if (eq activeTool 'select')}}cibola8-tool-btn--active{{/if}}" data-tooltip="{{localize 'cibola8.wallDetection.tools.select'}}: {{localize 'cibola8.wallDetection.tools.selectHint'}}">
+          <i class="fas fa-mouse-pointer"></i>
+        </button>
+        <button type="button" data-action="toolErase" class="cibola8-tool-btn {{#if (eq activeTool 'erase')}}cibola8-tool-btn--active{{/if}}" data-tooltip="{{localize 'cibola8.wallDetection.tools.erase'}}: {{localize 'cibola8.wallDetection.tools.eraseHint'}}">
+          <i class="fas fa-eraser"></i>
+        </button>
+        <button type="button" data-action="toolBrush" class="cibola8-tool-btn {{#if (eq activeTool 'brush')}}cibola8-tool-btn--active{{/if}}" data-tooltip="{{localize 'cibola8.wallDetection.tools.brush'}}: {{localize 'cibola8.wallDetection.tools.brushHint'}}">
+          <i class="fas fa-paint-brush"></i>
+        </button>
+        <button type="button" data-action="toolSelectArea" class="cibola8-tool-btn {{#if (eq activeTool 'selectArea')}}cibola8-tool-btn--active{{/if}}" data-tooltip="{{localize 'cibola8.wallDetection.tools.selectArea'}}: {{localize 'cibola8.wallDetection.tools.selectAreaHint'}}">
+          <i class="fas fa-vector-square"></i>
+        </button>
+        {{#if selectionRectsCount}}
+        <button type="button" data-action="clearAreas" class="cibola8-tool-btn" data-tooltip="{{localize 'cibola8.wallDetection.tools.clearAreas'}}">
+          <i class="fas fa-times-circle"></i>
+        </button>
+        {{/if}}
+      </div>
+
+      {{!-- Main Actions --}}
+      <div class="cibola8-toolbar__group actions-bar">
+        <button type="button" data-action="detectWalls" {{#if busy}}disabled{{/if}} class="cibola8-tool-btn cibola8-tool-btn--primary" data-tooltip="{{localize 'cibola8.wallDetection.detect'}}">
+          <i class="fas fa-search"></i>
+        </button>
+        <button type="button" data-action="applyWalls" {{#if applyDisabled}}disabled{{/if}} class="cibola8-tool-btn cibola8-tool-btn--success" data-tooltip="{{localize 'cibola8.wallDetection.apply'}}">
+          <i class="fas fa-check"></i>
+        </button>
+        <button type="button" data-action="removeAllWalls" class="cibola8-tool-btn cibola8-tool-btn--danger" data-tooltip="{{localize 'cibola8.wallDetection.sceneManagement.removeAll'}}">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
+    </div>
+
+    {{!-- Toolbar Row 2: Wall Types --}}
+    <div class="cibola8-toolbar cibola8-toolbar--compact cibola8-toolbar--row2">
+      <div class="cibola8-toolbar__group wall-type-bar">
+        <span class="cibola8-toolbar__label">{{localize "cibola8.wallDetection.wallTypes.title"}}:</span>
+        <button type="button" data-action="setWallType" data-type="normal" class="cibola8-tool-btn cibola8-tool-btn--wall-type {{#if (eq options.defaultWallType 'normal')}}cibola8-tool-btn--active{{/if}}" style="--wt-color: #ff4444;" data-tooltip="{{localize 'cibola8.wallDetection.wallTypes.normal'}}">
+          <i class="fas fa-square"></i>
+        </button>
+        <button type="button" data-action="setWallType" data-type="terrain" class="cibola8-tool-btn cibola8-tool-btn--wall-type {{#if (eq options.defaultWallType 'terrain')}}cibola8-tool-btn--active{{/if}}" style="--wt-color: #44ff44;" data-tooltip="{{localize 'cibola8.wallDetection.wallTypes.terrain'}}">
+          <i class="fas fa-mountain"></i>
+        </button>
+        <button type="button" data-action="setWallType" data-type="invisible" class="cibola8-tool-btn cibola8-tool-btn--wall-type {{#if (eq options.defaultWallType 'invisible')}}cibola8-tool-btn--active{{/if}}" style="--wt-color: #4444ff;" data-tooltip="{{localize 'cibola8.wallDetection.wallTypes.invisible'}}">
+          <i class="fas fa-eye-slash"></i>
+        </button>
+        <button type="button" data-action="setWallType" data-type="ethereal" class="cibola8-tool-btn cibola8-tool-btn--wall-type {{#if (eq options.defaultWallType 'ethereal')}}cibola8-tool-btn--active{{/if}}" style="--wt-color: #ffff44;" data-tooltip="{{localize 'cibola8.wallDetection.wallTypes.ethereal'}}">
+          <i class="fas fa-ghost"></i>
+        </button>
+      </div>
+
+      {{!-- Eraser brush size (shown when eraser is active) --}}
+      {{#if (eq activeTool 'erase')}}
+      <div class="cibola8-toolbar__group cibola8-toolbar__range">
+        <span class="cibola8-toolbar__label">{{localize "cibola8.wallDetection.tools.eraserSize"}}:</span>
+        <input type="range" name="eraserBrushSize" value="{{eraserBrushSize}}" min="5" max="100" step="5" />
+        <span class="cibola8-toolbar__range-value">{{eraserBrushSize}}</span>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- Status Bar --}}
+  <div class="wd-panel wd-status-bar cibola8-p-1">
+    {{#if sceneName}}
+      <span class="scene-name" data-tooltip="{{localize 'cibola8.wallDetection.scene'}}"><i class="fas fa-map"></i> {{sceneName}}</span>
+    {{/if}}
+    <span class="segment-count" data-tooltip="{{localize 'cibola8.wallDetection.detected'}}"><i class="fas fa-vector-square"></i> {{detectedCount}}</span>
+    {{#if selectionRectsCount}}
+      <span class="areas-info"><i class="fas fa-draw-polygon"></i> {{selectionRectsCount}} {{localize 'cibola8.wallDetection.areas'}}</span>
+    {{/if}}
+    {{#if hasSelection}}
+      <span class="selection-info"><i class="fas fa-object-group"></i> Selected</span>
+    {{/if}}
+    {{#if busy}}
+      <span class="busy-indicator"><i class="fas fa-spinner fa-spin"></i> {{busyMessage}}</span>
+    {{/if}}
+    {{#if isPickingColor}}
+      <span class="picking-color"><i class="fas fa-eye-dropper"></i> {{localize 'cibola8.wallDetection.colorDetection.pickingMode'}}</span>
+    {{/if}}
+  </div>
+
+  {{!-- Panels --}}
+  <div class="wd-panels scrollable">
+    
+    {{!-- Detection Parameters (NOT collapsible) --}}
+    <div class="wd-panel wd-panel-fixed" data-section="params">
+      <div class="wd-panel-header"><i class="fas fa-cog"></i> {{localize "cibola8.wallDetection.options"}}</div>
+      <div class="wd-panel-content params-grid">
+        
+        <div class="param-row">
+          <label data-tooltip="{{localize 'cibola8.wallDetection.hint.blurKernel'}}">{{localize "cibola8.wallDetection.blurKernel"}}</label>
+          <input type="range" name="blurKernel" value="{{options.blurKernel}}" min="1" max="21" step="2" />
+          <span class="range-value">{{options.blurKernel}}</span>
+        </div>
+
+        <div class="param-row">
+          <label data-tooltip="{{localize 'cibola8.wallDetection.hint.closeKernel'}}">{{localize "cibola8.wallDetection.closeKernel"}}</label>
+          <input type="range" name="closeKernel" value="{{options.closeKernel}}" min="1" max="31" step="2" />
+          <span class="range-value">{{options.closeKernel}}</span>
+        </div>
+
+        <div class="param-row">
+          <label data-tooltip="{{localize 'cibola8.wallDetection.hint.canny1'}}">{{localize "cibola8.wallDetection.canny1"}}</label>
+          <input type="range" name="canny1" value="{{options.canny1}}" min="0" max="255" step="1" />
+          <span class="range-value">{{options.canny1}}</span>
+        </div>
+
+        <div class="param-row">
+          <label data-tooltip="{{localize 'cibola8.wallDetection.hint.canny2'}}">{{localize "cibola8.wallDetection.canny2"}}</label>
+          <input type="range" name="canny2" value="{{options.canny2}}" min="0" max="255" step="1" />
+          <span class="range-value">{{options.canny2}}</span>
+        </div>
+
+        <div class="param-row">
+          <label data-tooltip="{{localize 'cibola8.wallDetection.hint.minContourArea'}}">{{localize "cibola8.wallDetection.minContourArea"}}</label>
+          <input type="range" name="minContourArea" value="{{options.minContourArea}}" min="0" max="5000" step="10" />
+          <span class="range-value">{{options.minContourArea}}px</span>
+        </div>
+
+        <div class="param-row">
+          <label data-tooltip="{{localize 'cibola8.wallDetection.hint.minSegmentLength'}}">{{localize "cibola8.wallDetection.minSegmentLength"}}</label>
+          <input type="range" name="minSegmentLength" value="{{options.minSegmentLength}}" min="0" max="100" step="1" />
+          <span class="range-value">{{options.minSegmentLength}}</span>
+        </div>
+
+        <div class="param-row">
+          <label data-tooltip="{{localize 'cibola8.wallDetection.hint.edgeMargin'}}">{{localize "cibola8.wallDetection.edgeMargin"}}</label>
+          <input type="range" name="edgeMargin" value="{{options.edgeMargin}}" min="0" max="50" step="1" />
+          <span class="range-value">{{options.edgeMargin}}</span>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" name="mergeContours" {{#if options.mergeContours}}checked{{/if}} />
+          <span data-tooltip="{{localize 'cibola8.wallDetection.hint.mergeContours'}}">{{localize "cibola8.wallDetection.mergeContours"}}</span>
+        </label>
+
+      </div>
+    </div>
+
+    {{!-- Color Detection (collapsible, open by default) --}}
+    <details class="wd-panel" data-section="colorDetection" open>
+      <summary><i class="fas fa-palette"></i> {{localize "cibola8.wallDetection.colorDetection.title"}}</summary>
+      <div class="wd-panel-content">
+        <label class="checkbox-row">
+          <input type="checkbox" name="colorDetectionEnabled" {{#if options.colorDetectionEnabled}}checked{{/if}} />
+          <span data-tooltip="{{localize 'cibola8.wallDetection.hint.colorDetection'}}">{{localize "cibola8.wallDetection.colorDetection.enable"}}</span>
+        </label>
+        
+        <div class="color-detection-controls" {{#unless options.colorDetectionEnabled}}style="display: none;"{{/unless}}>
+          <div class="color-list-inline">
+            {{#each colorList}}
+              <div class="color-chip-wrap" data-index="{{@index}}">
+                <div class="color-chip {{#if this.selected}}selected{{/if}}" style="background-color: {{this.hex}};" data-action="selectColor" data-index="{{@index}}" title="{{this.hex}}"></div>
+                <button type="button" class="chip-delete" data-action="removeColorAt" data-index="{{@index}}" data-tooltip="{{localize 'cibola8.wallDetection.colorDetection.removeColor'}}">×</button>
+              </div>
+            {{/each}}
+            <input type="color" class="color-add-input" data-action="addColorDirect" value="#000000" title="{{localize 'cibola8.wallDetection.colorDetection.addColor'}}" />
+            <button type="button" class="icon-btn picker-btn" data-action="pickColorFromScene" data-tooltip="{{localize 'cibola8.wallDetection.colorDetection.pickFromScene'}}">
+              <i class="fas fa-eye-dropper"></i>
+            </button>
+          </div>
+          
+          <div class="param-row compact">
+            <label data-tooltip="{{localize 'cibola8.wallDetection.hint.colorThreshold'}}">{{localize "cibola8.wallDetection.colorDetection.threshold"}}</label>
+            {{#if selectedColor}}
+            <input type="range" name="colorThreshold" value="{{selectedColor.threshold}}" min="0" max="100" step="1" />
+            <span class="range-value">{{selectedColor.threshold}}%</span>
+            {{else}}
+            <input type="range" name="colorThresholdGlobal" value="{{options.colorThresholdGlobal}}" min="0" max="100" step="1" />
+            <span class="range-value">{{options.colorThresholdGlobal}}%</span>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </details>
+
+    {{!-- Hatching Removal (collapsible) --}}
+    <details class="wd-panel" data-section="hatchingRemoval">
+      <summary><i class="fas fa-strikethrough"></i> {{localize "cibola8.wallDetection.hatchingRemoval.title"}}</summary>
+      <div class="wd-panel-content">
+        <label class="checkbox-row">
+          <input type="checkbox" name="removeHatching" {{#if options.removeHatching}}checked{{/if}} />
+          <span data-tooltip="{{localize 'cibola8.wallDetection.hint.removeHatching'}}">{{localize "cibola8.wallDetection.hatchingRemoval.enable"}}</span>
+        </label>
+        
+        <div class="hatching-controls" {{#unless options.removeHatching}}style="display: none;"{{/unless}}>
+          <div class="param-row compact">
+            <label data-tooltip="{{localize 'cibola8.wallDetection.hint.hatchingColor'}}">{{localize "cibola8.wallDetection.hatchingRemoval.color"}}</label>
+            <input type="color" name="hatchingColor" value="{{options.hatchingColor}}" />
+            <span class="range-value">{{options.hatchingColor}}</span>
+          </div>
+          
+          <div class="param-row compact">
+            <label data-tooltip="{{localize 'cibola8.wallDetection.hint.hatchingThreshold'}}">{{localize "cibola8.wallDetection.hatchingRemoval.threshold"}}</label>
+            <input type="range" name="hatchingThreshold" value="{{options.hatchingThreshold}}" min="0" max="50" step="1" />
+            <span class="range-value">{{options.hatchingThreshold}}</span>
+          </div>
+          
+          <div class="param-row compact">
+            <label data-tooltip="{{localize 'cibola8.wallDetection.hint.hatchingMaxWidth'}}">{{localize "cibola8.wallDetection.hatchingRemoval.maxWidth"}}</label>
+            <input type="range" name="hatchingMaxWidth" value="{{options.hatchingMaxWidth}}" min="1" max="20" step="1" />
+            <span class="range-value">{{options.hatchingMaxWidth}}px</span>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    {{!-- Advanced Options (collapsible) --}}
+    <details class="wd-panel" data-section="options">
+      <summary><i class="fas fa-sliders-h"></i> {{localize "cibola8.wallDetection.advancedOptions"}}</summary>
+      <div class="wd-panel-content">
+        <label class="checkbox-row">
+          <input type="checkbox" name="useTexture" {{#if options.useTexture}}checked{{/if}} />
+          <span data-tooltip="{{localize 'cibola8.wallDetection.hint.useTexture'}}">{{localize "cibola8.wallDetection.imageSource.useTexture"}}</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" name="enableDownscaling" {{#if options.enableDownscaling}}checked{{/if}} />
+          <span data-tooltip="{{localize 'cibola8.wallDetection.hint.enableDownscaling'}}">{{localize "cibola8.wallDetection.imageSource.enableDownscaling"}}</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" name="livePreview" {{#if options.livePreview}}checked{{/if}} />
+          <span data-tooltip="{{localize 'cibola8.wallDetection.hint.livePreview'}}">{{localize "cibola8.wallDetection.livePreview"}}</span>
+        </label>
+      </div>
+    </details>
+
+  </div>
+
+  {{!-- Log/Error Area (collapsed by default) --}}
+  {{#if lastError}}
+  <div class="wd-error"><i class="fas fa-exclamation-triangle"></i> {{lastError}}</div>
+  {{/if}}
+
+  {{#if logText}}
+  <details class="wd-log">
+    <summary><i class="fas fa-terminal"></i> Log</summary>
+    <pre>{{logText}}</pre>
+  </details>
+  {{/if}}
+
+</section>

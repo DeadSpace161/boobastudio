@@ -1,0 +1,22 @@
+<div class="cibola8-thread__message {{#if (eq message.user 'cibola8.from')}}cibola8-thread__message--assistant{{else}}cibola8-thread__message--user{{/if}}">
+    {{#if (eq message.user 'cibola8.from')}}
+    <div class="cibola8-thread__avatar">
+        <em class="cib8-icon icon-cibola8"></em>
+    </div>
+    {{/if}}
+    <div class="cibola8-thread__bubble">
+        <div class="cibola8-thread__content cibolauserselect">
+            {{{message.message}}}
+        </div>
+    </div>
+    {{#if (eq message.user 'cibola8.to')}}
+    <div class="cibola8-thread__avatar cibola8-thread__avatar--user">
+        <i class="fas fa-user"></i>
+    </div>
+    {{/if}}
+    {{#if isWritable}}
+    <button type="button" class="cibola8-btn cibola8-btn--icon cibola8-btn--ghost cibola8-btn--danger cibola8-thread__delete" data-action="removeMessage" data-tooltip="cibola8.delete" data-id="{{message.id}}">
+        <i class="fas fa-trash"></i>
+    </button>
+    {{/if}}
+</div>

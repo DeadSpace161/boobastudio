@@ -1,0 +1,41 @@
+{{!-- Pack card - banner thumbnail + name + image count --}}
+<div class="pack-card" data-pack-id="{{id}}" data-pack-slug="{{attributes.slug}}" data-action="openPack">
+  {{!-- Banner --}}
+  <div class="pack-card-banner">
+      {{#if cardBannerSrc}}
+    <img src="modules/cibola8/templates/assets/cibolacoin.webp" 
+        data-src="{{cardBannerSrc}}" 
+         alt="{{attributes.name}}" loading="lazy" />
+    {{else}}
+    <div class="pack-card-placeholder">
+      <i class="fas fa-images"></i>
+    </div>
+    {{/if}}
+    {{#if attributes.featured}}
+    <span class="pack-card-badge pack-card-badge--featured" data-tooltip="cibola8.packs.featured">
+      <i class="fas fa-star"></i>
+    </span>
+    {{/if}}
+  </div>
+
+  {{!-- Info --}}
+  <div class="pack-card-info">
+    <span class="pack-card-name" data-tooltip="{{attributes.tagline}}">{{attributes.name}}</span>
+    <span class="pack-card-meta">
+      <i class="fas fa-image"></i> {{attributes.image_count}}
+      {{#if attributes.primary_tag}}
+        <span class="pack-card-tag">{{attributes.primary_tag}}</span>
+      {{/if}}
+    </span>
+  </div>
+
+  {{!-- Hover actions --}}
+  <div class="pack-card-hover">
+    {{#if canBrowseAsTokens}}
+    <button class="pack-card-action" data-action="useForTokens" 
+            data-tooltip="cibola8.packs.useForTokensHint" type="button">
+      <i class="fas fa-user-circle"></i>
+    </button>
+    {{/if}}
+  </div>
+</div>

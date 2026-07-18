@@ -1,0 +1,62 @@
+{{!-- My Packs list - shows user's own packs with status badges --}}
+<div class="pack-my-list">
+  <div class="pack-my-list-header">
+    <button class="cibola8-btn cibola8-btn--secondary" data-action="backToCatalog" type="button">
+      <i class="fas fa-arrow-left"></i>
+      {{localize 'cibola8.packs.backToCatalog'}}
+    </button>
+    <button class="cibola8-btn cibola8-btn--primary cibola8-btn--sm" data-action="createPack" type="button">
+      <i class="fas fa-plus"></i>
+      {{localize 'cibola8.packs.createNewPack'}}
+    </button>
+  </div>
+
+  {{#if packs.length}}
+  <div class="gallery-masonry pack-grid">
+    {{#each packs}}
+    <div class="pack-card pack-card--mine" 
+         data-pack-id="{{this.id}}" 
+         data-action="editPack">
+      {{!-- Banner --}}
+      <div class="pack-card-banner">
+        {{#if this.cardBannerSrc}}
+        <img src="{{this.cardBannerSrc}}" alt="{{this.attributes.name}}" loading="lazy" />
+        {{else}}
+        <div class="pack-card-placeholder">
+          <i class="fas fa-images"></i>
+        </div>
+        {{/if}}
+        <span class="pack-card-badge pack-card-badge--{{this.attributes.visibility}}">
+          {{this.attributes.visibility}}
+        </span>
+      </div>
+
+      {{!-- Info --}}
+      <div class="pack-card-info">
+        <span class="pack-card-name">{{this.attributes.name}}</span>
+        <span class="pack-card-meta">
+          <i class="fas fa-image"></i> {{this.attributes.image_count}}
+          {{#if this.attributes.primary_tag}}
+            <span class="pack-card-tag">{{this.attributes.primary_tag}}</span>
+          {{/if}}
+        </span>
+      </div>
+
+      {{!-- Hover actions --}}
+      <div class="pack-card-hover">
+        <button class="pack-card-action" data-action="editPack"
+                data-tooltip="cibola8.packs.editor.edit" type="button">
+          <i class="fas fa-pen"></i>
+        </button>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="gallery-empty">
+    <i class="fas fa-box-open"></i>
+    <p>{{localize 'cibola8.packs.editor.noPacksYet'}}</p>
+    <p class="cibola8-text-muted">{{localize 'cibola8.packs.editor.noPacksYetHint'}}</p>
+  </div>
+  {{/if}}
+</div>

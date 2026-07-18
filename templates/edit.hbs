@@ -1,0 +1,8 @@
+<div class="flexcol stretch scrollable">
+    <button type="button" data-action="save"><i class="fas fa-save"></i>{{localize 'cibola8.save'}}</button>
+    {{#if isV13}}
+    <code-mirror language="json" class="content stretch" indent="2">{{~content~}}</code-mirror>
+    {{else}}
+    <textarea spellcheck="false" lang="{{lang}}" class="content stretch">{{content}}</textarea>
+    {{/if}}
+</div>

@@ -1,0 +1,245 @@
+<div class="cibola8-onboarding">
+  {{!-- Scrollable Content --}}
+  <div class="cibola8-onboarding__content">
+    
+    {{!-- Important Disclaimer - Uses design system notice --}}
+    <section class="cibola8-notice cibola8-notice--warning cibola8-notice--compact">
+      <i class="cibola8-notice__icon fas fa-exclamation-triangle"></i>
+      <div class="cibola8-notice__content">
+        <h3 class="cibola8-notice__title">{{localize "cibola8.onboarding.welcome.disclaimer.title"}}</h3>
+        <ul class="cibola8-notice__text" style="margin: 0; padding-left: 1.25rem;">
+          <li>{{{localize "cibola8.onboarding.welcome.disclaimer.ai"}}}</li>
+          <li>{{{localize "cibola8.onboarding.welcome.disclaimer.external"}}}</li>
+          <li>{{{localize "cibola8.onboarding.welcome.disclaimer.subscription"}}}</li>
+        </ul>
+      </div>
+    </section>
+
+    {{!-- Hero Section --}}
+    <section class="cibola8-onboarding__hero">
+      <img 
+        class="cibola8-onboarding__logo" 
+        src="modules/cibola8/templates/assets/cibolacoin.webp" 
+        alt="Cibola 8"
+      />
+      <h1 class="cibola8-onboarding__title">{{localize "cibola8.onboarding.welcome.title"}}</h1>
+      <p class="cibola8-onboarding__tagline">{{localize "cibola8.onboarding.welcome.tagline"}}</p>
+      
+      <div class="cibola8-onboarding__hero-actions">
+        <button 
+          type="button" 
+          class="cibola8-btn cibola8-btn--accent cibola8-btn--draggable" 
+          draggable="true"
+          data-tooltip="{{localize 'cibola8.onboarding.welcome.dragToHotbarHint'}}"
+        >
+          <i class="fas fa-grip"></i>
+          {{localize "cibola8.onboarding.welcome.dragToHotbar"}}
+        </button>
+        <button 
+          type="button" 
+          class="cibola8-btn cibola8-btn--secondary"
+          data-action="openSettings"
+        >
+          <i class="fas fa-cog"></i>
+          {{localize "cibola8.onboarding.welcome.openSettings"}}
+        </button>
+        <button 
+          type="button" 
+          class="cibola8-btn cibola8-btn--secondary"
+          data-action="openApp"
+          data-tooltip="{{localize 'cibola8.onboarding.welcome.openAppHint'}}"
+        >
+          <i class="fas fa-external-link-alt"></i>
+          {{localize "cibola8.onboarding.welcome.openApp"}}
+        </button>
+      </div>
+    </section>
+
+    {{!-- Features Section --}}
+    <section class="cibola8-onboarding__features">
+      <h2 class="cibola8-onboarding__section-title">{{localize "cibola8.onboarding.featuresTitle"}}</h2>
+      <div class="cibola8-onboarding__feature-grid">
+        {{#each features}}
+        <div 
+          class="cibola8-onboarding__feature-card"
+          data-action="openFeature"
+          data-feature="{{this.id}}"
+          data-tooltip-class="cibola8-feature-tooltip"
+          data-tooltip="<div class='cibola8-feature-tooltip'><div class='cibola8-feature-tooltip__title'>{{this.title}}</div><div class='cibola8-feature-tooltip__desc'>{{this.description}}</div><div class='cibola8-feature-tooltip__hint'>{{localize 'cibola8.onboarding.welcome.clickToTry'}}</div></div>"
+        >
+          <button 
+            type="button"
+            class="cibola8-onboarding__feature-info"
+            data-action="openDocs"
+            data-feature="{{this.id}}"
+            data-tooltip="cibola8.onboarding.welcome.resources.docs"
+          >
+            <i class="fas fa-circle-info"></i>
+          </button>
+          <i class="cibola8-onboarding__feature-icon fas {{this.icon}}"></i>
+          <span class="cibola8-onboarding__feature-title">{{this.title}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </section>
+
+    {{!-- Finding Cibola Section --}}
+    <section class="cibola8-onboarding__find-cibola">
+      <h2 class="cibola8-onboarding__section-title">{{localize "cibola8.onboarding.welcome.findCibola.title"}}</h2>
+      <div class="cibola8-onboarding__find-cibola-card">
+        <div class="cibola8-onboarding__find-cibola-icon">
+          <i class="cib8-icon icon-cibola8"></i>
+        </div>
+        <div class="cibola8-onboarding__find-cibola-body">
+          <p class="cibola8-onboarding__find-cibola-desc">{{localize "cibola8.onboarding.welcome.findCibola.desc"}}</p>
+          <ul class="cibola8-onboarding__find-cibola-list">
+            <li><i class="fas fa-window-maximize"></i> {{localize "cibola8.onboarding.welcome.findCibola.contextMenu"}}</li>
+            <li><i class="fas fa-pen-fancy"></i> {{localize "cibola8.onboarding.welcome.findCibola.editorToolbar"}}</li>
+            <li><i class="fas fa-map"></i> {{localize "cibola8.onboarding.welcome.findCibola.sceneControls"}}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {{!-- Connection Modes Section --}}
+    <section class="cibola8-onboarding__modes">
+      <h2 class="cibola8-onboarding__section-title">{{localize "cibola8.onboarding.modesTitle"}}</h2>
+      <div class="cibola8-onboarding__mode-grid">
+        {{!-- Cibola Backend --}}
+        <div class="cibola8-onboarding__mode-card {{#if backendConnected}}cibola8-onboarding__mode-card--connected{{/if}}">
+          <div class="cibola8-onboarding__mode-header">
+            <i class="fas fa-cloud"></i>
+            <span>{{localize "cibola8.onboarding.welcome.modes.backendTitle"}}</span>
+            {{#if backendConnected}}
+            <span class="cibola8-badge cibola8-badge--success cibola8-badge--sm">
+              <i class="fas fa-check-circle"></i>
+              {{localize "cibola8.onboarding.welcome.modes.connected"}}
+            </span>
+            {{/if}}
+          </div>
+          <p class="cibola8-onboarding__mode-desc">
+            {{localize "cibola8.onboarding.welcome.modes.backendDesc"}}
+          </p>
+          {{#unless backendConnected}}
+          <div class="cibola8-onboarding__mode-actions">
+            <button 
+              type="button" 
+              class="cibola8-btn cibola8-btn--accent cibola8-btn--sm"
+              data-action="connectPatreon"
+            >
+              <i class="fab fa-patreon"></i>
+              {{localize "cibola8.connect.button"}}
+            </button>
+            <button 
+              type="button" 
+              class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm"
+              data-action="setupToken"
+            >
+              <i class="fas fa-keyboard"></i>
+              {{localize "cibola8.connect.manualEntry"}}
+            </button>
+          </div>
+          {{/unless}}
+        </div>
+        
+        {{!-- Client-Only Mode --}}
+        <div class="cibola8-onboarding__mode-card">
+          <div class="cibola8-onboarding__mode-header">
+            <i class="fas fa-key"></i>
+            <span>{{localize "cibola8.onboarding.welcome.modes.clientTitle"}}</span>
+          </div>
+          <p class="cibola8-onboarding__mode-desc">{{localize "cibola8.onboarding.welcome.modes.clientDesc"}}</p>
+          <button 
+            type="button" 
+            class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm"
+            data-action="configureClientOnly"
+          >
+            {{localize "cibola8.onboarding.welcome.modes.clientAction"}}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    {{!-- Gallery Preview Section --}}
+    {{#if galleryImages.length}}
+    <section class="cibola8-onboarding__gallery">
+      <h2 class="cibola8-onboarding__section-title">{{localize "cibola8.onboarding.welcome.gallery.title"}}</h2>
+      <div class="cibola8-onboarding__gallery-grid">
+        {{#each galleryImages}}
+        <div 
+          class="cibola8-onboarding__gallery-item"
+          data-action="viewImage"
+          data-url="{{this.url}}"
+          data-tooltip="{{this.prompt}}"
+        >
+          <img src="{{this.thumbnail}}" alt="Generated image" loading="lazy" />
+        </div>
+        {{/each}}
+        <div 
+          class="cibola8-onboarding__gallery-more"
+          data-action="openGallery"
+        >
+          <span>{{localize "cibola8.onboarding.welcome.gallery.viewAll"}}</span>
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- Resources Section --}}
+    <section class="cibola8-onboarding__resources">
+      <div class="cibola8-onboarding__resource-row">
+        <button 
+          type="button"
+          class="cibola8-btn cibola8-btn--ghost cibola8-btn--sm"
+          data-action="openDocumentation"
+        >
+          <i class="fas fa-book"></i>
+          {{localize "cibola8.onboarding.welcome.resources.docs"}}
+        </button>
+        <a 
+          href="{{urls.faq}}" 
+          target="_blank" 
+          class="cibola8-btn cibola8-btn--ghost cibola8-btn--sm"
+          data-resource="faq"
+        >
+          <i class="fas fa-question-circle"></i>
+          {{localize "cibola8.onboarding.welcome.resources.faq"}}
+        </a>
+        <a 
+          href="{{urls.discord}}" 
+          target="_blank" 
+          class="cibola8-btn cibola8-btn--ghost cibola8-btn--sm"
+          data-resource="discord"
+        >
+          <i class="fab fa-discord"></i>
+          {{localize "cibola8.onboarding.welcome.resources.discord"}}
+        </a>
+        <a 
+          href="{{urls.patreon}}" 
+          target="_blank" 
+          class="cibola8-btn cibola8-btn--ghost cibola8-btn--sm"
+          data-resource="patreon"
+        >
+          <i class="fab fa-patreon"></i>
+          {{localize "cibola8.onboarding.welcome.resources.patreon"}}
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  {{!-- Footer --}}
+  <footer class="cibola8-onboarding__footer">
+    <label class="cibola8-onboarding__dont-show">
+      <input type="checkbox" name="dontShowAgain" {{#if dontShowAgain}}checked{{/if}} />
+      {{localize "cibola8.onboarding.welcome.dontShowAgain"}}
+    </label>
+    <button 
+      type="button" 
+      class="cibola8-btn cibola8-btn--accent"
+      data-action="getStarted"
+    >
+      {{localize "cibola8.onboarding.welcome.getStarted"}}
+    </button>
+  </footer>
+</div>

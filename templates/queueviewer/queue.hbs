@@ -1,0 +1,132 @@
+<section class="cibola8-queue-viewer scrollable">
+  {{!-- Header Section --}}
+  <div class="cibola8-page-header">
+    <div class="cibola8-page-header__content">
+      <div class="cibola8-page-header__icon">
+        <i class="fas fa-list-check"></i>
+      </div>
+      <div class="cibola8-page-header__text">
+        <h3>{{localize 'cibola8.QueueViewer.title'}}</h3>
+        <p>{{localize 'cibola8.QueueViewer.description'}}</p>
+      </div>
+    </div>
+    <div class="cibola8-page-header__actions">
+      <button type="button" class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm" data-action="cleanAll" data-tooltip="{{localize 'cibola8.QueueViewer.cleanAll'}}">
+        <i class="fas fa-broom"></i>
+        <span>{{localize 'cibola8.QueueViewer.cleanAll'}}</span>
+      </button>
+    </div>
+  </div>
+
+  {{!-- Queue Items --}}
+  <div class="cibola8-queue-list">
+    {{#if queue.length}}
+      {{#each queue as |element|}}
+        <div class="cibola8-queue-item {{#if element.finished}}{{#if element.success}}cibola8-queue-item--success{{else}}cibola8-queue-item--danger{{/if}}{{else}}cibola8-queue-item--pending{{/if}}" data-id="{{element.id}}">
+          
+          {{!-- Item Header --}}
+          <div class="cibola8-queue-item__header">
+            <div class="cibola8-queue-item__icon">
+              {{#if element.isPack}}
+                <i class="fas fa-atlas" data-tooltip="{{localize 'cibola8.QueueViewer.compendium'}}"></i>
+              {{else}}
+                {{#if element.document.img}}
+                  <img src="{{element.document.img}}" alt="" class="cibola8-portrait cibola8-portrait--md"/>
+                {{else}}
+                  <i class="fas fa-file-alt"></i>
+                {{/if}}
+              {{/if}}
+            </div>
+            
+            <div class="cibola8-queue-item__info">
+              <div class="cibola8-queue-item__name">
+                {{#if element.isPack}}
+                  <a class="openElement cibola8-link" data-uuid="{{element.document.metadata.id}}" data-ispack="true">
+                    {{element.document.metadata.label}}
+                  </a>
+                  <small class="text-muted">{{element.document.metadata.id}}</small>
+                {{else}}
+                  <a class="openElement cibola8-link" data-uuid="{{element.document.uuid}}">
+                    {{element.document.name}}
+                  </a>
+                {{/if}}
+              </div>
+            </div>
+            
+            <div class="cibola8-queue-item__status">
+              {{#if element.finished}}
+                {{#if element.success}}
+                  <span class="cibola8-badge cibola8-badge--success" data-tooltip="{{localize 'cibola8.QueueViewer.success'}}">
+                    <i class="fas fa-check"></i> {{localize 'cibola8.QueueViewer.success'}}
+                  </span>
+                {{else}}
+                  <span class="cibola8-badge cibola8-badge--danger" data-tooltip="{{localize 'cibola8.QueueViewer.failed'}}">
+                    <i class="fas fa-exclamation-triangle"></i> {{localize 'cibola8.QueueViewer.failed'}}
+                  </span>
+                {{/if}}
+              {{else}}
+                <span class="cibola8-badge cibola8-badge--warning">
+                  <i class="fas fa-spinner fa-spin"></i> {{localize 'cibola8.QueueViewer.processing'}}
+                </span>
+              {{/if}}
+            </div>
+          </div>
+          
+          {{!-- Progress Bar --}}
+          <div class="cibola8-queue-item__progress cibola8-progress">
+            <div class="cibola8-progress__bar">
+              <div class="cibola8-progress__fill" style="width: {{element.progress}}%"></div>
+            </div>
+            <span class="cibola8-progress__text">{{element.progress}}%</span>
+          </div>
+          
+          {{!-- Item Details --}}
+          <div class="cibola8-queue-item__details">
+            <div class="cibola8-detail">
+              <i class="fas fa-hourglass-start"></i>
+              <span data-tooltip="{{localize 'cibola8.QueueViewer.start'}}">{{timeSince element.started}}</span>
+            </div>
+            
+            {{#if element.finished}}
+              <div class="cibola8-detail">
+                <i class="fas fa-hourglass-end"></i>
+                <span data-tooltip="{{localize 'cibola8.QueueViewer.end'}}">{{timeSince element.finished}}</span>
+              </div>
+            {{/if}}
+            
+            {{#if element.status.total}}
+              <div class="cibola8-detail cibola8-queue-breakdown">
+                <i class="fas fa-chart-pie" data-tooltip="{{localize 'cibola8.QueueViewer.elementStatus'}}"></i>
+                <span class="cibola8-stats">
+                  <span class="cibola8-stats__item" data-tooltip="{{localize 'cibola8.QueueViewer.enqueued'}}">{{element.status.enqueued}}</span>
+                  <span class="cibola8-stats__sep">/</span>
+                  <span class="cibola8-stats__item cibola8-stats__item--success" data-tooltip="{{localize 'cibola8.QueueViewer.success'}}">{{element.status.success}}</span>
+                  <span class="cibola8-stats__sep">/</span>
+                  <span class="cibola8-stats__item cibola8-stats__item--danger" data-tooltip="{{localize 'cibola8.QueueViewer.failed'}}">{{element.status.error}}</span>
+                  <span class="cibola8-stats__sep">/</span>
+                  <span class="cibola8-stats__item" data-tooltip="{{localize 'cibola8.QueueViewer.total'}}">{{element.status.total}}</span>
+                </span>
+              </div>
+            {{/if}}
+            
+            {{!-- Delete Button --}}
+            {{#if element.finished}}
+              <button type="button" class="cibola8-btn cibola8-btn--icon cibola8-btn--danger" data-action="abortElement" data-id="{{element.id}}" data-tooltip="{{localize 'cibola8.delete'}}">
+                <i class="fas fa-trash"></i>
+              </button>
+            {{/if}}
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      {{!-- Empty State --}}
+      <div class="cibola8-empty-state">
+        <div class="cibola8-empty-icon">
+          <i class="fas fa-inbox"></i>
+        </div>
+        <h4>{{localize 'cibola8.QueueViewer.empty'}}</h4>
+        <p class="text-muted">{{localize 'cibola8.QueueViewer.emptyHint'}}</p>
+      </div>
+    {{/if}}
+  </div>
+</section>

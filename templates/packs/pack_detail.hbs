@@ -1,0 +1,78 @@
+{{!-- Pack detail view - banner + metadata + image grid --}}
+<div class="pack-detail" data-pack-id="{{pack.attributes.id}}">
+  {{!-- Header --}}
+  <div class="pack-detail-header">
+    <button class="cibola8-btn cibola8-btn--secondary" 
+            data-action="backToCatalog" data-tooltip="cibola8.packs.backToCatalogHint" type="button">
+      <i class="fas fa-arrow-left"></i>
+      {{localize 'cibola8.packs.backToCatalog'}}
+    </button>
+  </div>
+
+  {{!-- Banner --}}
+  {{#if detailBannerSrc}}
+  <div class="pack-detail-banner">
+    <img src="{{detailBannerSrc}}" alt="{{pack.attributes.name}}" />
+    <div class="pack-detail-banner-overlay">
+      <h2>{{pack.attributes.name}}</h2>
+      {{#if pack.attributes.tagline}}
+      <p class="cibola8-text-muted">{{pack.attributes.tagline}}</p>
+      {{/if}}
+    </div>
+  </div>
+  {{else}}
+  <div class="pack-detail-title-row">
+    <h2>{{pack.attributes.name}}</h2>
+    {{#if pack.attributes.tagline}}
+    <p class="cibola8-text-muted">{{pack.attributes.tagline}}</p>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{#if pack.attributes.description}}
+  <p class="pack-detail-description">{{pack.attributes.description}}</p>
+  {{/if}}
+
+  {{!-- Metadata pills --}}
+  <div class="pack-detail-meta">
+    {{#if pack.attributes.primary_tag}}
+    <span class="cibola8-badge cibola8-badge--featured" data-tooltip="Primary style tag">
+      <i class="fas fa-tag"></i> {{pack.attributes.primary_tag}}
+    </span>
+    {{/if}}
+    {{#if pack.attributes.category}}
+    <span class="cibola8-badge">
+      <i class="fas fa-folder"></i> {{pack.attributes.category}}
+    </span>
+    {{/if}}
+    {{#if pack.attributes.style}}
+    <span class="cibola8-badge">
+      <i class="fas fa-paint-brush"></i> {{pack.attributes.style}}
+    </span>
+    {{/if}}
+    <span class="cibola8-badge" data-tooltip="cibola8.packs.imageCount">
+      <i class="fas fa-image"></i> {{pack.attributes.image_count}}
+    </span>
+  </div>
+
+  {{!-- Action bar --}}
+  <div class="pack-detail-actions cibola8-action-bar">
+    {{#if canBrowseAsTokens}}
+    <button class="cibola8-btn cibola8-btn--secondary" data-action="useForTokens"
+            data-tooltip="cibola8.packs.useForTokensHint" type="button">
+      <i class="fas fa-user-circle"></i>
+      {{localize 'cibola8.packs.useForTokens'}}
+    </button>
+    {{/if}}
+  </div>
+
+  {{!-- Image grid - reuses gallery masonry --}}
+  <div class="pack-detail-images gallery-masonry elements">
+    {{!-- Images injected dynamically --}}
+  </div>
+
+  {{!-- Loading - reuses gallery-loader --}}
+  <div class="gallery-loader pack-detail-loader" style="display:none">
+    <div class="cibola8-spinner cibola8-spinner-lg"></div>
+  </div>
+</div>

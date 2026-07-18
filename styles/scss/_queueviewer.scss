@@ -1,0 +1,128 @@
+@use "sass:color";
+
+// ============================================================
+// Queue Viewer - Component-specific overrides only
+// Uses design system components from _cibola_components.scss
+// ============================================================
+
+// Design system classes used:
+
+// Variables (should be available from main import)
+$cibola-success: #28a745 !default;
+$cibola-error: #dc3545 !default;
+$cibola-warning: #ffc107 !default;
+$cibola-border-radius-lg: 12px !default;
+$cibola-transition-fast: 0.15s ease !default;
+
+.cibola8 {
+  &.cibola8-dark-theme {
+    .cibola8-queue-viewer {
+      padding: 1.25rem;
+    }
+
+    // Queue list layout
+    .cibola8-queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    // Queue item - extends list-item with status indicators
+    .cibola8-queue-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: $cibola-border-radius-lg;
+      padding: 1rem 1.25rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      // Status modifiers - colored left border
+      &--success {
+        border-left: 3px solid $cibola-success;
+      }
+
+      &--danger {
+        border-left: 3px solid $cibola-error;
+      }
+
+      &--pending {
+        border-left: 3px solid $cibola-warning;
+      }
+    }
+
+    // Item header layout
+    .cibola8-queue-item__header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    // Item icon - uses portrait base styling
+    .cibola8-queue-item__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    // Item info container
+    .cibola8-queue-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    // Item name with link
+    .cibola8-queue-item__name {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+
+      a {
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      small {
+        font-size: 0.75rem;
+      }
+    }
+
+    // Status badge container
+    .cibola8-queue-item__status {
+      flex-shrink: 0;
+    }
+
+    // Progress section
+    .cibola8-queue-item__progress {
+      margin-bottom: 0.75rem;
+    }
+
+    // Details row
+    .cibola8-queue-item__details {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    // Breakdown positioned to the right
+    .cibola8-queue-breakdown {
+      margin-left: auto;
+    }
+
+    // Delete button positioning
+    .cibola8-queue-item__details .cibola8-btn--icon {
+      margin-left: auto;
+    }
+  }
+}

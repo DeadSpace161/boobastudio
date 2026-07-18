@@ -1,0 +1,192 @@
+{{!-- Pack Editor - create/edit user packs --}}
+<div class="pack-editor" data-pack-id="{{pack.id}}">
+  {{!-- Header --}}
+  <div class="pack-editor-header">
+    <button class="cibola8-btn cibola8-btn--secondary" data-action="backToMyPacks" type="button">
+      <i class="fas fa-arrow-left"></i>
+      {{localize 'cibola8.packs.myPacks'}}
+    </button>
+    <div class="pack-editor-header-actions">
+      {{#if pack.id}}
+      <span class="cibola8-badge cibola8-badge--{{visibilityClass}}">
+        {{pack.visibility}}
+      </span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- Rejection feedback --}}
+  {{#if isRejected}}
+  <div class="pack-editor-rejection cibola8-alert cibola8-alert--warning">
+    <i class="fas fa-exclamation-triangle"></i>
+    <div>
+      <strong>{{localize 'cibola8.packs.editor.rejectedTitle'}}</strong>
+      {{#if rejectionReason}}
+      <p>{{rejectionReason}}</p>
+      {{/if}}
+      <p class="cibola8-text-sm cibola8-text-muted">{{localize 'cibola8.packs.editor.rejectedHint'}}</p>
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Metadata form --}}
+  <div class="pack-editor-form">
+    <div class="form-group">
+      <label>{{localize 'cibola8.packs.editor.name'}} <span class="required">*</span></label>
+      <input type="text" name="packName" value="{{pack.name}}" 
+             placeholder="{{localize 'cibola8.packs.editor.namePlaceholder'}}" required />
+    </div>
+    <div class="form-group">
+      <label>{{localize 'cibola8.packs.editor.tagline'}}</label>
+      <input type="text" name="packTagline" value="{{pack.tagline}}" 
+             placeholder="{{localize 'cibola8.packs.editor.taglinePlaceholder'}}" maxlength="120" />
+    </div>
+    <div class="form-group">
+      <label>{{localize 'cibola8.packs.editor.description'}}</label>
+      <textarea name="packDescription" rows="3" 
+                placeholder="{{localize 'cibola8.packs.editor.descriptionPlaceholder'}}">{{pack.description}}</textarea>
+    </div>
+    <div class="form-group-row">
+      <div class="form-group form-group--half">
+        <label>{{localize 'cibola8.packs.editor.category'}}</label>
+        <select name="packCategory">
+          <option value="">—</option>
+          {{#each categories}}
+          <option value="{{this}}" {{#if (eq this ../pack.category)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group form-group--half">
+        <label>{{localize 'cibola8.packs.editor.style'}}</label>
+        <select name="packStyle">
+          <option value="">—</option>
+          {{#each styles}}
+          <option value="{{this}}" {{#if (eq this ../pack.style)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="form-group-row">
+      <div class="form-group form-group--half">
+        <label>{{localize 'cibola8.packs.editor.primaryTag'}}</label>
+        <select name="packPrimaryTag">
+          <option value="">—</option>
+          {{#each tags}}
+          <option value="{{this}}" {{#if (eq this ../pack.primary_tag)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group form-group--half">
+        <label>{{localize 'cibola8.packs.editor.drawingStyle'}}</label>
+        <select name="packDrawingStyle">
+          <option value="">—</option>
+          {{#each drawingStyles}}
+          <option value="{{this}}" {{#if (eq this ../pack.drawing_style)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-group--checkbox">
+        <input type="checkbox" name="packContributions" {{#if pack.allow_contributions}}checked{{/if}} />
+        {{localize 'cibola8.packs.editor.allowContributions'}}
+      </label>
+    </div>
+  </div>
+
+  {{!-- Banner section --}}
+  {{#if pack.id}}
+  <div class="pack-editor-banner">
+    <div class="pack-editor-banner-header">
+      <h3>
+        <i class="fas fa-panorama"></i>
+        {{localize 'cibola8.packs.editor.banner'}}
+      </h3>
+    </div>
+    {{#if editorBannerSrc}}
+    <div class="pack-editor-banner-preview">
+      <img src="{{editorBannerSrc}}" alt="Banner" class="pack-banner-img" />
+    </div>
+    {{/if}}
+    <button class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm" 
+            data-action="generateBanner" type="button">
+      <i class="fas fa-magic"></i>
+      {{localize 'cibola8.packs.editor.generateBanner'}}
+    </button>
+    <p class="cibola8-text-muted cibola8-text-sm">
+      {{localize 'cibola8.packs.editor.generateBannerHint'}}
+    </p>
+  </div>
+  {{/if}}
+
+  {{!-- Image grid --}}
+  <div class="pack-editor-images">
+    <div class="pack-editor-images-header">
+      <h3>
+        <i class="fas fa-images"></i>
+        {{localize 'cibola8.packs.editor.images'}}
+        <span class="cibola8-text-muted">({{imageCount}})</span>
+      </h3>
+      <button class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm" 
+              data-action="addFromCreations" type="button">
+        <i class="fas fa-plus"></i>
+        {{localize 'cibola8.packs.editor.addFromCreations'}}
+      </button>
+    </div>
+    <div class="pack-editor-grid gallery-masonry">
+      {{#each images}}
+      <div class="pack-editor-image" data-packitem-id="{{this.packitemId}}" data-llmjob-id="{{this.id}}">
+        <img src="{{this.thumbnail}}" alt="{{this.prompt}}" loading="lazy" />
+        <div class="pack-editor-image-actions">
+          <button class="pack-editor-img-btn" data-action="setCover" 
+                  data-tooltip="{{localize 'cibola8.packs.editor.setCover'}}" type="button"
+                  {{#if this.isCover}}disabled{{/if}}>
+            <i class="fas fa-star{{#unless this.isCover}}-o{{/unless}}"></i>
+          </button>
+          <button class="pack-editor-img-btn pack-editor-img-btn--danger" data-action="removeFromPack"
+                  data-tooltip="{{localize 'cibola8.packs.editor.removeImage'}}" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        {{#if this.isCover}}
+        <span class="pack-editor-cover-badge">
+          <i class="fas fa-star"></i> Cover
+        </span>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{#unless images.length}}
+    <div class="gallery-empty gallery-empty--sm">
+      <i class="fas fa-image"></i>
+      <p>{{localize 'cibola8.packs.editor.noImages'}}</p>
+    </div>
+    {{/unless}}
+  </div>
+
+  {{!-- Action bar --}}
+  <div class="pack-editor-actions cibola8-action-bar">
+    <button class="cibola8-btn cibola8-btn--primary" data-action="savePack" type="button">
+      <i class="fas fa-save"></i>
+      {{localize 'cibola8.packs.editor.save'}}
+    </button>
+    {{#if canSubmit}}
+    <button class="cibola8-btn cibola8-btn--secondary" data-action="submitPack" type="button">
+      <i class="fas fa-paper-plane"></i>
+      {{localize 'cibola8.packs.editor.submit'}}
+    </button>
+    {{/if}}
+    {{#if canWithdraw}}
+    <button class="cibola8-btn cibola8-btn--secondary" data-action="withdrawPack" type="button">
+      <i class="fas fa-undo"></i>
+      {{localize 'cibola8.packs.editor.withdraw'}}
+    </button>
+    {{/if}}
+    {{#if canDelete}}
+    <button class="cibola8-btn cibola8-btn--danger" data-action="deletePack" type="button">
+      <i class="fas fa-trash"></i>
+      {{localize 'cibola8.packs.editor.delete'}}
+    </button>
+    {{/if}}
+  </div>
+</div>

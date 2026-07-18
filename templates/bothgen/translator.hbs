@@ -1,0 +1,141 @@
+<section class='tab standard-form scrollable {{tabs.translator.cssClass}}' data-tab='translator' data-group='{{tabs.translator.group}}'>
+
+  <div class="cibola8-intro-text cibola8-mt-1">
+    <i class="fas fa-language cibola8-intro-icon"></i>
+    <span>{{localize 'cibola8.AiTranslator.description'}}</span>
+  </div>
+  <div class="cibola8-hint cibola8-hint--warning cibola8-hint--compact">
+    <i class="fas fa-warning"></i>
+    <span>{{localize 'cibola8.Localizer.warning'}}</span>
+  </div>
+  <div class='flexcol stretch'>
+    <div class='flexrow stretch'>
+      <fieldset class='relativedisplay minWidth stretch'>
+        <legend>{{localize 'cibola8.Localizer.source'}}</legend>
+        <div class='form-group'>
+          <label>{{item.name}}</label>
+        </div>
+        <img src='modules/cibola8/templates/assets/scroll1.webp' class='noBorder alignatcenter' width='100' />
+        <div class='form-group' data-tooltip='cibola8.Localizer.batchmodeHint'>
+          <label>{{localize 'cibola8.Localizer.batch'}}</label>
+          <div class='form-fields'>
+            <span><i class='fas fa-clock'></i> 24h</span>
+            {{#if item.isPack}}<span data-tooltip='cibola8.AiTranslator.batchModeLock'><i class='fas fa-lock'></i></span>{{/if}}
+            <div class='flexrow radioTextGroup manahtmlcontainer cibola8'>1/2 <span class='manapot'></span> </div>
+            <input type='checkbox' name='batch' value='1' checked {{disabled item.isPack}} />
+          </div>
+        </div>
+        <img src='modules/cibola8/templates/assets/arrow.webp' class='noBorder arrowpointer' width='75' />
+      </fieldset>
+      <fieldset data-tooltip='cibola8.AiTranslator.languagehint' class='minWidth stretch'>
+        <legend>{{localize 'cibola8.Localizer.target'}}</legend>
+        <div class='form-group'>
+          <label>{{localize 'cibola8.Localizer.target'}}</label>
+          <div class='form-fields withButton'>
+            <select name='translator.language'>
+              {{selectOptions translator.languages selected=translator.language labelAttr='name' valueAttr='lang' sort=true}}
+            </select>
+          </div>
+        </div>
+        <img src='modules/cibola8/templates/assets/scroll2.webp' class='noBorder alignatcenter' width='100' />
+        <p class='hint'>{{localize 'cibola8.AiTranslator.languagehint'}}</p>
+      </fieldset>
+    </div>
+
+    {{#if userInfo.alive}}
+      <div class='flexrow imageControlContainer'>
+        <button type='button' data-tooltip='cibola8.spinner' data-action='translate'>{{localize 'cibola8.AiTranslator.title'}}</button>
+        <button type='button' data-tooltip='cibola8.QueueViewer.title' class='smallbutton permanentlyunlocked' data-action='showQueueViewer'><i
+            class='fas fa-bars-progress'
+          ></i></button>
+        <button type='button' data-tooltip='cibola8.AiTranslator.getHelp' class='smallbutton permanentlyunlocked' data-action='showGrudge'><i class='fas fa-bug'></i></button>
+        <button type='button' data-tooltip='cibola8.AiTranslator.showTranslations' class='smallbutton permanentlyunlocked' data-action='showTranslations'><i
+            class='fas fa-book'
+          ></i></button>
+      </div>
+    {{else}}
+      {{{patreon}}}
+    {{/if}}
+    <fieldset class='{{ifThen actorTranslation.hasAny "" "hidden"}}'>
+      <legend>{{localize 'cibola8.AiTranslator.options'}}</legend>
+
+      <div class='flexcol'>
+        {{#if item.isPack}}
+          <div class='flexrow form-group'>
+            <label>{{localize 'cibola8.AiTranslator.packageout'}}</label>
+            <div class='form-fields'>
+              <select name='packageout'>
+                {{#each translator.packs as |pack|}}
+                  <option value='{{pack.metadata.id}}'>{{pack.metadata.name}}</option>
+                {{/each}}
+              </select>
+              <button type='button' data-tooltip='cibola8.AiTranslator.createPack' class='smallbutton' data-action='createPack'><i class='fas fa-plus'></i></button>
+            </div>
+            <p class='hint'>{{localize 'cibola8.AiTranslator.packageouthint'}}</p>
+          </div>
+          <div class='flexrow form-group'>
+            <label>{{localize 'cibola8.AiTranslator.overwrite'}}</label>
+            <div class='form-fields'>
+              <input type='checkbox' name='overwrite' value='1' />
+            </div>
+            <p class='hint'>{{localize 'cibola8.AiTranslator.overwritehint'}}</p>
+          </div>
+          {{#if translator.canDictionary}}
+            <div class='flexrow form-group'>
+              <label>{{localize 'cibola8.AiTranslator.addToDictionary'}}</label>
+              <div class='form-fields'>
+                <input type='checkbox' name='addToDictionary' value='1' checked />
+              </div>
+              <p class='hint'>{{{localize 'cibola8.AiTranslator.addToDictionaryHint'}}}</p>
+            </div>
+          {{/if}}
+          {{#if (eq item.documentName 'Actor')}}
+            <div class='flexrow form-group'>
+              <label>{{localize 'cibola8.AiTranslator.skipEmbeds'}}</label>
+              <div class='form-fields'>
+                <input type='checkbox' name='skipEmbeds' value='1' />
+              </div>
+              <p class='hint'>{{{localize 'cibola8.AiTranslator.skipEmbedsHint'}}}</p>
+            </div>
+          {{/if}}
+        {{else}}
+          {{#if (eq item.documentName 'Folder')}}
+            <div class='flexrow form-group'>
+              <label>{{localize 'cibola8.AiTranslator.folderout'}}</label>
+              <div class='form-fields'>
+                <select name='folderout'>
+                  {{#each translator.folders as |folder|}}
+                    <option value='{{folder.id}}'>{{folder.name}}</option>
+                  {{/each}}
+                </select>
+                <button type='button' data-tooltip='cibola8.AiTranslator.createFolder' class='smallbutton' data-action='createFolder'><i class='fas fa-plus'></i></button>
+              </div>
+              <p class='hint'>{{localize 'cibola8.AiTranslator.folderouthint'}}</p>
+            </div>
+          {{else}}
+            <div class='flexrow form-fields withButton'>
+              <p>{{localize 'cibola8.Localizer.missingItems'}}</p>
+              <a class='editEntry' data-tooltip='cibola8.AiTranslator.editMatchers'><i class='fas fa-cogs'></i></a>
+            </div>
+          {{/if}}
+        {{/if}}
+        <div class='flexrow form-group'>
+          <label>{{localize 'cibola8.AiTranslator.useFallback'}}</label>
+          <div class='form-fields'>
+            <input type='checkbox' name='useFallback' value='1' />
+          </div>
+          <p class='hint'>{{localize 'cibola8.AiTranslator.useFallbackHint'}}</p>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class='{{ifThen actorTranslation.hasAny "" "hidden"}}'>
+      <legend>{{localize 'cibola8.Localizer.currentlyMissing' object=(localize (cibolaConcat 'DOCUMENT.' item.documentName))}}{{#if item.isPack}} (Compendium){{/if}}</legend>
+      <div class='flexrow wrapping actormisses'>
+        {{#each actorTranslation.misses as |item|}}
+          <span class='cibola8-badge showItem' data-uuid='{{item.uuid}}'>{{item.name}}</span>
+        {{/each}}
+      </div>
+    </fieldset>
+  </div>
+
+</section>

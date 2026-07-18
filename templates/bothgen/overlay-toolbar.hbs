@@ -1,0 +1,90 @@
+{{!-- Overlay Toolbar Partial (zoom, brush, selection controls) --}}
+<div class="cibola8-toolbar-container cibola8-toolbar-container--overlay hideOnCrop imageControlContainer">
+    {{!-- Main row: existing controls --}}
+    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay">
+        <button type="button" data-tooltip="cibola8.showArtwork" data-action="showArtwork"
+            class="imgControls {{ifThen image.latestImg '' 'hidden'}} cibola8-tool-btn"><i
+                class="fas fa-maximize"></i></button>
+        <button type="button" data-tooltip="cibola8.postChat" data-action="postChat"
+            class="imgControls hidden cibola8-tool-btn"><i class="fas fa-comment"></i></button>
+        {{!-- Zoom controls --}}
+        <span class="cibola8-zoom-controls">
+            <button type="button" data-action="zoomOut" data-tooltip="cibola8.canvas.zoomOut"
+                class="cibola8-tool-btn"><i class="fas fa-minus"></i></button>
+            <span class="cibola8-zoom-value">100%</span>
+            <button type="button" data-action="zoomIn" data-tooltip="cibola8.canvas.zoomIn"
+                class="cibola8-tool-btn"><i class="fas fa-plus"></i></button>
+            <button type="button" data-action="fitToView" data-tooltip="cibola8.canvas.fitToView"
+                class="cibola8-tool-btn"><i class="fas fa-expand"></i></button>
+        </span>
+    </div>
+
+    {{!-- Second row: Brush size (shown when brush tool active) --}}
+    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay cibola8-brush-context hidden">
+        <label class="cibola8-context-label">
+            <i class="fas fa-paintbrush"></i>
+            <span>{{localize 'cibola8.canvas.brushSize'}}</span>
+        </label>
+        <input type="range" class="cibola8-brush-size-slider" min="1" max="200" value="20" />
+        <span class="cibola8-brush-size-value">20px</span>
+    </div>
+
+    {{!-- Third row: Selection actions (shown when selection tool active) --}}
+    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay cibola8-selection-actions hidden">
+        <button type="button" data-action="clearSelection" data-tooltip="cibola8.canvas.clearSelection"
+            class="cibola8-tool-btn">
+            <i class="fas fa-times"></i>
+        </button>
+        <button type="button" data-action="invertSelection" data-tooltip="cibola8.canvas.invertSelection"
+            class="cibola8-tool-btn">
+            <i class="fas fa-arrows-rotate"></i>
+        </button>
+        <button type="button" data-action="selectAll" data-tooltip="cibola8.canvas.selectAll"
+            class="cibola8-tool-btn">
+            <i class="fas fa-border-all"></i>
+        </button>
+    </div>
+
+    {{!-- Fourth row: Crop context (shown when crop tool active) --}}
+    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay cibola8-crop-context hidden">
+        <button type="button" data-tooltip="cibola8.toolbar.cropHint" class="cibola8-tool-btn" disabled>
+            <i class="fas fa-crop"></i>
+        </button>
+        <div class="cibola8-toolbar__separator"></div>
+        <button type="button" data-action="setCropRatio" data-ratio="16:9" 
+            data-tooltip="cibola8.toolbar.ratio16x9"
+            class="cibola8-tool-btn">
+            <i class="fas fa-rectangle-wide"></i>
+            <span>16:9</span>
+        </button>
+        <button type="button" data-action="setCropRatio" data-ratio="4:3" 
+            data-tooltip="cibola8.toolbar.ratio4x3"
+            class="cibola8-tool-btn">
+            <i class="fas fa-rectangle-landscape"></i>
+            <span>4:3</span>
+        </button>
+        <button type="button" data-action="setCropRatio" data-ratio="1:1" 
+            data-tooltip="cibola8.toolbar.ratio1x1"
+            class="cibola8-tool-btn">
+            <i class="fas fa-square"></i>
+            <span>1:1</span>
+        </button>
+        <button type="button" data-action="setCropRatio" data-ratio="free" 
+            data-tooltip="cibola8.toolbar.ratioFree"
+            class="cibola8-tool-btn cibola8-tool-btn--active">
+            <i class="fas fa-expand"></i>
+            <span>{{localize 'cibola8.free'}}</span>
+        </button>
+        <div class="cibola8-toolbar__separator"></div>
+        <button type="button" data-action="cropConfirm" 
+            data-tooltip="cibola8.toolbar.cropConfirm"
+            class="cibola8-tool-btn cibola8-tool-btn--success">
+            <i class="fas fa-check"></i>
+        </button>
+        <button type="button" data-action="cropCancel" 
+            data-tooltip="cibola8.toolbar.cropCancel"
+            class="cibola8-tool-btn cibola8-tool-btn--danger">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>

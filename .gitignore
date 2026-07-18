@@ -1,0 +1,22 @@
+# Foundry-generated and local development data
+docs/_working/
+storage/
+*.log
+*.ldb
+LOCK
+
+# Secrets and local provider configuration
+.env
+.env.*
+*.secret
+*.key
+
+# Generated release artifacts
+dist/
+release/
+*.zip
+
+# Dependency/build caches
+node_modules/
+.cache/
+coverage/

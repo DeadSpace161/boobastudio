@@ -1,0 +1,110 @@
+@use "sass:color";
+
+// ============================================================
+// Name Generator - Component-specific overrides only
+// Uses design system components from _cibola_components.scss
+// ============================================================
+
+.cibola8 {
+  .cibola8-namegen {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    height: 100%;
+
+    &__group {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      // Larger border radius for groups
+      &.cibola8-glass {
+        border-radius: 12px;
+      }
+    }
+
+    // Token list within a group
+    &__tokens {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+
+    // Gender toggle container
+    &__genders {
+      display: flex;
+      gap: 0.5rem;
+      flex: 0 0 auto;
+    }
+
+    // Name input section
+    &__name-section {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 0;
+
+      .cibola8-input {
+        flex: 1;
+        min-width: 100px;
+        padding: 0.5rem 0.75rem;
+      }
+
+      // Icon-only tool button override
+      .cibola8-tool-btn--icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: 32px !important;
+        min-width: 32px !important;
+        max-width: 32px;
+        height: 32px !important;
+        padding: 0 !important;
+      }
+    }
+
+    // Empty state - inherits from .cibola8-empty-state
+    &__empty {
+      flex: 1;
+
+      // Larger icon for namegen empty state
+      .cibola8-empty-state__icon {
+        font-size: 4rem;
+        opacity: 0.5;
+      }
+
+      .cibola8-empty-state__description {
+        max-width: 400px;
+      }
+
+      .cibola8-empty-state__help {
+        text-align: left;
+        max-width: 400px;
+      }
+    }
+
+    // Tool button with text override (not icon-only)
+    .cibola8-tool-btn:has(span) {
+      width: auto !important;
+      min-width: auto !important;
+      max-width: none;
+      padding: 0.375rem 0.75rem !important;
+      font-size: 0.8rem !important;
+
+      span {
+        font-size: 0.8rem;
+      }
+    }
+
+    .cibola8-textarea {
+      min-height: 60px;
+      resize: vertical;
+      line-height: 1.4;
+    }
+  }
+}

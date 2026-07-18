@@ -1,0 +1,65 @@
+<section class="tab standard-form scrollable {{tabs.tts.cssClass}}" data-tab="tts"
+    data-group="{{tabs.tts.group}}">
+    <div class="flexcol" style="flex: 1">
+        <div class="cibola8-intro-text cibola8-mb-3">
+            <i class="fas fa-microphone cibola8-intro-icon"></i>
+            <span>{{localize 'cibola8.musicgen.ttsdescription'}}</span>
+        </div>
+
+        {{#unless userInfo.alive}}
+            {{{patreon}}}
+        {{else}}
+
+        <div class="flexrow align-child-top stretch" style="gap: 0.75rem;">
+            <div class="flexcol stretch" style="flex: 1;">
+                <fieldset class="flexcol promptblock stretch cibola8-glass">
+                    <legend><i class="fas fa-comment-dots"></i> {{localize 'cibola8.prompt'}}</legend>
+                    <div class="flexrow">
+                        <div class="form-group">
+                            <label>{{localize 'cibola8.fields.model'}}</label>
+                            <div class="form-fields">
+                                <select name="ttschoice">
+                                    {{selectOptions ttsmodels selected=ttschoice}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="manaheader">{{{ttsmanaHtml}}}</div>
+                    </div>
+                    <div class="ttsmodelcontainer">
+                        {{{modelFields}}}
+                    </div>
+                </fieldset>
+
+                {{!-- Player block - only visible when audio is generated --}}
+                <fieldset class="flexcol playerblock hidden stretch cibola8-player-panel cibola8-glass">
+                    <legend class="songNameLegend"><i class="fas fa-play-circle"></i></legend>
+                    <div class="flexrow cibola8-player-controls">
+                        <div></div>
+                        <button type="button" data-tooltip="cibola8.musicgen.saveToPlaylist" data-action="saveToPlaylist" class="cibola8-btn cibola8-btn--icon cibola8-btn--success cibola8-btn--sm"><i class="fas fa-save"></i></button>
+                        <button type="button" data-tooltip="cibola8.musicgen.hideSongs" data-action="hideSongs" class="cibola8-btn cibola8-btn--icon cibola8-btn--danger cibola8-btn--sm"><i class="fas fa-times"></i></button>
+                    </div>
+
+                    <div class="flexrow align-child-top cibola8-player-content">
+                        <div class="showImage cibola8-album-art">
+                            <div class="showImageContainer">
+                                <img/>
+                                <div class="iContainer cibola8-loading-overlay">
+                                    <div class="cibola8-spinner cibola8-spinner-lg"></div>
+                                </div>
+                            </div>
+                            <audio controls class="cibola8-audio-player"></audio>
+                            <p class="cibola8-hint cibola8-hint--compact">{{localize 'cibola8.musicgen.previewNote'}}</p>
+                        </div>
+                        <div class="showLyrics scrollable cibola8-lyrics-text" style="flex: 1; max-height: 200px;"></div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <fieldset class="flexcol imageHistory ttshistory hidden cibola8-history-sidebar">
+                <legend><i class="fas fa-clock-rotate-left"></i> {{localize 'cibola8.history'}}</legend>
+                <div class="cibola8-history-grid"></div>
+            </fieldset>
+        </div>
+        {{/unless}}
+    </div>
+</section>

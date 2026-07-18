@@ -1,0 +1,78 @@
+<section class="tab standard-form scrollable {{tabs.config.cssClass}}" data-tab="config"
+    data-group="{{tabs.config.group}}">
+    {{#if image.canImage}}
+    {{> modules/cibola8/templates/modelselector.hbs fieldname="image.model"}}
+    <fieldset class="stretch t-spacer">
+        <legend><i class="fas fa-cogs"></i> {{localize 'cibola8.parameterConfig'}}</legend>
+        <div class="flexcol">
+            <div class="flexrow imagesGroupLabel">
+                <label class="centerText" data-tooltip="cibola8.behaviorHint">
+                    {{localize 'cibola8.behavior'}} <span class="fa-stack" style="font-size:0.5em;">
+                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                        <i class="fa-solid fa-info fa-stack-1x"></i>
+                    </span>
+                </label>
+                <label class="centerText" data-tooltip="cibola8.drawingStyleHint" style="margin:0 auto">
+                    {{localize 'cibola8.drawingStyle'}} <span class="fa-stack" style="font-size:0.5em;">
+                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                        <i class="fa-solid fa-info fa-stack-1x"></i>
+                    </span>
+                </label>
+            </div>
+            <div class="flexrow">
+                <div class="imagesGroupParent">
+                    <div class="radioImagesGroup flexrow wrapping hideChoices">
+                        {{#each image.behaviors as |item key|}}
+                        <input type="radio" id="behavior_{{key}}_{{../randomId}}" name="image.behavior" value="{{key}}" {{#if (eq key
+                            ../image.behavior)}}checked{{/if}}>
+                        <label for="behavior_{{key}}_{{../randomId}}">
+                            <img src="modules/cibola8/templates/assets/{{key}}.webp" alt="{{key}}">
+                            <div class="img-overlay">{{localize (cibolaConcat 'cibola8.behaviors.' key)}}</div>
+                            <i class="fas fa-edit"></i>
+                        </label>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="imagesGroupParent">
+                    <div class="radioImagesGroup flexrow wrapping hideChoices">
+                        {{#each image.drawingStyles as |item key|}}
+                        <input type="radio" id="drawingstyle_{{key}}_{{../randomId}}" name="image.drawingStyle" value="{{key}}" {{#if
+                            (eq key ../image.drawingStyle)}}checked{{/if}}>
+                        <label for="drawingstyle_{{key}}_{{../randomId}}">
+                            <img src="modules/cibola8/templates/assets/{{key}}.webp" alt="{{key}}">
+                            <div class="img-overlay">{{localize (cibolaConcat 'cibola8.drawingStyles.' key)}}</div>
+                            <i class="fas fa-edit"></i>
+                        </label>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="stretch t-spacer">
+        <legend>{{localize 'cibola8.advancedConfig'}}</legend>
+        <div class="form-group">
+            <label>{{localize 'cibola8.drawingType'}}</label>
+            <div class="form-fields">
+                <select class="drawingType" name="image.{{item.documentName}}.{{item.type}}.drawingType">
+                    {{selectOptions image.drawingTypes selected=image.drawingType localize=true}}
+                </select>
+            </div>
+            <p class="hint">{{localize 'cibola8.drawingTypeHint'}}</p>
+        </div>
+
+        <div class="form-group {{#unless image.properties}}hidden{{/unless}}">
+            <label>{{localize 'cibola8.AiImageGen.property'}}</label>
+            <div class="form-fields">
+                <select name="defaultProperty">
+                    {{selectOptions image.properties selected=image.selectedProperty valueAttr="value" labelAttr="label"
+                    blank=""}}
+                </select>
+            </div>
+            <p class="hint">{{localize 'cibola8.defineProperties'}}</p>
+        </div>
+
+    </fieldset>
+    {{/if}}
+</section>

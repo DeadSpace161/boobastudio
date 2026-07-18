@@ -1,0 +1,29 @@
+{{!-- History/Gallery Sidebar Partial --}}
+<fieldset class="flexcol stretch wrapping hideOnCrop max100height cibola8-glass cibola8-history-sidebar">
+    <legend class="cibola8-sidebar-tabs">
+        <button type="button" 
+                data-action="showSidebarTab" 
+                data-tab="history"
+                class="cibola8-sidebar-tab active">
+            <i class="fas fa-clock-rotate-left"></i>
+            <span>{{localize 'cibola8.history'}}</span>
+        </button>
+        <button type="button"
+                data-action="showSidebarTab"
+                data-tab="gallery"
+                class="cibola8-sidebar-tab">
+            <i class="fas fa-images"></i>
+            <span>{{localize 'cibola8.AiBrowser.title'}}</span>
+        </button>
+    </legend>
+    {{!-- History content --}}
+    <div class="cibola8-sidebar-content cibola8-sidebar-history max100height scrollable" data-sidebar-tab="history">
+        <div class="imageHistory max100height">
+            <div class="cibola8-history-grid max100height"></div>
+        </div>
+    </div>
+    {{!-- Gallery content --}}
+    <div class="cibola8-sidebar-content cibola8-sidebar-gallery max100height scrollable hidden" data-sidebar-tab="gallery">
+        {{!-- Gallery will be injected here by GalleryComponent --}}
+    </div>
+</fieldset>

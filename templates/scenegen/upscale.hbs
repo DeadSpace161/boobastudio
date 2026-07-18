@@ -1,0 +1,28 @@
+<div class="scrollable">
+    <p>{{localize 'cibola8.AiSceneGen.upscaleDescription'}}</p>
+    <div class="imagesGroupParent">
+        <div class="radioTextGroup flexrow">
+        {{#each models as |item key|}}
+            <input type="radio" id="upscale_{{key}}_{{../randomId}}" name="choice" value="{{key}}" {{checked (eq key ../selected)}}>
+            <label for="upscale_{{key}}_{{../randomId}}" class="stretch">
+                <h3>{{item.name}}</h3>
+                {{{item.manaHtml}}}
+                {{#if item.upscaleResolutions}}
+                 <div class="form-group t-spacer" data-tooltip="cibola8.AiSceneGen.upscaleResolutionHint">
+                    <div class="form-fields">
+                        <select name="upscaleMax">
+                            {{selectOptions item.upscaleResolutions selected=4096}}
+                        </select>
+                    </div>
+                </div>
+                {{/if}}
+                <p>{{localize (cibolaConcat 'cibola8.upscalers.' key)}}</p>
+            </label>
+        {{/each}}
+        </div>        
+    </div>
+
+    <div class="modelFields t-spacer">
+        {{{modelFields}}}
+    </div> 
+</div>

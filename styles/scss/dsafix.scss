@@ -1,0 +1,29 @@
+.system-dsa5.dsa5-immersive {
+    .AiBothGen.control {
+        padding-left: 0;
+    }
+    .header-button .icon-cibola8 {
+        width: 22px;
+        height: 22px;
+        position: relative;
+        left:0;
+    }
+
+    #chat-controls {
+        .control-buttons.withCibola {
+            flex: 0 0 96px;
+        }
+    }
+
+    .application.cibola8:after, .window-app.cibola8:after {
+        background-image: none;
+        bottom: unset;
+        content: none;
+    }
+
+    .application .window-header {
+        top: 0px;
+        height: auto;
+        min-height: auto;
+    }
+}

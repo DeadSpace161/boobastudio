@@ -1,0 +1,34 @@
+{{!-- Unified history item partial - matches gallery_embedded styling --}}
+<div class="cibola8-gallery-item cibola8-history-item{{#if showLoader}} cibola8-gallery-item--loading{{/if}}" {{{dataAttributes}}}>
+  {{#if showLoader}}
+  <div class="cibola8-gallery-item-loader">
+    <i class="fas fa-spinner fa-spin"></i>
+  </div>
+  {{/if}}
+  {{#if isImage}}
+    <img 
+      src="{{src}}"
+      alt="{{alt}}"
+      loading="lazy"
+    />
+  {{else if isAudio}}
+    {{#if backgroundImage}}
+      <img
+        src="{{backgroundImage}}"
+        alt="{{alt}}"
+        loading="lazy"
+      />
+    {{else}}
+      <div class="cibola8-history-audio-icon">
+        <i class="fas fa-music"></i>
+      </div>
+    {{/if}}
+  {{else}}
+    <i class="{{icon}}"></i>
+  {{/if}}
+  {{#if showOverlay}}
+  <div class="cibola8-gallery-item-overlay">
+    <i class="fas fa-plus"></i>
+  </div>
+  {{/if}}
+</div>

@@ -1,0 +1,320 @@
+{
+  "gpt-image-1.5": {
+    "elo": 1268,
+    "speed": 40.0,
+    "speedrating": 5,
+    "tags": [
+      "allrounder",
+      "fotorealistic",
+      "new"
+    ]
+  },
+  "gpt-image-1-mini": {
+    "elo": 1071,
+    "speed": 20.0,
+    "speedrating": 3,
+    "tags": [
+      "allrounder"
+    ]
+  },
+  "black-forest-labs/flux-2-klein-4b": {
+    "elo": 1069,
+    "speed": 1.5,
+    "speedrating": 0,
+    "tags": [
+      "nsfw"
+    ]
+  },
+  "black-forest-labs/flux-2-klein-9b": {
+    "elo": 1134,
+    "speed": 2.5,
+    "speedrating": 1,
+    "tags": [
+      "nsfw"
+    ]
+  },
+  "black-forest-labs/flux-2-dev": {
+    "elo": 1151,
+    "speed": 4.0,
+    "speedrating": 1,
+    "tags": [
+      "image-to-image",
+      "nsfw"
+    ]
+  },
+  "black-forest-labs/flux-2-pro": {
+    "elo": 1192,
+    "speed": 5.0,
+    "speedrating": 1,
+    "tags": [
+      "image-to-image",
+      "fotorealistic",
+      "nsfw"
+    ]
+  },
+  "black-forest-labs/flux-2-flex": {
+    "elo": 1178,
+    "speed": 5.0,
+    "speedrating": 1,
+    "tags": [
+      "image-to-image",
+      "nsfw"
+    ]
+  },
+  "black-forest-labs/flux-2-max": {
+    "elo": 1207,
+    "speed": 7.0,
+    "speedrating": 1,
+    "tags": [
+      "fotorealistic",
+      "nsfw",
+      "image-to-image"
+    ]
+  },
+  "stability-ai/sd3.5-large": {
+    "elo": 1028,
+    "speed": 9.3,
+    "speedrating": 2,
+    "tags": [
+      "battlemaps",
+      "image-to-image"
+    ]
+  },
+  "stability-ai/sd3.5-large-turbo": {
+    "elo": 1018,
+    "speed": 1.5,
+    "speedrating": 0,
+    "tags": [
+      "image-to-image"
+    ]
+  },
+  "stability-ai/sd3.5-medium": {
+    "elo": 944,
+    "speed": 10.0,
+    "speedrating": 2,
+    "tags": [
+      "image-to-image"
+    ]
+  },
+  "stability-ai/stable-fast-3d": {
+    "elo": 0,
+    "speed": 5,
+    "speedrating": 1,
+    "tags": [
+      "3D"
+    ]
+  },
+  "recraft-ai/recraft-v3": {
+    "elo": 1073,
+    "speed": 6.0,
+    "speedrating": 1,
+    "tags": []
+  },
+  "recraft-ai/recraft-20b": {
+    "elo": 985,
+    "speed": 3.7,
+    "speedrating": 1,
+    "tags": []
+  },
+  "google/imagen-4": {
+    "elo": 1170,
+    "speed": 7.3,
+    "speedrating": 2,
+    "tags": [
+      "fotorealistic",
+      "beginner",
+      "new"
+    ]
+  },
+  "google/imagen-4-fast": {
+    "elo": 1085,
+    "speed": 2.9,
+    "speedrating": 1,
+    "tags": [
+      "new"
+    ]
+  },
+  "google/imagen-4-ultra": {
+    "elo": 1176,
+    "speed": 8.6,
+    "speedrating": 2,
+    "tags": [
+      "fotorealistic",
+      "new"
+    ]
+  },
+  "ideogram-ai/ideogram-v3-turbo": {
+    "elo": 0,
+    "speed": 6.1,
+    "speedrating": 1,
+    "tags": []
+  },
+  "ideogram-ai/ideogram-v3-balanced": {
+    "elo": 0,
+    "speed": 8.3,
+    "speedrating": 2,
+    "tags": []
+  },
+  "ideogram-ai/ideogram-v3-quality": {
+    "elo": 1078,
+    "speed": 10.3,
+    "speedrating": 2,
+    "tags": []
+  },
+  "prunaai/p-image": {
+    "elo": 1068,
+    "speed": 4.0,
+    "speedrating": 1,
+    "tags": []
+  },
+  "bria/fibo": {
+    "elo": 1072,
+    "speed": 5.0,
+    "speedrating": 1,
+    "tags": []
+  },
+  "bria/image-3.2": {
+    "elo": 899,
+    "speed": 5.0,
+    "speedrating": 1,
+    "tags": []
+  },
+  "dall-e-3": {
+    "elo": 937,
+    "speed": 16.3,
+    "speedrating": 3,
+    "tags": []
+  },
+  "gpt-image-1": {
+    "elo": 1129,
+    "speed": 46.0,
+    "speedrating": 5,
+    "tags": [
+      "allrounder",
+      "fotorealistic"
+    ]
+  },
+  "stability-ai/stable-image-core": {
+    "elo": 0,
+    "speed": 14,
+    "speedrating": 2,
+    "tags": []
+  },
+  "stability-ai/stable-image-ultra": {
+    "elo": 0,
+    "speed": 17,
+    "speedrating": 3,
+    "tags": []
+  },
+  "black-forest-labs/schnell": {
+    "elo": 1000,
+    "speed": 0.9,
+    "speedrating": 0,
+    "tags": [
+      "dirty",
+      "nsfw"
+    ]
+  },
+  "black-forest-labs/flux-dev": {
+    "elo": 1038,
+    "speed": 3.3,
+    "speedrating": 1,
+    "tags": [
+      "image-to-image",
+      "nsfw"
+    ]
+  },
+  "black-forest-labs/flux-pro": {
+    "elo": 1076,
+    "speed": 3.9,
+    "speedrating": 1,
+    "tags": [
+      "image-to-image",
+      "fotorealistic",
+      "nsfw",
+      "beginner"
+    ]
+  },
+  "black-forest-labs/flux-pro-ultra": {
+    "elo": 1089,
+    "speed": 13.1,
+    "speedrating": 2,
+    "tags": [
+      "image-to-image",
+      "fotorealistic",
+      "nsfw"
+    ]
+  },
+  "stability-ai/sdxl": {
+    "elo": 855,
+    "speed": 5.0,
+    "speedrating": 1,
+    "tags": []
+  },
+  "bytedance/sdxl-lightning-4step": {
+    "elo": 893,
+    "speed": 1.1,
+    "speedrating": 0,
+    "tags": [
+      "nsfw"
+    ]
+  },
+  "playgroundai/playground-v2.5": {
+    "elo": 970,
+    "speed": 4.4,
+    "speedrating": 1,
+    "tags": [
+      "image-to-image",
+      "nsfw"
+    ]
+  },
+  "luma/photon": {
+    "elo": 1062,
+    "speed": 18.1,
+    "speedrating": 3,
+    "tags": [
+      "image-to-image"
+    ]
+  },
+  "luma/photon-flash": {
+    "elo": 972,
+    "speed": 11.4,
+    "speedrating": 2,
+    "tags": [
+      "image-to-image"
+    ]
+  },
+  "nvidia/sana": {
+    "elo": 937,
+    "speed": 1.2,
+    "speedrating": 0,
+    "tags": []
+  },
+  "google/imagen-3": {
+    "elo": 1101,
+    "speed": 7.3,
+    "speedrating": 2,
+    "tags": [
+      "fotorealistic",
+      "beginner"
+    ]
+  },
+  "google/imagen-3-fast": {
+    "elo": 0,
+    "speed": 2.9,
+    "speedrating": 1,
+    "tags": []
+  },
+  "prunaai/hidream-l1-dev": {
+    "elo": 1046,
+    "speed": 15.0,
+    "speedrating": 2,
+    "tags": []
+  },
+  "prunaai/hidream-l1-fast": {
+    "elo": 1046,
+    "speed": 7.0,
+    "speedrating": 1,
+    "tags": []
+  }
+}

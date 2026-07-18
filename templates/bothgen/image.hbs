@@ -1,0 +1,28 @@
+<section class="tab standard-form max100height overflow-hidden {{tabs.image.cssClass}}" data-tab="image"
+    data-group="{{tabs.image.group}}">
+
+    <div class="cibola8-intro-text cibola8-mt-1">
+        <i class="fas fa-image cibola8-intro-icon"></i>
+        <span>{{localize 'cibola8.AiImageGen.description'}}</span>
+    </div>
+
+    <div class="flexrow stretch max100height overflow-hidden">
+        {{#if (or userInfo.alive clientOnlyModeEnabled)}}
+        {{#if (and canDoFiles canEdit)}}
+        {{> modules/cibola8/templates/bothgen/sidebar.hbs}}
+        <div class="flexcol stretch relativedisplay max100height cibola8-image-workspace cibola8-mt-2">
+            <div class="">
+                {{> modules/cibola8/templates/bothgen/toolbar.hbs}}
+            </div>
+            {{> modules/cibola8/templates/bothgen/canvas.hbs}}
+        </div>
+        {{else}}
+        <p class="notes cibola8-warning-box"><i class="fas fa-exclamation-triangle"></i> {{localize
+            'cibola8.NoUploadPermission'}}</p>
+        {{/if}}
+        {{else}}
+        {{{patreon}}}
+        {{/if}}
+    </div>
+
+</section>

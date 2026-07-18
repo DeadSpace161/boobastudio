@@ -1,0 +1,615 @@
+// =============================================================================
+// Cibola 8 Onboarding / Welcome Landing Page
+// Minimal overrides - Uses design system components from _cibola_components.scss
+// 
+// Design System Components Used:
+//   - Buttons: .cibola8-btn--accent, .cibola8-btn--secondary, .cibola8-btn--draggable
+//   - Cards: .cibola8-card, .cibola8-card--clickable, .cibola8-card--compact
+//   - Notices: .cibola8-notice--warning
+//   - Badges: .cibola8-badge--success
+//   - Utilities: .cibola8-flex, .cibola8-gap-*, .cibola8-mt-*, etc.
+// =============================================================================
+
+// Force dark theme for the onboarding window (works in both light and dark Foundry themes)
+.cibola8-dark-theme {
+  // Override Foundry's color system variables for proper contrast
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #a0a0a0;
+  --color-text-light-highlight: #ffffff;
+  --color-text-dark-primary: #1a1a2e;
+  --color-text-emphatic: #ffffff;
+  --color-text-light-0: #ffffff;
+  --color-text-light-1: #e0e0e0;
+  --color-text-light-2: #c0c0c0;
+  --color-text-light-3: #a0a0a0;
+  --color-text-light-4: #808080;
+  --color-text-light-5: #606060;
+  --color-text-light-6: #404040;
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  --color-shadow-primary: rgba(0, 0, 0, 0.5);
+  --color-shadow-highlight: rgba(255, 147, 0, 0.3);
+  
+  // Form label and hint colors
+  --color-form-label: #e0e0e0;
+  --color-form-label-hover: #ffffff;
+  --color-form-hint: #a0a0a0;
+  --color-form-hint-hover: #c0c0c0;
+  --input-placeholder-color: #a0a0a0;
+  --button-text-color: #e0e0e0;
+  
+  // Cibola custom vars for elements
+  --cibola-text: #ffffff;
+  --cibola-bg-input: rgba(0, 0, 0, 0.3);
+  --cibola-bg-dark: #1a1a2e;
+  --cibola-bg-darkest: #0f0f23;
+  
+  background: linear-gradient(135deg, #1a0a2e 0%, #0d1b2a 50%, #1a1a2e 100%);
+  color: #e0e0e0;
+  
+  // Direct element styling for dark theme
+  label {
+    color: var(--color-form-label) !important;
+    
+    &:hover {
+      color: var(--color-form-label-hover) !important;
+    }
+  }
+  
+  .hint, .notes, p.notes {
+    color: var(--color-form-hint) !important;
+  }
+  
+  input, textarea {
+    color: var(--cibola-text) !important;
+    background-color: var(--cibola-bg-input) !important;
+    
+    &::placeholder {
+      color: var(--input-placeholder-color) !important;
+      opacity: 1;
+    }
+  }
+  
+  select {
+    color: var(--cibola-text) !important;
+    background-color: var(--cibola-bg-input) !important;
+    padding: 0.25rem 0.5rem !important;
+    line-height: 1.4 !important;
+    
+    option {
+      background-color: var(--cibola-bg-dark) !important;
+      color: var(--cibola-text) !important;
+      padding: 0.25rem 0.5rem;
+    }
+    
+    optgroup {
+      background-color: var(--cibola-bg-darkest) !important;
+      color: var(--cibola-text) !important;
+    }
+  }
+  
+  button {
+    color: var(--cibola-text) !important;
+  }
+
+  .window-header {
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+
+    .window-title {
+      color: #e0e0e0;
+    }
+  }
+
+  .window-content {
+    background: transparent;
+  }
+}
+
+// =============================================================================
+// Onboarding Container & Layout
+// =============================================================================
+
+.cibola8-onboarding {
+  // Orange accent color for onboarding (unique to this component)
+  --onboarding-accent: #ff9300;
+  --onboarding-glow: rgba(255, 147, 0, 0.4);
+  --onboarding-card-bg: rgba(255, 255, 255, 0.03);
+  --onboarding-card-border: rgba(255, 255, 255, 0.1);
+  --onboarding-card-hover: rgba(255, 147, 0, 0.15);
+  --onboarding-text: #e0e0e0;
+  --onboarding-text-muted: #a0a0a0;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--onboarding-text);
+  font-size: 0.95rem;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  isolation: isolate;
+
+  // Background with overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: 
+      linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.9) 100%),
+      url('../../templates/assets/cibolabug.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: cibola-fadeInUp 0.8s ease-out forwards;
+    animation-name: onboardingBgFadeIn;
+    pointer-events: none;
+  }
+
+  // Content area
+  &__content {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  // ==========================================================================
+  // Hero Section (Unique styling)
+  // ==========================================================================
+  &__hero {
+    text-align: center;
+    padding: 1rem 0;
+    animation: cibola-fadeInUp 0.5s ease-out 0.1s both;
+  }
+
+  &__logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    box-shadow: 0 0 30px var(--onboarding-glow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px var(--onboarding-glow);
+    }
+  }
+
+  &__title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    background: linear-gradient(90deg, #fff 0%, var(--onboarding-accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+  }
+
+  &__tagline {
+    font-size: 1rem;
+    color: var(--onboarding-text-muted);
+    margin: 0 0 1.25rem;
+  }
+
+  &__hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  // ==========================================================================
+  // Section Title (uses design system pattern)
+  // ==========================================================================
+  &__section-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--onboarding-accent);
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--onboarding-card-border);
+  }
+
+  // ==========================================================================
+  // Feature Cards Grid
+  // ==========================================================================
+  &__features {
+    animation: cibola-fadeInUp 0.5s ease-out 0.1s both;
+  }
+
+  &__feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  // Feature card extends design system card with onboarding colors
+  &__feature-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0.75rem;
+    background: var(--onboarding-card-bg);
+    border: 1px solid var(--onboarding-card-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: var(--onboarding-card-hover);
+      border-color: rgba(255, 147, 0, 0.6);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+
+      .cibola8-onboarding__feature-icon {
+        transform: scale(1.1);
+        color: var(--onboarding-accent);
+      }
+
+      .cibola8-onboarding__feature-info {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__feature-info {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--onboarding-text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    line-height: 1;
+
+    &:hover {
+      color: var(--onboarding-accent);
+    }
+  }
+
+  &__feature-icon {
+    font-size: 1.75rem;
+    color: var(--onboarding-text-muted);
+    margin-bottom: 0.5rem;
+    transition: all 0.25s ease;
+  }
+
+  &__feature-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--onboarding-text);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  // ==========================================================================
+  // Find Cibola (Logo Explanation)
+  // ==========================================================================
+  &__find-cibola {
+    animation: cibola-fadeInUp 0.5s ease-out 0.15s both;
+  }
+
+  &__find-cibola-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: var(--onboarding-card-bg);
+    border: 1px solid var(--onboarding-card-border);
+    border-radius: 10px;
+  }
+
+  &__find-cibola-icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: rgba(255, 147, 0, 0.1);
+    border: 2px solid rgba(255, 147, 0, 0.3);
+    box-shadow: 0 0 25px rgba(255, 147, 0, 0.2);
+
+    i {
+      font-size: 3.5rem;
+      color: var(--onboarding-accent);
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  &__find-cibola-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__find-cibola-desc {
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+    color: var(--onboarding-text);
+    line-height: 1.5;
+  }
+
+  &__find-cibola-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    li {
+      font-size: 0.85rem;
+      color: var(--onboarding-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        color: var(--onboarding-accent);
+        width: 1rem;
+        text-align: center;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  // ==========================================================================
+  // Connection Modes
+  // ==========================================================================
+  &__modes {
+    animation: cibola-fadeInUp 0.5s ease-out 0.2s both;
+  }
+
+  &__mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  &__mode-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background: var(--onboarding-card-bg);
+    border: 1px solid var(--onboarding-card-border);
+    border-radius: 10px;
+    transition: all 0.25s ease;
+
+    &:hover {
+      background: var(--onboarding-card-hover);
+      border-color: rgba(255, 147, 0, 0.6);
+    }
+
+    &--connected {
+      border-color: rgba(40, 167, 69, 0.3);
+      background: rgba(40, 167, 69, 0.05);
+    }
+  }
+
+  &__mode-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    i {
+      font-size: 1.25rem;
+      color: var(--onboarding-accent);
+    }
+
+    span {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+  }
+
+  &__mode-desc {
+    font-size: 0.8rem;
+    color: var(--onboarding-text-muted);
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  &__mode-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .cibola8-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  // ==========================================================================
+  // Gallery Preview
+  // ==========================================================================
+  &__gallery {
+    animation: cibola-fadeInUp 0.5s ease-out 0.25s both;
+  }
+
+  &__gallery-grid {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--onboarding-card-border);
+      border-radius: 3px;
+
+      &:hover {
+        background: rgba(255, 147, 0, 0.6);
+      }
+    }
+  }
+
+  &__gallery-item {
+    flex: 0 0 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--onboarding-card-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      border-color: rgba(255, 147, 0, 0.6);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__gallery-placeholder {
+    flex: 0 0 80px;
+    height: 80px;
+    border-radius: 8px;
+    background: var(--onboarding-card-bg);
+    border: 1px dashed var(--onboarding-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--onboarding-text-muted);
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  &__gallery-more {
+    flex: 0 0 80px;
+    height: 80px;
+    border-radius: 8px;
+    background: var(--onboarding-card-bg);
+    border: 1px solid var(--onboarding-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--onboarding-accent);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--onboarding-card-hover);
+      border-color: rgba(255, 147, 0, 0.6);
+    }
+  }
+
+  // ==========================================================================
+  // Resources Row
+  // ==========================================================================
+  &__resources {
+    animation: cibola-fadeInUp 0.5s ease-out 0.3s both;
+  }
+
+  &__resource-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  // ==========================================================================
+  // Footer
+  // ==========================================================================
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--onboarding-card-border);
+    background: rgba(0, 0, 0, 0.3);
+    animation: cibola-fadeInUp 0.5s ease-out 0.35s both;
+  }
+
+  &__dont-show {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--onboarding-text-muted);
+    cursor: pointer;
+
+    input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--onboarding-accent);
+    }
+
+    &:hover {
+      color: var(--onboarding-text);
+    }
+  }
+}
+
+// =============================================================================
+// Animations
+// =============================================================================
+@keyframes onboardingBgFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+
+// =============================================================================
+// Tooltip Styles for Feature Cards (Foundry HTML Tooltip compatible)
+// =============================================================================
+.cibola8-feature-tooltip {
+  max-width: 250px;
+  padding: 0.75rem;
+
+  &__title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 0 0 0.5rem;
+    color: #ff9300;
+  }
+
+  &__desc {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0 0 0.75rem;
+    color: #ccc;
+  }
+
+  &__hint {
+    font-size: 0.75rem;
+    color: #888;
+    font-style: italic;
+  }
+}

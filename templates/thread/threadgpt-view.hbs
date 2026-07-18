@@ -1,0 +1,46 @@
+<section class="journal-page-content stretch flexcol scrollable cibola8-thread">
+    <div class="cibola8-thread__messages mainContentScroller {{ifThen isV1 '' 'scrollable'}} stretch">
+        {{#unless document.system.messages}}
+        <div class="cibola8-thread__welcome">
+            <div class="cibola8-intro-text cibola8-mb-3">
+                <i class="fas fa-comments cibola8-intro-icon"></i>
+                <span>{{localize 'cibola8.AiThread.explanation'}}</span>
+            </div>
+            <div class="cibola8-card-grid cibola8-card-grid--2">
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.1'}}}</div>
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.2'}}}</div>
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.3'}}}</div>
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.4'}}}</div>
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.5'}}}</div>
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.6'}}}</div>
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.7'}}}</div>
+                <div class="cibola8-card cibola8-card--compact">{{{localize 'cibola8.AiThread.example.8'}}}</div>
+            </div>
+        </div>
+        {{/unless}}
+        {{#each document.system.messages as |message|}}
+        {{> modules/cibola8/templates/thread/message.hbs message=message isWritable=../isWritable}}
+        {{/each}}
+    </div>
+    <div class="hidden jump-to-bottom cibola8-thread__jump-bottom">
+        <a aria-label="{{localize 'CHAT.JumpToBottom'}}" role="button"><i class="fas fa-keyboard-down"></i>
+            {{localize "CHAT.JumpToBottom"}}</a>
+    </div>
+    {{#if userInfo.alive}}
+    <div class="cibola8-thread__input inputcontainer">
+        <div class="cibola8-thread__health" data-tooltip="cibola8.health">
+            <div class="progressbar aihealth" style="--height: {{userInfo.health}}" data-label="{{userPercent}}"></div>
+        </div>
+        <button type="button" class="cibola8-btn cibola8-btn--icon cibola8-btn--ghost ellipsisMenu" data-tooltip="cibola8.options">
+            <i class="fas fa-ellipsis-vertical"></i>
+        </button>
+        <textarea class="cibola8-textarea cibola8-thread__textarea" {{#unless isWritable}}disabled{{/unless}}
+            name="prompt" placeholder="{{localize 'cibola8.AiThread.sendMessage'}}"></textarea>
+        <button type="button" class="cibola8-btn cibola8-btn--primary" data-action="sendMessage" {{#unless isWritable}}disabled{{/unless}}>
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+    {{else}}
+    {{{patreon}}}
+    {{/if}}
+</section>

@@ -1,0 +1,31 @@
+<div class="scrollable stretch">
+    {{#if customDescription}}
+        <div class="cibola8-hint cibola8-hint--compact cibola8-mb-1">
+            <i class="fas fa-info-circle"></i>
+            <span>{{localize customDescription}}</span>
+        </div>
+    {{else}}
+        <div class="cibola8-hint cibola8-hint--compact cibola8-mb-1">
+            <i class="fas fa-info-circle"></i>
+            <span>{{localize 'cibola8.alternatemode.description'}}</span>
+        </div>
+    {{/if}}
+    <div class="imagesGroupParent">
+        <div class="radioTextGroup flexrow">
+        {{#each models as |item key|}}
+            <input type="radio" id="sketch_{{key}}_{{../randomId}}" name="choice" value="{{key}}" {{checked (eq key ../selected)}}>
+            <label for="sketch_{{key}}_{{../randomId}}" class="stretch">
+                <h3>{{localize (cibolaConcat 'cibola8.alternatemodenames.' item.name)}}</h3>
+                {{{item.manaHtml}}}
+                {{#unless ../customDescription}}
+                <p>{{localize (cibolaConcat 'cibola8.alternatemode.' key)}}</p>
+                {{/unless}}
+            </label>
+        {{/each}}
+        </div>        
+    </div>
+
+    <div class="modelFields">
+        {{{modelFields}}}
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="flexrow tokenRow" data-index="{{item.index}}">
+    <img src="{{item.img}}" style="max-width: 80px; height: 80px;" />
+    <div class="flexrow">
+        <!--input type="checkbox" class="smallbutton" name="token_{{i}}" value="{{item}}" checked/-->
+        <button type="button" data-tooltip="cibola8.tokenhorde.autotokenhint" data-action="autoToken"><i
+                class="fas fa-image"></i> {{localize 'cibola8.tokenhorde.autotoken' }}</button>
+        <button type="button" data-tooltip="cibola8.tokenhorde.manualTokenHint" data-action="manualToken"><i
+                class="fas fa-hand"></i> {{localize 'cibola8.tokenhorde.manualtoken' }}</button>
+        <button type="button" class="smallbutton" data-action="removeEntry"><i class="fas fa-trash"></i></button>
+    </div>
+</div>
