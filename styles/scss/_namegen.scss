@@ -5,8 +5,8 @@
 // Uses design system components from _cibola_components.scss
 // ============================================================
 
-.cibola8 {
-  .cibola8-namegen {
+.boobastudio {
+  .boobastudio-namegen {
     display: flex;
     flex-direction: column;
     padding: 1rem;
@@ -20,7 +20,7 @@
       gap: 1rem;
 
       // Larger border radius for groups
-      &.cibola8-glass {
+      &.boobastudio-glass {
         border-radius: 12px;
       }
     }
@@ -48,14 +48,14 @@
       flex: 1;
       min-width: 0;
 
-      .cibola8-input {
+      .boobastudio-input {
         flex: 1;
         min-width: 100px;
         padding: 0.5rem 0.75rem;
       }
 
       // Icon-only tool button override
-      .cibola8-tool-btn--icon {
+      .boobastudio-tool-btn--icon {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -68,28 +68,28 @@
       }
     }
 
-    // Empty state - inherits from .cibola8-empty-state
+    // Empty state - inherits from .boobastudio-empty-state
     &__empty {
       flex: 1;
 
       // Larger icon for namegen empty state
-      .cibola8-empty-state__icon {
+      .boobastudio-empty-state__icon {
         font-size: 4rem;
         opacity: 0.5;
       }
 
-      .cibola8-empty-state__description {
+      .boobastudio-empty-state__description {
         max-width: 400px;
       }
 
-      .cibola8-empty-state__help {
+      .boobastudio-empty-state__help {
         text-align: left;
         max-width: 400px;
       }
     }
 
     // Tool button with text override (not icon-only)
-    .cibola8-tool-btn:has(span) {
+    .boobastudio-tool-btn:has(span) {
       width: auto !important;
       min-width: auto !important;
       max-width: none;
@@ -101,7 +101,7 @@
       }
     }
 
-    .cibola8-textarea {
+    .boobastudio-textarea {
       min-height: 60px;
       resize: vertical;
       line-height: 1.4;

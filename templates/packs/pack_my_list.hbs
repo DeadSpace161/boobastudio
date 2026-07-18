@@ -1,21 +1,21 @@
 {{!-- My Packs list - shows user's own packs with status badges --}}
 <div class="pack-my-list">
   <div class="pack-my-list-header">
-    <button class="cibola8-btn cibola8-btn--secondary" data-action="backToCatalog" type="button">
+    <button class="boobastudio-btn boobastudio-btn--secondary" data-action="backToCatalog" type="button">
       <i class="fas fa-arrow-left"></i>
-      {{localize 'cibola8.packs.backToCatalog'}}
+      {{localize 'boobastudio.packs.backToCatalog'}}
     </button>
-    <button class="cibola8-btn cibola8-btn--primary cibola8-btn--sm" data-action="createPack" type="button">
+    <button class="boobastudio-btn boobastudio-btn--primary boobastudio-btn--sm" data-action="createPack" type="button">
       <i class="fas fa-plus"></i>
-      {{localize 'cibola8.packs.createNewPack'}}
+      {{localize 'boobastudio.packs.createNewPack'}}
     </button>
   </div>
 
   {{#if packs.length}}
   <div class="gallery-masonry pack-grid">
     {{#each packs}}
-    <div class="pack-card pack-card--mine" 
-         data-pack-id="{{this.id}}" 
+    <div class="pack-card pack-card--mine"
+         data-pack-id="{{this.id}}"
          data-action="editPack">
       {{!-- Banner --}}
       <div class="pack-card-banner">
@@ -45,7 +45,7 @@
       {{!-- Hover actions --}}
       <div class="pack-card-hover">
         <button class="pack-card-action" data-action="editPack"
-                data-tooltip="cibola8.packs.editor.edit" type="button">
+                data-tooltip="boobastudio.packs.editor.edit" type="button">
           <i class="fas fa-pen"></i>
         </button>
       </div>
@@ -55,8 +55,8 @@
   {{else}}
   <div class="gallery-empty">
     <i class="fas fa-box-open"></i>
-    <p>{{localize 'cibola8.packs.editor.noPacksYet'}}</p>
-    <p class="cibola8-text-muted">{{localize 'cibola8.packs.editor.noPacksYetHint'}}</p>
+    <p>{{localize 'boobastudio.packs.editor.noPacksYet'}}</p>
+    <p class="boobastudio-text-muted">{{localize 'boobastudio.packs.editor.noPacksYetHint'}}</p>
   </div>
   {{/if}}
 </div>

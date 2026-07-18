@@ -1,0 +1,42 @@
+import assert from "node:assert/strict";
+
+const hooks = new Map();
+const values = new Map();
+const requests = [];
+
+globalThis.Hooks = { once(name, callback) { hooks.set(name, callback); } };
+globalThis.game = {
+  settings: {
+    register(namespace, key, definition) { values.set(`${namespace}.${key}`, values.get(`${namespace}.${key}`) ?? definition.default); },
+    get(namespace, key) { return values.get(`${namespace}.${key}`); },
+    async set(namespace, key, value) { values.set(`${namespace}.${key}`, value); },
+  },
+};
+globalThis.fetch = async (input, init) => {
+  requests.push({ input, init });
+  if (String(input).endsWith("/chat/completions")) return new Response(JSON.stringify({ choices: [{ message: { content: "provider response" } }] }), { status: 200 });
+  if (String(input).endsWith("/images/generations")) return new Response(JSON.stringify({ data: [{ b64_json: "aGVsbG8=" }] }), { status: 200 });
+  return new Response(JSON.stringify({ error: { message: "unexpected request" } }), { status: 500 });
+};
+
+await import("../bundle/modules/boobastudio-openai-compatible.js");
+await hooks.get("init")();
+values.set("boobastudio.providerEnabled", true);
+values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
+values.set("boobastudio.providerApiKey", "test-key");
+values.set("boobastudio.providerModel", "local-model");
+values.set("boobastudio.providerHeaders", JSON.stringify({ "X-Test": "yes" }));
+await hooks.get("ready")();
+
+const textResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ model: "gpt-5", input: [{ role: "user", content: [{ type: "input_text", text: "hello" }] }] }) });
+assert.equal((await textResponse.json()).output[0].content[0].text, "provider response");
+assert.equal(requests[0].input, "http://provider.test/v1/chat/completions");
+assert.equal(JSON.parse(requests[0].init.body).model, "local-model");
+assert.equal(requests[0].init.headers.Authorization, "Bearer test-key");
+assert.equal(requests[0].init.headers["X-Test"], "yes");
+
+const imageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "gpt-image-1", prompt: "a castle" }) });
+assert.equal((await imageResponse.json()).data[0].b64_json, "aGVsbG8=");
+assert.equal(requests[1].input, "http://provider.test/v1/images/generations");
+
+console.log("BoobaStudio provider smoke test passed");

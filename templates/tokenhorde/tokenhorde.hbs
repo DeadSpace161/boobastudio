@@ -1,46 +1,46 @@
 <div class="scrollable cibolagen">
-    <div class="cibola8-intro-text cibola8-mb-2">
-        <i class="fas fa-layer-group cibola8-intro-icon"></i>
-        <span>{{localize 'cibola8.tokenhorde.description'}}</span>
+    <div class="boobastudio-intro-text boobastudio-mb-2">
+        <i class="fas fa-layer-group boobastudio-intro-icon"></i>
+        <span>{{localize 'boobastudio.tokenhorde.description'}}</span>
     </div>
 
     {{#if tokenizeractive}}
-    <fieldset class="t-spacer cibola8-glass">
-        <legend><i class="fas fa-cog"></i> {{ localize 'cibola8.configuration' }}</legend>
-        <div class="form-group cibola8-form-group-animated">
-            <label><i class="fas fa-tag"></i> {{localize 'cibola8.tokenhorde.prefix'}}</label>
+    <fieldset class="t-spacer boobastudio-glass">
+        <legend><i class="fas fa-cog"></i> {{ localize 'boobastudio.configuration' }}</legend>
+        <div class="form-group boobastudio-form-group-animated">
+            <label><i class="fas fa-tag"></i> {{localize 'boobastudio.tokenhorde.prefix'}}</label>
             <div class="form-fields">
-                <input name="prefix" type="text" value="{{tokenSuffix}}" class="cibola8-input" />
+                <input name="prefix" type="text" value="{{tokenSuffix}}" class="boobastudio-input" />
             </div>
-            <span class="hint cibola8-hint">{{ localize 'cibola8.tokenhorde.prefixhint' }}</span>
+            <span class="hint boobastudio-hint">{{ localize 'boobastudio.tokenhorde.prefixhint' }}</span>
         </div>
-        
-        <div class="form-group cibola8-form-group-animated">
-            <label><i class="fas fa-folder"></i> {{localize 'cibola8.tokenhorde.outFolder'}}</label>
+
+        <div class="form-group boobastudio-form-group-animated">
+            <label><i class="fas fa-folder"></i> {{localize 'boobastudio.tokenhorde.outFolder'}}</label>
             <div class="form-fields">
                 <file-picker name='outFolder' type='folder' value='{{outFolder}}'></file-picker>
             </div>
-            <span class="hint cibola8-hint">{{ localize 'cibola8.tokenhorde.outFolderHint' }}</span>
+            <span class="hint boobastudio-hint">{{ localize 'boobastudio.tokenhorde.outFolderHint' }}</span>
         </div>
-        <div class="flexrow cibola8-action-bar mt-3">
-            <button type="button" class="cibola8-btn cibola8-btn--primary cibola8-btn--lg" data-tooltip="cibola8.tokenhorde.finishHorde" data-action="finishHorde"><i class="fas fa-check"></i> {{localize 'cibola8.tokenhorde.create' }}</button>
-            <button type="button" class="cibola8-tool-btn" data-tooltip="cibola8.browse" data-tooltip-direction="UP" data-action="browse"><i class="fas fa-file-import"></i></button>
-            <button type="button" class="cibola8-tool-btn" data-tooltip-direction="UP" data-tooltip="cibola8.tooltip.pickFromGallery" data-action="pickFromGallery"><i class="fas fa-images"></i></button>
-            <button type="button" class="cibola8-tool-btn" data-tooltip-direction="UP" data-tooltip="cibola8.packs.fromPackHint" data-action="fromPack"><i class="fas fa-box-open"></i></button>
+        <div class="flexrow boobastudio-action-bar mt-3">
+            <button type="button" class="boobastudio-btn boobastudio-btn--primary boobastudio-btn--lg" data-tooltip="boobastudio.tokenhorde.finishHorde" data-action="finishHorde"><i class="fas fa-check"></i> {{localize 'boobastudio.tokenhorde.create' }}</button>
+            <button type="button" class="boobastudio-tool-btn" data-tooltip="boobastudio.browse" data-tooltip-direction="UP" data-action="browse"><i class="fas fa-file-import"></i></button>
+            <button type="button" class="boobastudio-tool-btn" data-tooltip-direction="UP" data-tooltip="boobastudio.tooltip.pickFromGallery" data-action="pickFromGallery"><i class="fas fa-images"></i></button>
+            <button type="button" class="boobastudio-tool-btn" data-tooltip-direction="UP" data-tooltip="boobastudio.packs.fromPackHint" data-action="fromPack"><i class="fas fa-box-open"></i></button>
         </div>
-        
+
     </fieldset>
-    
-    <fieldset class="t-spacer tokenhorde cibola8-glass cibola8-horde-container">
-        <legend><i class="fas fa-images"></i> {{ localize 'cibola8.tokenhorde.tokenChose' }}</legend>
+
+    <fieldset class="t-spacer tokenhorde boobastudio-glass boobastudio-horde-container">
+        <legend><i class="fas fa-images"></i> {{ localize 'boobastudio.tokenhorde.tokenChose' }}</legend>
         {{#each history as |item|}}
-            {{> modules/cibola8/templates/tokenhorde/tokenrow.hbs item=item}}
+            {{> modules/boobastudio/templates/tokenhorde/tokenrow.hbs item=item}}
         {{/each}}
     </fieldset>
     {{else}}
-    <div class="cibola8-warning-box">
+    <div class="boobastudio-warning-box">
         <i class="fas fa-exclamation-triangle"></i>
-        <span>{{ localize 'cibola8.tokenhorde.requiresTokenizer' }}</span>
+        <span>{{ localize 'boobastudio.tokenhorde.requiresTokenizer' }}</span>
     </div>
     {{/if}}
 </div>

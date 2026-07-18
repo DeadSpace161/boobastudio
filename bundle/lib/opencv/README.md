@@ -27,5 +27,5 @@ Note: the docs-hosted `opencv.js` is typically a **single-file build** with the 
 
 ## Notes
 - The wall detection loader will try to load:
-  - `modules/cibola8/lib/opencv/opencv.js`
+  - `modules/boobastudio/lib/opencv/opencv.js`
 - No network/CDN is used; this is intended to work offline.

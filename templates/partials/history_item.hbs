@@ -1,12 +1,12 @@
 {{!-- Unified history item partial - matches gallery_embedded styling --}}
-<div class="cibola8-gallery-item cibola8-history-item{{#if showLoader}} cibola8-gallery-item--loading{{/if}}" {{{dataAttributes}}}>
+<div class="boobastudio-gallery-item boobastudio-history-item{{#if showLoader}} boobastudio-gallery-item--loading{{/if}}" {{{dataAttributes}}}>
   {{#if showLoader}}
-  <div class="cibola8-gallery-item-loader">
+  <div class="boobastudio-gallery-item-loader">
     <i class="fas fa-spinner fa-spin"></i>
   </div>
   {{/if}}
   {{#if isImage}}
-    <img 
+    <img
       src="{{src}}"
       alt="{{alt}}"
       loading="lazy"
@@ -19,7 +19,7 @@
         loading="lazy"
       />
     {{else}}
-      <div class="cibola8-history-audio-icon">
+      <div class="boobastudio-history-audio-icon">
         <i class="fas fa-music"></i>
       </div>
     {{/if}}
@@ -27,7 +27,7 @@
     <i class="{{icon}}"></i>
   {{/if}}
   {{#if showOverlay}}
-  <div class="cibola8-gallery-item-overlay">
+  <div class="boobastudio-gallery-item-overlay">
     <i class="fas fa-plus"></i>
   </div>
   {{/if}}

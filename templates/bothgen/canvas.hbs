@@ -1,21 +1,21 @@
 {{!-- PIXI Canvas Wrapper Partial --}}
-<div class="cibola8-canvas-wrapper max100height">
-    <div class="imgContext max100height maxHeight90 cibola8-image-canvas"
+<div class="boobastudio-canvas-wrapper max100height">
+    <div class="imgContext max100height maxHeight90 boobastudio-image-canvas"
         data-image-url="{{image.latestImg}}">
         {{!-- PIXI canvas will be injected here by ImageEditorCanvas --}}
 
         {{!-- Badges overlay --}}
-        <div class="cibolabadges cibola8-badges">
-            <span class="publicelement hidden cibola8-badge cibola8-badge--info"
-                data-tooltip="cibola8.tooltip.publicelement">
+        <div class="cibolabadges boobastudio-badges">
+            <span class="publicelement hidden boobastudio-badge boobastudio-badge--info"
+                data-tooltip="boobastudio.tooltip.publicelement">
                 <i class="fas fa-share"></i>
             </span>
         </div>
 
         {{!-- Fallback image (hidden when canvas is active) --}}
-        <img class="targetImg max100height cibola8-main-image cibola8-canvas-fallback"
+        <img class="targetImg max100height boobastudio-main-image boobastudio-canvas-fallback"
             src="{{image.latestImg}}" />
     </div>
 
-    {{> modules/cibola8/templates/bothgen/overlay-toolbar.hbs}}
+    {{> modules/boobastudio/templates/bothgen/overlay-toolbar.hbs}}
 </div>

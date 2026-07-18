@@ -3,15 +3,15 @@
 // Minimal overrides - Uses design system components from _cibola_components.scss
 // 
 // Design System Components Used:
-//   - Buttons: .cibola8-btn--accent, .cibola8-btn--secondary, .cibola8-btn--draggable
-//   - Cards: .cibola8-card, .cibola8-card--clickable, .cibola8-card--compact
-//   - Notices: .cibola8-notice--warning
-//   - Badges: .cibola8-badge--success
-//   - Utilities: .cibola8-flex, .cibola8-gap-*, .cibola8-mt-*, etc.
+//   - Buttons: .boobastudio-btn--accent, .boobastudio-btn--secondary, .boobastudio-btn--draggable
+//   - Cards: .boobastudio-card, .boobastudio-card--clickable, .boobastudio-card--compact
+//   - Notices: .boobastudio-notice--warning
+//   - Badges: .boobastudio-badge--success
+//   - Utilities: .boobastudio-flex, .boobastudio-gap-*, .boobastudio-mt-*, etc.
 // =============================================================================
 
 // Force dark theme for the onboarding window (works in both light and dark Foundry themes)
-.cibola8-dark-theme {
+.boobastudio-dark-theme {
   // Override Foundry's color system variables for proper contrast
   --color-text-primary: #e0e0e0;
   --color-text-secondary: #a0a0a0;
@@ -110,7 +110,7 @@
 // Onboarding Container & Layout
 // =============================================================================
 
-.cibola8-onboarding {
+.boobastudio-onboarding {
   // Orange accent color for onboarding (unique to this component)
   --onboarding-accent: #ff9300;
   --onboarding-glow: rgba(255, 147, 0, 0.4);
@@ -251,12 +251,12 @@
       border-color: rgba(255, 147, 0, 0.6);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 
-      .cibola8-onboarding__feature-icon {
+      .boobastudio-onboarding__feature-icon {
         transform: scale(1.1);
         color: var(--onboarding-accent);
       }
 
-      .cibola8-onboarding__feature-info {
+      .boobastudio-onboarding__feature-info {
         opacity: 1;
       }
     }
@@ -433,7 +433,7 @@
     flex-direction: column;
     gap: 0.5rem;
 
-    .cibola8-btn {
+    .boobastudio-btn {
       width: 100%;
       justify-content: center;
     }
@@ -589,7 +589,7 @@
 // =============================================================================
 // Tooltip Styles for Feature Cards (Foundry HTML Tooltip compatible)
 // =============================================================================
-.cibola8-feature-tooltip {
+.boobastudio-feature-tooltip {
   max-width: 250px;
   padding: 0.75rem;
 

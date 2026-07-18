@@ -1,46 +1,46 @@
 <section class="tab standard-form scrollable {{tabs.browser.cssClass}}" data-tab="browser"
     data-group="{{tabs.browser.group}}">
 
-    <p class="cibola8-text-muted cibola8-intro-text cibola8-mb-3">
-        <i class="fas fa-images cibola8-intro-icon"></i>
-        {{localize 'cibola8.AiBrowser.description'}}
+    <p class="boobastudio-text-muted boobastudio-intro-text boobastudio-mb-3">
+        <i class="fas fa-images boobastudio-intro-icon"></i>
+        {{localize 'boobastudio.AiBrowser.description'}}
     </p>
-    
+
     {{!-- Filter Section --}}
-    <div class="gallery-filters filterSection cibola8-tabs cibola8-tabs--inline">
-        <button data-action="changeFilter" data-filter="own" type="button" 
-                class="cibola8-tab {{ifThen (eq currenttab 'own') 'active' ''}}">
-            <i class="fas fa-image"></i> 
-            {{localize 'cibola8.AiBrowser.myimages'}}
+    <div class="gallery-filters filterSection boobastudio-tabs boobastudio-tabs--inline">
+        <button data-action="changeFilter" data-filter="own" type="button"
+                class="boobastudio-tab {{ifThen (eq currenttab 'own') 'active' ''}}">
+            <i class="fas fa-image"></i>
+            {{localize 'boobastudio.AiBrowser.myimages'}}
         </button>
         {{#unless hasCallback}}
-        <button data-action="changeFilter" data-filter="song" type="button" 
-                class="cibola8-tab {{ifThen (eq currenttab 'song') 'active' ''}}">
-            <i class="fas fa-music"></i> 
-            {{localize 'cibola8.AiBrowser.mysongs'}}
+        <button data-action="changeFilter" data-filter="song" type="button"
+                class="boobastudio-tab {{ifThen (eq currenttab 'song') 'active' ''}}">
+            <i class="fas fa-music"></i>
+            {{localize 'boobastudio.AiBrowser.mysongs'}}
         </button>
         {{/unless}}
-        <span class="cibola8-tab-divider"></span>
-        <button data-action="changeFilter" data-filter="all" type="button" 
-                class="cibola8-tab {{ifThen (eq currenttab 'all') 'active' ''}}">
-            <i class="fas fa-globe"></i> 
-            {{localize 'cibola8.AiBrowser.publicGallery'}}
+        <span class="boobastudio-tab-divider"></span>
+        <button data-action="changeFilter" data-filter="all" type="button"
+                class="boobastudio-tab {{ifThen (eq currenttab 'all') 'active' ''}}">
+            <i class="fas fa-globe"></i>
+            {{localize 'boobastudio.AiBrowser.publicGallery'}}
         </button>
-        <button data-action="changeFilter" data-filter="packs" type="button" 
-                class="cibola8-tab {{ifThen (eq currenttab 'packs') 'active' ''}}"
-                data-tooltip="cibola8.packs.titleHint">
-            <i class="fas fa-box-open"></i> 
-            {{localize 'cibola8.packs.title'}}
+        <button data-action="changeFilter" data-filter="packs" type="button"
+                class="boobastudio-tab {{ifThen (eq currenttab 'packs') 'active' ''}}"
+                data-tooltip="boobastudio.packs.titleHint">
+            <i class="fas fa-box-open"></i>
+            {{localize 'boobastudio.packs.title'}}
         </button>
     </div>
 
     {{!-- Search Section --}}
-    <div class="gallery-filters searchFilter cibola8-search-bar">        
-        <div class="gallery-search semanticSearch cibola8-search-input {{ifThen (eq currenttab 'all') '' 'hidden'}}">
+    <div class="gallery-filters searchFilter boobastudio-search-bar">
+        <div class="gallery-search semanticSearch boobastudio-search-input {{ifThen (eq currenttab 'all') '' 'hidden'}}">
             <i class="fas fa-search"></i>
-            <input type="text" name="search" placeholder="{{localize 'cibola8.AiBrowser.search'}}..."/>
+            <input type="text" name="search" placeholder="{{localize 'boobastudio.AiBrowser.search'}}..."/>
         </div>
-        <div class="gallery-search categorySearch cibola8-search-input">
+        <div class="gallery-search categorySearch boobastudio-search-input">
             <i class="fas fa-filter"></i>
             <select name="category">
                 {{selectOptions imageCategories localize=true}}
@@ -55,9 +55,9 @@
             <div class="gallery-masonry elements">
                 {{!-- Items loaded dynamically --}}
             </div>
-            <div class="gallery-loader mainloader cibola8-loader-container">
-                <div class="cibola8-spinner cibola8-spinner-lg"></div>
-                <span class="cibola8-loader-text">{{localize 'cibola8.loading'}}</span>
+            <div class="gallery-loader mainloader boobastudio-loader-container">
+                <div class="boobastudio-spinner boobastudio-spinner-lg"></div>
+                <span class="boobastudio-loader-text">{{localize 'boobastudio.loading'}}</span>
             </div>
         </div>
         {{else}}
@@ -66,27 +66,27 @@
 
         {{!-- Detail View Controls --}}
         <div class="detailControls hidden">
-            <div class="gallery-detail-view cibola8-glass">
+            <div class="gallery-detail-view boobastudio-glass">
                 <div class="detail-actions">
                     {{#if hasCallback}}
-                    <button class="cibola8-btn cibola8-btn--primary" data-action="pickGalleryImage" data-tooltip="cibola8.tooltip.yourchoice" type="button">
+                    <button class="boobastudio-btn boobastudio-btn--primary" data-action="pickGalleryImage" data-tooltip="boobastudio.tooltip.yourchoice" type="button">
                         <i class="fas fa-check"></i>
-                        {{localize 'cibola8.tooltip.yourchoice'}}
+                        {{localize 'boobastudio.tooltip.yourchoice'}}
                     </button>
                     {{/if}}
-                    <button class="cibola8-btn cibola8-btn--secondary" data-action="closeDetails" type="button">
+                    <button class="boobastudio-btn boobastudio-btn--secondary" data-action="closeDetails" type="button">
                         <i class="fas fa-arrow-left"></i>
-                        {{localize 'cibola8.radialMenu.back'}}
+                        {{localize 'boobastudio.radialMenu.back'}}
                     </button>
-                </div>            
+                </div>
             </div>
         </div>
 
         {{!-- Item Control Panel --}}
-        <fieldset class="detailControls hidden cibola8-control-panel">
-            <legend><i class="fas fa-sliders-h"></i> {{localize 'cibola8.AiBrowser.control'}}</legend>
-            <div class="detail-actions cibola8-action-bar">
-                <button class="cibola8-btn cibola8-btn--danger imageonly" data-action="deletePrediction" data-tooltip="cibola8.tooltip.deletePrediction" type="button">
+        <fieldset class="detailControls hidden boobastudio-control-panel">
+            <legend><i class="fas fa-sliders-h"></i> {{localize 'boobastudio.AiBrowser.control'}}</legend>
+            <div class="detail-actions boobastudio-action-bar">
+                <button class="boobastudio-btn boobastudio-btn--danger imageonly" data-action="deletePrediction" data-tooltip="boobastudio.tooltip.deletePrediction" type="button">
                     <i class="fas fa-trash"></i>
                 </button>
                 <div class="gallery-audio-player songonly">
@@ -94,11 +94,11 @@
                         <source type="audio/mpeg">
                     </audio>
                 </div>
-                <button class="cibola8-btn cibola8-btn--secondary imageonly" data-action="togglePublic" type="button">
-                    <i class="fas fa-bullhorn"></i> 
-                    {{localize 'cibola8.tooltip.togglePublic'}}
+                <button class="boobastudio-btn boobastudio-btn--secondary imageonly" data-action="togglePublic" type="button">
+                    <i class="fas fa-bullhorn"></i>
+                    {{localize 'boobastudio.tooltip.togglePublic'}}
                 </button>
-                <button class="cibola8-btn cibola8-btn--secondary" data-action="copyUrl" data-tooltip="cibola8.tooltip.copyUrl" type="button">
+                <button class="boobastudio-btn boobastudio-btn--secondary" data-action="copyUrl" data-tooltip="boobastudio.tooltip.copyUrl" type="button">
                     <i class="fas fa-copy"></i>
                 </button>
             </div>

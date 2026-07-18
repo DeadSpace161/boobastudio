@@ -2,7 +2,7 @@
 <div class="pack-dropdown-overlay" data-action="closePackDropdown">
   <div class="pack-dropdown" data-llmjob-id="{{llmjobId}}">
     <div class="pack-dropdown-header">
-      <span>{{localize 'cibola8.packs.addToPackTitle'}}</span>
+      <span>{{localize 'boobastudio.packs.addToPackTitle'}}</span>
       <button class="pack-dropdown-close" data-action="closePackDropdown" type="button">
         <i class="fas fa-times"></i>
       </button>
@@ -11,7 +11,7 @@
     <div class="pack-dropdown-list">
       {{#if myPacks.length}}
         {{#each myPacks}}
-        <button class="pack-dropdown-item" data-action="addImageToPack" 
+        <button class="pack-dropdown-item" data-action="addImageToPack"
                 data-pack-id="{{this.attributes.id}}" type="button"
                 data-tooltip="{{this.attributes.tagline}}">
           <span class="pack-dropdown-item-name">
@@ -28,16 +28,16 @@
       {{else}}
         <div class="pack-dropdown-empty">
           <i class="fas fa-box-open"></i>
-          <span>{{localize 'cibola8.packs.noPacks'}}</span>
+          <span>{{localize 'boobastudio.packs.noPacks'}}</span>
         </div>
       {{/if}}
     </div>
 
     <div class="pack-dropdown-footer">
-      <button class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm" 
-              data-action="createNewPack" data-tooltip="cibola8.packs.createNewPackHint" type="button">
+      <button class="boobastudio-btn boobastudio-btn--secondary boobastudio-btn--sm"
+              data-action="createNewPack" data-tooltip="boobastudio.packs.createNewPackHint" type="button">
         <i class="fas fa-plus"></i>
-        {{localize 'cibola8.packs.createNewPack'}}
+        {{localize 'boobastudio.packs.createNewPack'}}
       </button>
     </div>
   </div>

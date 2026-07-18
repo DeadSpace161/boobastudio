@@ -1,88 +1,88 @@
-<section class="tab standard-form scrollable cibola8-localizer-tab {{tabs.translations.cssClass}}" data-tab="translations" data-group="{{tabs.translations.group}}">
-  <div class="cibola8 cibola8-translations">
-    
+<section class="tab standard-form scrollable boobastudio-localizer-tab {{tabs.translations.cssClass}}" data-tab="translations" data-group="{{tabs.translations.group}}">
+  <div class="boobastudio boobastudio-translations">
+
     {{!-- Header --}}
-    <header class="cibola8-localizer-header">
-      <div class="cibola8-localizer-header-icon">
+    <header class="boobastudio-localizer-header">
+      <div class="boobastudio-localizer-header-icon">
         <i class="fas fa-file-alt"></i>
       </div>
-      <div class="cibola8-localizer-header-content">
-        <h2>{{localize 'cibola8.Localizer.translations'}}</h2>
-        <p>{{localize 'cibola8.Localizer.descriptionTranslations'}}</p>
+      <div class="boobastudio-localizer-header-content">
+        <h2>{{localize 'boobastudio.Localizer.translations'}}</h2>
+        <p>{{localize 'boobastudio.Localizer.descriptionTranslations'}}</p>
       </div>
     </header>
 
     {{!-- Warning Notice --}}
-    <div class="cibola8-notice cibola8-notice--warning">
+    <div class="boobastudio-notice boobastudio-notice--warning">
       <i class="fas fa-exclamation-triangle"></i>
-      <span>{{localize 'cibola8.Localizer.warning'}}</span>
+      <span>{{localize 'boobastudio.Localizer.warning'}}</span>
     </div>
-    
+
     {{#unless userInfo.alive}}
       {{{patreon}}}
     {{/unless}}
 
     {{!-- Supported Languages Section --}}
-    <div class="cibola8-section-card">
-      <div class="cibola8-section-card-header">
+    <div class="boobastudio-section-card">
+      <div class="boobastudio-section-card-header">
         <i class="fas fa-globe"></i>
-        <span>{{localize 'cibola8.Localizer.supported_translations'}}</span>
+        <span>{{localize 'boobastudio.Localizer.supported_translations'}}</span>
       </div>
-      <div class="cibola8-section-card-body">
-        <div class="cibola8-language-tags supportedLanguages">
+      <div class="boobastudio-section-card-body">
+        <div class="boobastudio-language-tags supportedLanguages">
           {{{translator.supportedLanguages}}}
         </div>
-        
-        <div class="cibola8-add-language-form">
-          <div class="cibola8-form-group cibola8-form-group--inline">
-            <label class="cibola8-form-label">
+
+        <div class="boobastudio-add-language-form">
+          <div class="boobastudio-form-group boobastudio-form-group--inline">
+            <label class="boobastudio-form-label">
               <i class="fas fa-plus-circle"></i>
-              {{localize 'cibola8.AiTranslator.language'}}
+              {{localize 'boobastudio.AiTranslator.language'}}
             </label>
-            <select name="newLanguage" class="cibola8-select">
+            <select name="newLanguage" class="boobastudio-select">
               {{selectOptions translator.languages selected=translator.language labelAttr="name" valueAttr="lang" sort=true}}
             </select>
-            <button type="button" class="cibola8-btn cibola8-btn--primary" data-action="saveLang" data-tooltip="{{localize 'cibola8.Localizer.addLanguage'}}">
+            <button type="button" class="boobastudio-btn boobastudio-btn--primary" data-action="saveLang" data-tooltip="{{localize 'boobastudio.Localizer.addLanguage'}}">
               <i class="fas fa-save"></i>
-              {{localize 'cibola8.save'}}
+              {{localize 'boobastudio.save'}}
             </button>
           </div>
-          <p class="cibola8-hint">
+          <p class="boobastudio-hint">
             <i class="fas fa-info-circle"></i>
-            {{localize 'cibola8.Localizer.addLanguage'}}
+            {{localize 'boobastudio.Localizer.addLanguage'}}
           </p>
         </div>
       </div>
     </div>
 
     {{!-- Language Files Section --}}
-    <div class="cibola8-section-card">
-      <div class="cibola8-section-card-header">
+    <div class="boobastudio-section-card">
+      <div class="boobastudio-section-card-header">
         <i class="fas fa-folder-open"></i>
-        <span>{{localize 'cibola8.Localizer.langFiles'}}</span>
-        <a class="cibola8-btn cibola8-btn--icon addOwnLangFile" data-tooltip="{{localize 'cibola8.tooltip.addOwnLangFile'}}">
+        <span>{{localize 'boobastudio.Localizer.langFiles'}}</span>
+        <a class="boobastudio-btn boobastudio-btn--icon addOwnLangFile" data-tooltip="{{localize 'boobastudio.tooltip.addOwnLangFile'}}">
           <i class="fas fa-upload"></i>
         </a>
       </div>
-      <div class="cibola8-section-card-body">
+      <div class="boobastudio-section-card-body">
         {{!-- Table Header --}}
-        <div class="cibola8-translation-table-header">
-          <div class="cibola8-translation-col cibola8-translation-col--module">{{localize 'cibola8.Localizer.modul'}}</div>
-          <div class="cibola8-translation-col cibola8-translation-col--lang">{{localize 'cibola8.AiTranslator.language'}}</div>
-          <div class="cibola8-translation-col cibola8-translation-col--status">{{localize 'cibola8.Localizer.active'}}</div>
-          <div class="cibola8-translation-col cibola8-translation-col--actions"></div>
+        <div class="boobastudio-translation-table-header">
+          <div class="boobastudio-translation-col boobastudio-translation-col--module">{{localize 'boobastudio.Localizer.modul'}}</div>
+          <div class="boobastudio-translation-col boobastudio-translation-col--lang">{{localize 'boobastudio.AiTranslator.language'}}</div>
+          <div class="boobastudio-translation-col boobastudio-translation-col--status">{{localize 'boobastudio.Localizer.active'}}</div>
+          <div class="boobastudio-translation-col boobastudio-translation-col--actions"></div>
         </div>
-        
+
         {{!-- Translation Files List --}}
-        <div class="cibola8-translation-list translationfiles">
+        <div class="boobastudio-translation-list translationfiles">
           {{#each translationData.files as |file|}}
-            {{> modules/cibola8/templates/localizer/translationentry.hbs file=file}}
+            {{> modules/boobastudio/templates/localizer/translationentry.hbs file=file}}
           {{/each}}
-          
+
           {{#unless translationData.files.length}}
-          <div class="cibola8-empty-state cibola8-empty-state--small">
+          <div class="boobastudio-empty-state boobastudio-empty-state--small">
             <i class="fas fa-file-circle-question"></i>
-            <p>{{localize 'cibola8.noEntries'}}</p>
+            <p>{{localize 'boobastudio.noEntries'}}</p>
           </div>
           {{/unless}}
         </div>

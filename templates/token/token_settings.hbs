@@ -2,77 +2,77 @@
   {{!-- ================================================================== --}}
   {{!-- Cibola API Key — primary connection method                         --}}
   {{!-- ================================================================== --}}
-  <fieldset class="cibola8-glass cibola8-mb-3">
-    <legend><i class="fas fa-key"></i> {{localize "cibola8.settings.apikey"}}</legend>
+  <fieldset class="boobastudio-glass boobastudio-mb-3">
+    <legend><i class="fas fa-key"></i> {{localize "boobastudio.settings.apikey"}}</legend>
 
-    <div class="cibola8-hint cibola8-mb-2">
+    <div class="boobastudio-hint boobastudio-mb-2">
       <i class="fas fa-info-circle"></i>
-      {{localize "cibola8.settings.apikeyHint"}}
+      {{localize "boobastudio.settings.apikeyHint"}}
     </div>
 
     {{!-- One-click Patreon connect --}}
-    <button type="button" class="cibola8-btn cibola8-btn--accent cibola8-btn--full" data-action="connectPatreon">
-      <i class="fab fa-patreon"></i> {{localize "cibola8.connect.button"}}
+    <button type="button" class="boobastudio-btn boobastudio-btn--accent boobastudio-btn--full" data-action="connectPatreon">
+      <i class="fab fa-patreon"></i> {{localize "boobastudio.connect.button"}}
     </button>
-    <p class="cibola8-hint cibola8-mt-1 cibola8-mb-2">
-      <i class="fas fa-bolt"></i> {{localize "cibola8.connect.hint"}}
+    <p class="boobastudio-hint boobastudio-mt-1 boobastudio-mb-2">
+      <i class="fas fa-bolt"></i> {{localize "boobastudio.connect.hint"}}
     </p>
 
     {{!-- Manual key entry (collapsed) --}}
-    <details class="cibola8-manual-key-section">
-      <summary class="cibola8-btn cibola8-btn--ghost cibola8-btn--sm cibola8-btn--full">
-        <i class="fas fa-keyboard"></i> {{localize "cibola8.connect.manualEntry"}}
+    <details class="boobastudio-manual-key-section">
+      <summary class="boobastudio-btn boobastudio-btn--ghost boobastudio-btn--sm boobastudio-btn--full">
+        <i class="fas fa-keyboard"></i> {{localize "boobastudio.connect.manualEntry"}}
       </summary>
 
-      <div class="cibola8-link-list cibola8-mb-2 cibola8-mt-1">
-        <a href="{{urls.patreon}}" target="_blank" class="cibola8-link-item">
-          <i class="fab fa-patreon"></i> {{localize "cibola8.token.getKeyPatreon"}}
+      <div class="boobastudio-link-list boobastudio-mb-2 boobastudio-mt-1">
+        <a href="{{urls.patreon}}" target="_blank" class="boobastudio-link-item">
+          <i class="fab fa-patreon"></i> {{localize "boobastudio.token.getKeyPatreon"}}
         </a>
-        <a href="{{urls.app}}" target="_blank" class="cibola8-link-item">
-          <i class="fas fa-globe"></i> {{localize "cibola8.token.getKeyApp"}}
+        <a href="{{urls.app}}" target="_blank" class="boobastudio-link-item">
+          <i class="fas fa-globe"></i> {{localize "boobastudio.token.getKeyApp"}}
         </a>
       </div>
 
-      <div class="form-group cibola8-form-group-animated">
-        <label><i class="fas fa-ticket"></i> {{localize "cibola8.settings.apikey"}}</label>
+      <div class="form-group boobastudio-form-group-animated">
+        <label><i class="fas fa-ticket"></i> {{localize "boobastudio.settings.apikey"}}</label>
         <div class="form-fields">
           {{#if revealed}}
-            <input name="apikey" type="text" value="{{tokenValue}}" placeholder="{{localize 'cibola8.settings.apiKeyPlaceholder'}}" class="cibola8-input" />
+            <input name="apikey" type="text" value="{{tokenValue}}" placeholder="{{localize 'boobastudio.settings.apiKeyPlaceholder'}}" class="boobastudio-input" />
           {{else}}
-            <input name="apikey" type="password" value="{{tokenValue}}" placeholder="{{localize 'cibola8.settings.apiKeyPlaceholder'}}" autocomplete="off" class="cibola8-input" />
+            <input name="apikey" type="password" value="{{tokenValue}}" placeholder="{{localize 'boobastudio.settings.apiKeyPlaceholder'}}" autocomplete="off" class="boobastudio-input" />
           {{/if}}
         </div>
       </div>
 
-      <div class="cibola8-action-bar">
-        <button type="button" class="cibola8-tool-btn" data-action="toggleReveal" data-tooltip="{{#if revealed}}Hide{{else}}Reveal{{/if}}">
+      <div class="boobastudio-action-bar">
+        <button type="button" class="boobastudio-tool-btn" data-action="toggleReveal" data-tooltip="{{#if revealed}}Hide{{else}}Reveal{{/if}}">
           {{#if revealed}}<i class="fas fa-eye-slash"></i>{{else}}<i class="fas fa-eye"></i>{{/if}}
         </button>
-        <button type="button" class="cibola8-tool-btn" data-action="copyToken" {{#unless revealed}}disabled{{/unless}} data-tooltip="cibola8.token.copy">
+        <button type="button" class="boobastudio-tool-btn" data-action="copyToken" {{#unless revealed}}disabled{{/unless}} data-tooltip="boobastudio.token.copy">
           <i class="fas fa-copy"></i>
         </button>
-        <button type="button" class="cibola8-btn cibola8-btn--primary" data-action="saveapikey">
-          <i class="fas fa-save"></i> {{localize "cibola8.save"}}
+        <button type="button" class="boobastudio-btn boobastudio-btn--primary" data-action="saveapikey">
+          <i class="fas fa-save"></i> {{localize "boobastudio.save"}}
         </button>
       </div>
     </details>
 
-    <hr class="cibola8-divider" />
+    <hr class="boobastudio-divider" />
 
     {{!-- Validation --}}
-    <div class="form-group cibola8-form-group-animated">
-      <label><i class="fas fa-check-circle"></i> {{localize "cibola8.token.validate"}}</label>
-      <div class="form-fields cibola8-validation-row">
-        <button type="button" class="cibola8-btn cibola8-btn--secondary" data-action="validateToken">
-          <i class="fas fa-sync-alt"></i> {{localize "cibola8.token.validate"}}
+    <div class="form-group boobastudio-form-group-animated">
+      <label><i class="fas fa-check-circle"></i> {{localize "boobastudio.token.validate"}}</label>
+      <div class="form-fields boobastudio-validation-row">
+        <button type="button" class="boobastudio-btn boobastudio-btn--secondary" data-action="validateToken">
+          <i class="fas fa-sync-alt"></i> {{localize "boobastudio.token.validate"}}
         </button>
-        <span class="cibola8-badge cibola8-badge--lg {{#if (eq status 'valid')}}cibola8-badge--success{{else if (eq status 'invalid')}}cibola8-badge--danger{{else}}cibola8-badge--muted{{/if}}">
+        <span class="boobastudio-badge boobastudio-badge--lg {{#if (eq status 'valid')}}boobastudio-badge--success{{else if (eq status 'invalid')}}boobastudio-badge--danger{{else}}boobastudio-badge--muted{{/if}}">
           <i class="fas {{#if (eq status 'valid')}}fa-check{{else if (eq status 'invalid')}}fa-times{{else}}fa-question{{/if}}"></i>
           {{statusLabel}}
         </span>
       </div>
-      <p class="cibola8-hint mt-1">
-        <i class="fas fa-lightbulb"></i> {{localize "cibola8.token.validateHint"}}
+      <p class="boobastudio-hint mt-1">
+        <i class="fas fa-lightbulb"></i> {{localize "boobastudio.token.validateHint"}}
       </p>
     </div>
   </fieldset>
@@ -80,50 +80,50 @@
   {{!-- ================================================================== --}}
   {{!-- OpenAI API Key — client-only fallback (limited features)           --}}
   {{!-- ================================================================== --}}
-  <fieldset class="cibola8-glass cibola8-glass--muted">
-    <legend><i class="fas fa-robot"></i> {{localize "cibola8.clientOnly.settings.openaiKey"}}</legend>
+  <fieldset class="boobastudio-glass boobastudio-glass--muted">
+    <legend><i class="fas fa-robot"></i> {{localize "boobastudio.clientOnly.settings.openaiKey"}}</legend>
 
     {{!-- Limited-functionality warning --}}
-    <div class="cibola8-warning-box cibola8-mb-2">
-      <div class="cibola8-warning-icon">
+    <div class="boobastudio-warning-box boobastudio-mb-2">
+      <div class="boobastudio-warning-icon">
         <i class="fas fa-exclamation-triangle"></i>
       </div>
-      <div class="cibola8-warning-content">
-        <p>{{localize "cibola8.clientOnly.settings.limitedWarning"}}</p>
+      <div class="boobastudio-warning-content">
+        <p>{{localize "boobastudio.clientOnly.settings.limitedWarning"}}</p>
       </div>
     </div>
 
-    <div class="cibola8-hint cibola8-mb-2">
+    <div class="boobastudio-hint boobastudio-mb-2">
       <i class="fas fa-info-circle"></i>
-      {{localize "cibola8.clientOnly.settings.openaiKeyHint"}}
+      {{localize "boobastudio.clientOnly.settings.openaiKeyHint"}}
     </div>
 
-    <div class="cibola8-link-list cibola8-mb-2">
-      <a href="{{urls.openaiPlatform}}" target="_blank" class="cibola8-link-item">
-        <i class="fab fa-openai"></i> {{localize "cibola8.clientOnly.settings.getOpenAIKey"}}
+    <div class="boobastudio-link-list boobastudio-mb-2">
+      <a href="{{urls.openaiPlatform}}" target="_blank" class="boobastudio-link-item">
+        <i class="fab fa-openai"></i> {{localize "boobastudio.clientOnly.settings.getOpenAIKey"}}
       </a>
     </div>
 
-    <div class="form-group cibola8-form-group-animated">
-      <label><i class="fab fa-openai"></i> {{localize "cibola8.clientOnly.settings.openaiKey"}}</label>
+    <div class="form-group boobastudio-form-group-animated">
+      <label><i class="fab fa-openai"></i> {{localize "boobastudio.clientOnly.settings.openaiKey"}}</label>
       <div class="form-fields">
         {{#if revealed}}
-          <input name="openaiApiKey" type="text" value="{{openaiKeyValue}}" placeholder="sk-..." class="cibola8-input" />
+          <input name="openaiApiKey" type="text" value="{{openaiKeyValue}}" placeholder="sk-..." class="boobastudio-input" />
         {{else}}
-          <input name="openaiApiKey" type="password" value="{{openaiKeyValue}}" placeholder="sk-..." autocomplete="off" class="cibola8-input" />
+          <input name="openaiApiKey" type="password" value="{{openaiKeyValue}}" placeholder="sk-..." autocomplete="off" class="boobastudio-input" />
         {{/if}}
       </div>
     </div>
 
-    <div class="cibola8-action-bar">
-      <button type="button" class="cibola8-tool-btn" data-action="toggleReveal">
+    <div class="boobastudio-action-bar">
+      <button type="button" class="boobastudio-tool-btn" data-action="toggleReveal">
         {{#if revealed}}<i class="fas fa-eye-slash"></i>{{else}}<i class="fas fa-eye"></i>{{/if}}
       </button>
-      <button type="button" class="cibola8-tool-btn" data-action="copyOpenAIKey" {{#unless revealed}}disabled{{/unless}} data-tooltip="cibola8.token.copy">
+      <button type="button" class="boobastudio-tool-btn" data-action="copyOpenAIKey" {{#unless revealed}}disabled{{/unless}} data-tooltip="boobastudio.token.copy">
         <i class="fas fa-copy"></i>
       </button>
-      <button type="button" class="cibola8-btn cibola8-btn--primary" data-action="saveOpenAIKey">
-        <i class="fas fa-save"></i> {{localize "cibola8.save"}}
+      <button type="button" class="boobastudio-btn boobastudio-btn--primary" data-action="saveOpenAIKey">
+        <i class="fas fa-save"></i> {{localize "boobastudio.save"}}
       </button>
     </div>
   </fieldset>

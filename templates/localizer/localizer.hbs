@@ -1,91 +1,91 @@
-<section class="tab standard-form scrollable cibola8-localizer-tab {{tabs.localizer.cssClass}}" data-tab="localizer" data-group="{{tabs.localizer.group}}">
-  <div class="cibola8 cibola8-localizer">
-    
+<section class="tab standard-form scrollable boobastudio-localizer-tab {{tabs.localizer.cssClass}}" data-tab="localizer" data-group="{{tabs.localizer.group}}">
+  <div class="boobastudio boobastudio-localizer">
+
     {{!-- Header --}}
-    <header class="cibola8-localizer-header">
-      <div class="cibola8-localizer-header-icon">
+    <header class="boobastudio-localizer-header">
+      <div class="boobastudio-localizer-header-icon">
         <i class="fas fa-language"></i>
       </div>
-      <div class="cibola8-localizer-header-content">
-        <h2>{{localize 'cibola8.Localizer.modules'}}</h2>
-        <p>{{localize 'cibola8.Localizer.description'}}</p>
+      <div class="boobastudio-localizer-header-content">
+        <h2>{{localize 'boobastudio.Localizer.modules'}}</h2>
+        <p>{{localize 'boobastudio.Localizer.description'}}</p>
       </div>
     </header>
 
     {{!-- Warning Notice --}}
-    <div class="cibola8-notice cibola8-notice--warning">
+    <div class="boobastudio-notice boobastudio-notice--warning">
       <i class="fas fa-exclamation-triangle"></i>
-      <span>{{localize 'cibola8.Localizer.warning'}}</span>
+      <span>{{localize 'boobastudio.Localizer.warning'}}</span>
     </div>
-    
+
     {{#unless userInfo.alive}}
       {{{patreon}}}
     {{/unless}}
-    
+
     {{!-- Translation Panel --}}
-    <div class="cibola8-localizer-panel">
+    <div class="boobastudio-localizer-panel">
       {{!-- Module Selection --}}
-      <div class="cibola8-form-group">
-        <label class="cibola8-form-label">
+      <div class="boobastudio-form-group">
+        <label class="boobastudio-form-label">
           <i class="fas fa-cube"></i>
-          {{localize 'cibola8.Localizer.modul'}}
+          {{localize 'boobastudio.Localizer.modul'}}
         </label>
-        <select name="moduleId" class="cibola8-select">
+        <select name="moduleId" class="boobastudio-select">
           {{selectOptions modules selected=selectedModul valueAttr='id' labelAttr='title' sort=true}}
         </select>
       </div>
-      
+
       {{!-- Translation Flow --}}
-      <div class="cibola8-translation-flow">
+      <div class="boobastudio-translation-flow">
         {{!-- Source Panel --}}
-        <div class="cibola8-translation-card cibola8-translation-card--source">
-          <div class="cibola8-translation-card-header">
+        <div class="boobastudio-translation-card boobastudio-translation-card--source">
+          <div class="boobastudio-translation-card-header">
             <i class="fas fa-file-import"></i>
-            <span>{{localize 'cibola8.Localizer.source'}}</span>
+            <span>{{localize 'boobastudio.Localizer.source'}}</span>
           </div>
-          <div class="cibola8-translation-card-body">
-            <div class="cibola8-form-group">
-              <label class="cibola8-form-label">{{localize 'cibola8.AiTranslator.language'}}</label>
-              <select name="moduleLanguage" class="cibola8-select">
+          <div class="boobastudio-translation-card-body">
+            <div class="boobastudio-form-group">
+              <label class="boobastudio-form-label">{{localize 'boobastudio.AiTranslator.language'}}</label>
+              <select name="moduleLanguage" class="boobastudio-select">
                 {{selectOptions languages selected=selectedLang valueAttr='lang' labelAttr='name' sort=true}}
               </select>
             </div>
-            <div class="cibola8-translation-card-visual">
-              <img src="modules/cibola8/templates/assets/scroll1.webp" alt="Source" />
+            <div class="boobastudio-translation-card-visual">
+              <img src="modules/boobastudio/templates/assets/scroll1.webp" alt="Source" />
             </div>
           </div>
         </div>
 
         {{!-- Flow Arrow --}}
-        <div class="cibola8-translation-arrow" data-tooltip="{{localize 'cibola8.Localizer.batchmodeHint'}}">
-          <div class="cibola8-batch-toggle">
+        <div class="boobastudio-translation-arrow" data-tooltip="{{localize 'boobastudio.Localizer.batchmodeHint'}}">
+          <div class="boobastudio-batch-toggle">
             <input type="checkbox" name="batch" id="batch-toggle" value="1" checked />
-            <label for="batch-toggle" class="cibola8-batch-label">
+            <label for="batch-toggle" class="boobastudio-batch-label">
               <i class="fas fa-bolt"></i>
-              <span class="cibola8-batch-info">
-                <span class="cibola8-badge cibola8-badge--info">{{localize 'cibola8.Localizer.batch'}}</span>
-                <span class="cibola8-batch-savings">1/2 <span class="manapot"></span></span>
+              <span class="boobastudio-batch-info">
+                <span class="boobastudio-badge boobastudio-badge--info">{{localize 'boobastudio.Localizer.batch'}}</span>
+                <span class="boobastudio-batch-savings">1/2 <span class="manapot"></span></span>
               </span>
             </label>
           </div>
-          <i class="fas fa-arrow-right cibola8-flow-icon"></i>
+          <i class="fas fa-arrow-right boobastudio-flow-icon"></i>
         </div>
 
         {{!-- Target Panel --}}
-        <div class="cibola8-translation-card cibola8-translation-card--target" data-tooltip="{{localize 'cibola8.AiTranslator.languagehint'}}">
-          <div class="cibola8-translation-card-header">
+        <div class="boobastudio-translation-card boobastudio-translation-card--target" data-tooltip="{{localize 'boobastudio.AiTranslator.languagehint'}}">
+          <div class="boobastudio-translation-card-header">
             <i class="fas fa-file-export"></i>
-            <span>{{localize 'cibola8.Localizer.target'}}</span>
+            <span>{{localize 'boobastudio.Localizer.target'}}</span>
           </div>
-          <div class="cibola8-translation-card-body">
-            <div class="cibola8-form-group">
-              <label class="cibola8-form-label">{{localize 'cibola8.AiTranslator.language'}}</label>
-              <select name="translator.language" class="cibola8-select">
+          <div class="boobastudio-translation-card-body">
+            <div class="boobastudio-form-group">
+              <label class="boobastudio-form-label">{{localize 'boobastudio.AiTranslator.language'}}</label>
+              <select name="translator.language" class="boobastudio-select">
                 {{selectOptions translator.languages selected=translator.language labelAttr='name' valueAttr='lang' sort=true}}
               </select>
             </div>
-            <div class="cibola8-translation-card-visual">
-              <img src="modules/cibola8/templates/assets/scroll2.webp" alt="Target" />
+            <div class="boobastudio-translation-card-visual">
+              <img src="modules/boobastudio/templates/assets/scroll2.webp" alt="Target" />
             </div>
           </div>
         </div>
@@ -93,14 +93,14 @@
 
       {{!-- Action Section --}}
       {{#if userInfo.alive}}
-      <div class="cibola8-localizer-actions">
-        <p class="cibola8-hint">
+      <div class="boobastudio-localizer-actions">
+        <p class="boobastudio-hint">
           <i class="fas fa-info-circle"></i>
-          {{localize 'cibola8.AiTranslator.waitSomeTime'}}
+          {{localize 'boobastudio.AiTranslator.waitSomeTime'}}
         </p>
-        <button type="button" class="cibola8-btn cibola8-btn--primary cibola8-btn--lg" data-tooltip="{{localize 'cibola8.spinner'}}" data-action="translate">
+        <button type="button" class="boobastudio-btn boobastudio-btn--primary boobastudio-btn--lg" data-tooltip="{{localize 'boobastudio.spinner'}}" data-action="translate">
           <i class="fas fa-language"></i>
-          {{localize 'cibola8.AiTranslator.title'}}
+          {{localize 'boobastudio.AiTranslator.title'}}
         </button>
       </div>
       {{/if}}

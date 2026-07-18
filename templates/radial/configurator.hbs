@@ -1,71 +1,71 @@
-<div class="cibola8-radial-config scrollable">
+<div class="boobastudio-radial-config scrollable">
     {{!-- Header --}}
-    <header class="cibola8-radial-header">
-        <div class="cibola8-radial-header-icon">
+    <header class="boobastudio-radial-header">
+        <div class="boobastudio-radial-header-icon">
             <i class="fas fa-circle-nodes"></i>
         </div>
-        <div class="cibola8-radial-header-content">
-            <h2>{{localize 'cibola8.settings.radialconfig'}}</h2>
-            <p class="cibola8-text-muted">{{localize 'cibola8.radialMenu.headerDescription'}}</p>
+        <div class="boobastudio-radial-header-content">
+            <h2>{{localize 'boobastudio.settings.radialconfig'}}</h2>
+            <p class="boobastudio-text-muted">{{localize 'boobastudio.radialMenu.headerDescription'}}</p>
         </div>
     </header>
 
     {{!-- Action Bar --}}
-    <div class="cibola8-radial-actions">
-        <button type="button" class="cibola8-btn-action cibola8-btn-action--primary" data-tooltip="{{localize 'cibola8.radialMenu.test'}}" data-action="testMenu">
+    <div class="boobastudio-radial-actions">
+        <button type="button" class="boobastudio-btn-action boobastudio-btn-action--primary" data-tooltip="{{localize 'boobastudio.radialMenu.test'}}" data-action="testMenu">
             <i class="fas fa-play"></i>
-            <span>{{localize 'cibola8.radialMenu.test'}}</span>
+            <span>{{localize 'boobastudio.radialMenu.test'}}</span>
         </button>
-        <button type="button" class="cibola8-btn-action cibola8-btn-action--success" data-tooltip="{{localize 'cibola8.radialMenu.addSection'}}" data-action="addSection">
+        <button type="button" class="boobastudio-btn-action boobastudio-btn-action--success" data-tooltip="{{localize 'boobastudio.radialMenu.addSection'}}" data-action="addSection">
             <i class="fas fa-plus"></i>
-            <span>{{localize 'cibola8.radialMenu.addSection'}}</span>
+            <span>{{localize 'boobastudio.radialMenu.addSection'}}</span>
         </button>
-        <button type="button" class="cibola8-btn-action dragMe" data-tooltip="{{localize 'cibola8.radialMenu.dragMe'}}">
+        <button type="button" class="boobastudio-btn-action dragMe" data-tooltip="{{localize 'boobastudio.radialMenu.dragMe'}}">
             <i class="fas fa-grip"></i>
-            <span>{{localize 'cibola8.radialMenu.dragMe'}}</span>
+            <span>{{localize 'boobastudio.radialMenu.dragMe'}}</span>
         </button>
     </div>
 
     {{!-- Info Card --}}
-    <div class="cibola8-info-card cibola8-info-card--compact">
-        <div class="cibola8-info-card-header">
+    <div class="boobastudio-info-card boobastudio-info-card--compact">
+        <div class="boobastudio-info-card-header">
             <i class="fas fa-lightbulb"></i>
-            <span>{{localize 'cibola8.radialMenu.howToUse'}}</span>
+            <span>{{localize 'boobastudio.radialMenu.howToUse'}}</span>
         </div>
-        <div class="cibola8-info-card-body">
-            <ul class="cibola8-feature-list cibola8-feature-list--compact">
+        <div class="boobastudio-info-card-body">
+            <ul class="boobastudio-feature-list boobastudio-feature-list--compact">
                 <li>
                     <i class="fas fa-hand-pointer"></i>
-                    <span>{{localize 'cibola8.radialMenu.tipDragDrop'}}</span>
+                    <span>{{localize 'boobastudio.radialMenu.tipDragDrop'}}</span>
                 </li>
                 <li>
                     <i class="fas fa-folder-plus"></i>
-                    <span>{{localize 'cibola8.radialMenu.tipSections'}}</span>
+                    <span>{{localize 'boobastudio.radialMenu.tipSections'}}</span>
                 </li>
                 <li>
                     <i class="fas fa-image"></i>
-                    <span>{{localize 'cibola8.radialMenu.tipCustomize'}}</span>
+                    <span>{{localize 'boobastudio.radialMenu.tipCustomize'}}</span>
                 </li>
             </ul>
         </div>
     </div>
 
     {{!-- Menu Items Section --}}
-    <section class="cibola8-radial-section">
-        <div class="cibola8-section-header">
-            <h3><i class="fas fa-list"></i> {{localize 'cibola8.radialMenu.menuItems'}}</h3>
+    <section class="boobastudio-radial-section">
+        <div class="boobastudio-section-header">
+            <h3><i class="fas fa-list"></i> {{localize 'boobastudio.radialMenu.menuItems'}}</h3>
         </div>
-        
-        <div class="cibola8-radial-items">
+
+        <div class="boobastudio-radial-items">
             {{#each baseButtons as |button|}}
-                {{> 'modules/cibola8/templates/radial/submenu.hbs' button=button}}
+                {{> 'modules/boobastudio/templates/radial/submenu.hbs' button=button}}
             {{/each}}
-            
+
             {{#unless baseButtons.length}}
-            <div class="cibola8-empty-state">
+            <div class="boobastudio-empty-state">
                 <i class="fas fa-circle-nodes fa-2x"></i>
-                <p>{{localize 'cibola8.radialMenu.noItems'}}</p>
-                <span class="cibola8-text-muted">{{localize 'cibola8.radialMenu.noItemsHint'}}</span>
+                <p>{{localize 'boobastudio.radialMenu.noItems'}}</p>
+                <span class="boobastudio-text-muted">{{localize 'boobastudio.radialMenu.noItemsHint'}}</span>
             </div>
             {{/unless}}
         </div>

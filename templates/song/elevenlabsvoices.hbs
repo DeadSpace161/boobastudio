@@ -7,18 +7,18 @@
                 <span class="wv-bar"></span><span class="wv-bar"></span><span class="wv-bar"></span><span class="wv-bar"></span><span class="wv-bar"></span>
             </span>
         </a>
-        <a class="voice-fav-btn{{#if voice.isFavorite}} active{{/if}}" data-action="toggleFavorite" data-voice-id="{{voice.voice_id}}" data-tooltip="cibola8.musicgen.toggleFavorite"><i class="fa{{#if voice.isFavorite}}s{{else}}r{{/if}} fa-star"></i></a>
+        <a class="voice-fav-btn{{#if voice.isFavorite}} active{{/if}}" data-action="toggleFavorite" data-voice-id="{{voice.voice_id}}" data-tooltip="boobastudio.musicgen.toggleFavorite"><i class="fa{{#if voice.isFavorite}}s{{else}}r{{/if}} fa-star"></i></a>
     </div>
     <div class="flexcol">
         <div>
-            <b>{{voice.name}}</b>           
+            <b>{{voice.name}}</b>
         </div>
         <div>
-            <small>{{{voice.cost}}}{{#each voice.badges as |badge|}}<span class="cibola8-badge">{{badge.name}}</span>{{/each}}</small>
+            <small>{{{voice.cost}}}{{#each voice.badges as |badge|}}<span class="boobastudio-badge">{{badge.name}}</span>{{/each}}</small>
         </div>
         <div>
-            <small>{{voice.description}}</small> 
+            <small>{{voice.description}}</small>
         </div>
-    </div>    
+    </div>
   </li>
 {{/each}}

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check-package.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "test:provider": "node scripts/test-provider.mjs"
   }
 }

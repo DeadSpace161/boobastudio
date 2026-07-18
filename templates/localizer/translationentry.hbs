@@ -1,25 +1,25 @@
-<div class="cibola8-translation-row" data-translationid="{{file.module}}_{{file.lang}}">
-  <div class="cibola8-translation-col cibola8-translation-col--module">
+<div class="boobastudio-translation-row" data-translationid="{{file.module}}_{{file.lang}}">
+  <div class="boobastudio-translation-col boobastudio-translation-col--module">
     {{#if file.status}}
-      <span class="cibola8-text-muted">{{file.module}}</span>
+      <span class="boobastudio-text-muted">{{file.module}}</span>
     {{else}}
-      <a class="cibola8-link editEntry" data-id="{{file.module}}" data-lang="{{file.lang}}">
+      <a class="boobastudio-link editEntry" data-id="{{file.module}}" data-lang="{{file.lang}}">
         <i class="fas fa-edit"></i>
         {{file.module}}
       </a>
     {{/if}}
   </div>
 
-  <div class="cibola8-translation-col cibola8-translation-col--lang">
-    <span class="cibola8-badge cibola8-badge--muted">{{file.lang}}</span>
+  <div class="boobastudio-translation-col boobastudio-translation-col--lang">
+    <span class="boobastudio-badge boobastudio-badge--muted">{{file.lang}}</span>
   </div>
 
-  <div class="cibola8-translation-col cibola8-translation-col--status">
+  <div class="boobastudio-translation-col boobastudio-translation-col--status">
     {{#if file.status}}
-      <div class="cibola8-status-indicator cibola8-status-indicator--processing" data-tooltip="{{timeSince file.time}}">
+      <div class="boobastudio-status-indicator boobastudio-status-indicator--processing" data-tooltip="{{timeSince file.time}}">
         {{#if file.progress}}
-          <div class="cibola8-progress-mini">
-            <div class="cibola8-progress-mini-bar" style="width: {{file.progress}}%"></div>
+          <div class="boobastudio-progress-mini">
+            <div class="boobastudio-progress-mini-bar" style="width: {{file.progress}}%"></div>
           </div>
           <span>{{file.progress}}%</span>
         {{else}}
@@ -28,15 +28,15 @@
         {{/if}}
       </div>
     {{else}}
-      <label class="cibola8-toggle">
+      <label class="boobastudio-toggle">
         <input type="checkbox" class="enableTranslation" data-id="{{file.module}}" data-lang="{{file.lang}}" name="{{file.module}}_{{file.lang}}" {{checked file.active}} />
-        <span class="cibola8-toggle-slider"></span>
+        <span class="boobastudio-toggle-slider"></span>
       </label>
     {{/if}}
   </div>
 
-  <div class="cibola8-translation-col cibola8-translation-col--actions">
-    <a class="cibola8-btn cibola8-btn--icon cibola8-btn--danger removeEntry" data-tooltip="{{localize 'cibola8.delete'}}" data-id="{{file.module}}" data-lang="{{file.lang}}">
+  <div class="boobastudio-translation-col boobastudio-translation-col--actions">
+    <a class="boobastudio-btn boobastudio-btn--icon boobastudio-btn--danger removeEntry" data-tooltip="{{localize 'boobastudio.delete'}}" data-id="{{file.module}}" data-lang="{{file.lang}}">
       <i class="fas fa-trash"></i>
     </a>
   </div>

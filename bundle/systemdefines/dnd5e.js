@@ -22,7 +22,7 @@ const systemInfo = {
     },
   },
   connectButton: (app, html, callback) => {
-    const randomContentButton = $('<a data-tooltip="cibola8.tooltip.randomContent" class=""><i class="cib8-icon icon-cibola8"></i></a>');
+    const randomContentButton = $('<a data-tooltip="boobastudio.tooltip.randomContent" class=""><i class="cib8-icon icon-boobastudio"></i></a>');
 
     randomContentButton.on('click', (ev) => {
       let elem = $(ev.currentTarget).next('.description-edit')[0];

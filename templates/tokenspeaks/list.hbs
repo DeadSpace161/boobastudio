@@ -1,47 +1,47 @@
 <form class="scrollable tokenGroup standard-form cibNoGap">
-    <div class="cibola8-section-header cibola8-mb-3">
+    <div class="boobastudio-section-header boobastudio-mb-3">
         <i class="fas fa-volume-up"></i>
-        <span>{{localize 'cibola8.tokenspeaks.title'}}</span>
+        <span>{{localize 'boobastudio.tokenspeaks.title'}}</span>
     </div>
-    
-    <fieldset class="cibola8-glass cibola8-mb-3">
-        <legend><i class="fas fa-cog"></i> {{localize 'cibola8.configuration'}}</legend>
-        <div class="form-group flex-row cibola8-form-group-animated" data-tooltip="cibola8.tooltip.chatbubble">
-            <label for="cb_chatbubble"><i class="fas fa-comment-dots"></i> {{localize 'cibola8.chatbubble'}}</label>
+
+    <fieldset class="boobastudio-glass boobastudio-mb-3">
+        <legend><i class="fas fa-cog"></i> {{localize 'boobastudio.configuration'}}</legend>
+        <div class="form-group flex-row boobastudio-form-group-animated" data-tooltip="boobastudio.tooltip.chatbubble">
+            <label for="cb_chatbubble"><i class="fas fa-comment-dots"></i> {{localize 'boobastudio.chatbubble'}}</label>
             <input id="cb_chatbubble" type="checkbox" name="chatBubble" checked />
         </div>
-        <div class="form-group flex-row cibola8-form-group-animated" data-tooltip="cibola8.tooltip.playAtPosition">
-            <label for="cb_playAtPosition"><i class="fas fa-map-marker-alt"></i> {{localize 'cibola8.musicgen.playAtPosition'}}</label>
+        <div class="form-group flex-row boobastudio-form-group-animated" data-tooltip="boobastudio.tooltip.playAtPosition">
+            <label for="cb_playAtPosition"><i class="fas fa-map-marker-alt"></i> {{localize 'boobastudio.musicgen.playAtPosition'}}</label>
             <input id="cb_playAtPosition" type="checkbox" name="playAtPosition" />
         </div>
-        <div class="form-group flex-row cibola8-form-group-animated">
-            <label for="radius"><i class="fas fa-bullseye"></i> {{localize 'cibola8.radius'}}</label>
+        <div class="form-group flex-row boobastudio-form-group-animated">
+            <label for="radius"><i class="fas fa-bullseye"></i> {{localize 'boobastudio.radius'}}</label>
             <div class="form-fields">
                 <range-picker name="radius" value="5" min="0" max="25" step="1"></range-picker>
             </div>
         </div>
-        <div class="form-group flex-row cibola8-form-group-animated">
-            <label for="volume"><i class="fas fa-volume-high"></i> {{localize 'cibola8.volume'}}</label>
+        <div class="form-group flex-row boobastudio-form-group-animated">
+            <label for="volume"><i class="fas fa-volume-high"></i> {{localize 'boobastudio.volume'}}</label>
             <div class="form-fields">
                 <range-picker name="volume" value="1" min="0" max="1" step="0.05"></range-picker>
             </div>
         </div>
     </fieldset>
-    
+
     {{#each samples as |sample|}}
-    <fieldset class="tokenspeaks cibola8-sample-card" data-url="{{sample.url}}">
+    <fieldset class="tokenspeaks boobastudio-sample-card" data-url="{{sample.url}}">
         <legend><i class="fas fa-microphone"></i> {{sample.name}}</legend>
-        <div class="flexrow imageControlContainer largeSmallbuttons cibola8-sample-controls">
-            <button class="smallbutton cibola8-tool-btn cibola8-tool-btn--primary" type="button" data-action="playAll" data-tooltip="cibola8.musicgen.playAll"><i class="fas fa-play"></i></button>
-            <button class="smallbutton cibola8-tool-btn" type="button" data-action="playSelf" data-tooltip="cibola8.musicgen.playSelf"><i class="fas fa-ear"></i></button>
-            <button class="smallbutton cibola8-tool-btn cibola8-tool-btn--danger" type="button" data-action="deleteSample" data-tooltip="cibola8.delete"><i class="fas fa-trash"></i></button>
+        <div class="flexrow imageControlContainer largeSmallbuttons boobastudio-sample-controls">
+            <button class="smallbutton boobastudio-tool-btn boobastudio-tool-btn--primary" type="button" data-action="playAll" data-tooltip="boobastudio.musicgen.playAll"><i class="fas fa-play"></i></button>
+            <button class="smallbutton boobastudio-tool-btn" type="button" data-action="playSelf" data-tooltip="boobastudio.musicgen.playSelf"><i class="fas fa-ear"></i></button>
+            <button class="smallbutton boobastudio-tool-btn boobastudio-tool-btn--danger" type="button" data-action="deleteSample" data-tooltip="boobastudio.delete"><i class="fas fa-trash"></i></button>
         </div>
     </fieldset>
     {{/each}}
-    
+
     <div class="flexrow mt-3">
-        <button class="t-spacer cibola8-btn cibola8-btn--primary cibola8-btn--lg" type="button" data-action="newTTS">
-            <i class="fas fa-plus"></i> {{localize 'cibola8.musicgen.title'}}
+        <button class="t-spacer boobastudio-btn boobastudio-btn--primary boobastudio-btn--lg" type="button" data-action="newTTS">
+            <i class="fas fa-plus"></i> {{localize 'boobastudio.musicgen.title'}}
         </button>
     </div>
 </form>

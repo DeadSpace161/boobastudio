@@ -1,10 +1,10 @@
-<div class="cibola8-thread-settings">
-    <fieldset class="cibola8-glass">
-        <legend><i class="fas fa-cog"></i> {{localize "cibola8.AiThread.title"}}</legend>
+<div class="boobastudio-thread-settings">
+    <fieldset class="boobastudio-glass">
+        <legend><i class="fas fa-cog"></i> {{localize "boobastudio.AiThread.title"}}</legend>
 
-        <div class="flexrow cibola8 app">
+        <div class="flexrow boobastudio app">
             <div class="imagesGroupParent">
-                {{> modules/cibola8/templates/innermodelselector.hbs models=models fieldname='system.model'
+                {{> modules/boobastudio/templates/innermodelselector.hbs models=models fieldname='system.model'
                 selectedModel=document.system.model}}
             </div>
         </div>
@@ -15,30 +15,30 @@
             {{formGroup systemFields.max_history value=document.system.max_history name='system.max_history' }}
         </div>
     </fieldset>
-    <fieldset class="cibola8-glass">
-        <legend><i class="fas fa-cloud-upload-alt"></i> {{localize "cibola8.vector.uploadTitle"}}</legend>
+    <fieldset class="boobastudio-glass">
+        <legend><i class="fas fa-cloud-upload-alt"></i> {{localize "boobastudio.vector.uploadTitle"}}</legend>
         <div class="modelIsAdvanced {{ifThen modelData.advanced '' 'hidden'}}">
             {{#if (gt userInfo.level 0)}}
-            <div class="cibola8-hint cibola8-mb-2">{{{localize 'cibola8.vector.uploadFile'}}}</div>
+            <div class="boobastudio-hint boobastudio-mb-2">{{{localize 'boobastudio.vector.uploadFile'}}}</div>
             {{else}}
-            <div class="cibola8-hint cibola8-hint--warning cibola8-mb-2">{{localize 'cibola8.vector.notAvailable'}}</div>
+            <div class="boobastudio-hint boobastudio-hint--warning boobastudio-mb-2">{{localize 'boobastudio.vector.notAvailable'}}</div>
             {{/if}}
 
             {{#if userInfo.alive}}
-            <div class="cibola8-thread-settings__cost">
-                <span><b>{{localize 'cibola8.vector.estimatedCost'}}</b>:</span>
+            <div class="boobastudio-thread-settings__cost">
+                <span><b>{{localize 'boobastudio.vector.estimatedCost'}}</b>:</span>
                 <span class="estimatedcost"><i class="fas fa-spinner fa-spin"></i></span>
                 <i class="fas fa-times"></i>
                 <span class="manapot"></span>
             </div>
 
-            {{> modules/cibola8/templates/vector/showstorage.hbs}}
+            {{> modules/boobastudio/templates/vector/showstorage.hbs}}
             {{else}}
             {{{patreon}}}
             {{/if}}
         </div>
         <div class="modelIsNotAdvanced {{ifThen modelData.advanced 'hidden' ''}}">
-            <div class="cibola8-hint">{{localize 'cibola8.vector.notForThisModel'}}</div>
+            <div class="boobastudio-hint">{{localize 'boobastudio.vector.notForThisModel'}}</div>
         </div>
     </fieldset>
 </div>

@@ -1,24 +1,24 @@
 {{#each files as |file|}}
-<div class="cibola8-vector-file">
-  <div class="cibola8-vector-file-icon">
+<div class="boobastudio-vector-file">
+  <div class="boobastudio-vector-file-icon">
     <i class="fas fa-file-alt"></i>
   </div>
-  <div class="cibola8-vector-file-info">
-    <span class="cibola8-vector-file-name">{{file.attributes.uploaded_file_name}}</span>
-    <span class="cibola8-badge cibola8-badge--{{#if (eq file.attributes.status 'completed')}}success{{else if (eq file.attributes.status 'failed')}}danger{{else}}warning{{/if}}">
+  <div class="boobastudio-vector-file-info">
+    <span class="boobastudio-vector-file-name">{{file.attributes.uploaded_file_name}}</span>
+    <span class="boobastudio-badge boobastudio-badge--{{#if (eq file.attributes.status 'completed')}}success{{else if (eq file.attributes.status 'failed')}}danger{{else}}warning{{/if}}">
       {{file.attributes.status}}
     </span>
   </div>
-  <div class="cibola8-vector-file-actions">
-    <button type="button" class="cibola8-btn cibola8-btn--icon cibola8-btn--danger" data-id="{{file.id}}" data-action="removeVectorFile" data-tooltip="{{localize 'cibola8.delete'}}">
+  <div class="boobastudio-vector-file-actions">
+    <button type="button" class="boobastudio-btn boobastudio-btn--icon boobastudio-btn--danger" data-id="{{file.id}}" data-action="removeVectorFile" data-tooltip="{{localize 'boobastudio.delete'}}">
       <i class="fas fa-trash"></i>
     </button>
   </div>
 </div>
 {{/each}}
 {{#unless files.length}}
-<div class="cibola8-empty-state cibola8-empty-state--small">
+<div class="boobastudio-empty-state boobastudio-empty-state--small">
   <i class="fas fa-folder-open"></i>
-  <p>{{localize 'cibola8.vector.noVectors'}}</p>
+  <p>{{localize 'boobastudio.vector.noVectors'}}</p>
 </div>
 {{/unless}}

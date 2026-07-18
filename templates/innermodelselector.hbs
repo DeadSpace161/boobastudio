@@ -3,8 +3,8 @@
     <input type="radio" id="model_{{key}}_{{../randomId}}" name="{{../fieldname}}" value="{{key}}" {{#if (eq key ../selectedModel)}}checked{{/if}} {{#if item.unavailable}}disabled{{/if}}>
     <label for="model_{{key}}_{{../randomId}}" class="{{#if item.unavailable}}model-unavailable{{/if}}" data-id="{{key}}" data-speed="{{item.speed}}" data-mana="{{item.price}}"
         data-elo="{{item.elo}}">
-        <!--img src="modules/cibola8/templates/assets/{{key}}.webp"-->
-        <!--img src="modules/cibola8/templates/assets/cibolacoin.webp"-->
+        <!--img src="modules/boobastudio/templates/assets/{{key}}.webp"-->
+        <!--img src="modules/boobastudio/templates/assets/cibolacoin.webp"-->
         <div class="flexrow stretch">
             <div class="flexcol stretch">
                 <div>
@@ -12,18 +12,18 @@
                 </div>
                 <div>
                     {{#each item.tags as |tag|}}
-                    <span class="cibola8-badge badge-{{tag}}">{{localize (cibolaConcat 'cibola8.badges.'
+                    <span class="boobastudio-badge badge-{{tag}}">{{localize (cibolaConcat 'boobastudio.badges.'
                         tag)}}</span>
                     {{/each}}
                 </div>
             </div>
             <div class="flexcol centerText stretch manaheader">
                 {{#if item.elo}}
-                <div data-tooltip="cibola8.tooltip.perceivedElo" class="progressbar"
+                <div data-tooltip="boobastudio.tooltip.perceivedElo" class="progressbar"
                     style="--width: {{item.elowidth}}" data-label="{{item.elo}}"></div>
                 {{else}}
                 <div>
-                    <span class="cibola8-badge cibola8-badge--muted">{{localize 'cibola8.badges.noRating'}}</span>
+                    <span class="boobastudio-badge boobastudio-badge--muted">{{localize 'boobastudio.badges.noRating'}}</span>
                 </div>
                 {{/if}}
                 {{{item.manaHtml}}}

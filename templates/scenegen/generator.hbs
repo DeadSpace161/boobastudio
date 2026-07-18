@@ -1,24 +1,24 @@
 <section class="tab standard-form max100height overflow-hidden {{tabs.generator.cssClass}}" data-tab="generator"
     data-group="{{tabs.generator.group}}">
 
-    <div class="cibola8-intro-text cibola8-mt-1">
-        <i class="fas fa-map cibola8-intro-icon"></i>
-        <span>{{localize 'cibola8.AiSceneGen.description'}}</span>
+    <div class="boobastudio-intro-text boobastudio-mt-1">
+        <i class="fas fa-map boobastudio-intro-icon"></i>
+        <span>{{localize 'boobastudio.AiSceneGen.description'}}</span>
     </div>
 
     <div class="flexrow stretch max100height overflow-hidden">
         {{#if (or userInfo.alive clientOnlyModeEnabled)}}
         {{#if (and canDoFiles canEdit)}}
-        {{> modules/cibola8/templates/bothgen/sidebar.hbs}}
-        <div class="flexcol stretch relativedisplay max100height cibola8-image-workspace cibola8-mt-2">
+        {{> modules/boobastudio/templates/bothgen/sidebar.hbs}}
+        <div class="flexcol stretch relativedisplay max100height boobastudio-image-workspace boobastudio-mt-2">
             <div class="">
-                {{> modules/cibola8/templates/bothgen/toolbar.hbs}}
+                {{> modules/boobastudio/templates/bothgen/toolbar.hbs}}
             </div>
-            {{> modules/cibola8/templates/bothgen/canvas.hbs}}
+            {{> modules/boobastudio/templates/bothgen/canvas.hbs}}
         </div>
         {{else}}
-        <p class="notes cibola8-warning-box"><i class="fas fa-exclamation-triangle"></i> {{localize
-            'cibola8.NoUploadPermission'}}</p>
+        <p class="notes boobastudio-warning-box"><i class="fas fa-exclamation-triangle"></i> {{localize
+            'boobastudio.NoUploadPermission'}}</p>
         {{/if}}
         {{else}}
         {{{patreon}}}

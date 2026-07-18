@@ -1,29 +1,29 @@
 <div class="flexcol">
-    <div class="cibola8-intro-text cibola8-mb-2">
-        <i class="fas fa-language cibola8-intro-icon"></i>
-        <span>{{localize 'cibola8.Localizer.selectFile'}}</span>
+    <div class="boobastudio-intro-text boobastudio-mb-2">
+        <i class="fas fa-language boobastudio-intro-icon"></i>
+        <span>{{localize 'boobastudio.Localizer.selectFile'}}</span>
     </div>
-    
-    <fieldset class="standard-form cibola8-glass">
-        <legend><i class="fas fa-file-code"></i> {{localize 'cibola8.Localizer.modules'}}</legend>
-        <div class="form-group cibola8-form-group-animated">
-            <label><i class="fas fa-file-import"></i> {{localize 'cibola8.Localizer.selecttranslation'}}</label>
+
+    <fieldset class="standard-form boobastudio-glass">
+        <legend><i class="fas fa-file-code"></i> {{localize 'boobastudio.Localizer.modules'}}</legend>
+        <div class="form-group boobastudio-form-group-animated">
+            <label><i class="fas fa-file-import"></i> {{localize 'boobastudio.Localizer.selecttranslation'}}</label>
             <div class="form-fields">
                 <file-picker type="text" name="sourceFile"></file-picker>
             </div>
-        </div>  
-        
-        <div class="form-group cibola8-form-group-animated">
-            <label><i class="fas fa-globe"></i> {{localize 'cibola8.AiTranslator.language'}}</label>
+        </div>
+
+        <div class="form-group boobastudio-form-group-animated">
+            <label><i class="fas fa-globe"></i> {{localize 'boobastudio.AiTranslator.language'}}</label>
             <div class="form-fields">
-                <select name="translator.language" class="cibola8-select-enhanced">
+                <select name="translator.language" class="boobastudio-select-enhanced">
                     {{selectOptions languages labelAttr="name" valueAttr="lang" sort=true}}
                 </select>
             </div>
-        </div>        
+        </div>
     </fieldset>
-    
-    <button type="button" class="cibola8-btn--primary cibola8-btn--lg" data-action="save">
-        <i class="fas fa-save"></i> {{localize 'cibola8.save'}}
+
+    <button type="button" class="boobastudio-btn--primary boobastudio-btn--lg" data-action="save">
+        <i class="fas fa-save"></i> {{localize 'boobastudio.save'}}
     </button>
 </div>

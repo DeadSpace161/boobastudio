@@ -14,21 +14,21 @@ $cibola-warning: #ffc107 !default;
 $cibola-border-radius-lg: 12px !default;
 $cibola-transition-fast: 0.15s ease !default;
 
-.cibola8 {
-  &.cibola8-dark-theme {
-    .cibola8-queue-viewer {
+.boobastudio {
+  &.boobastudio-dark-theme {
+    .boobastudio-queue-viewer {
       padding: 1.25rem;
     }
 
     // Queue list layout
-    .cibola8-queue-list {
+    .boobastudio-queue-list {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
     }
 
     // Queue item - extends list-item with status indicators
-    .cibola8-queue-item {
+    .boobastudio-queue-item {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: $cibola-border-radius-lg;
@@ -55,7 +55,7 @@ $cibola-transition-fast: 0.15s ease !default;
     }
 
     // Item header layout
-    .cibola8-queue-item__header {
+    .boobastudio-queue-item__header {
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -63,7 +63,7 @@ $cibola-transition-fast: 0.15s ease !default;
     }
 
     // Item icon - uses portrait base styling
-    .cibola8-queue-item__icon {
+    .boobastudio-queue-item__icon {
       width: 40px;
       height: 40px;
       border-radius: 8px;
@@ -76,13 +76,13 @@ $cibola-transition-fast: 0.15s ease !default;
     }
 
     // Item info container
-    .cibola8-queue-item__info {
+    .boobastudio-queue-item__info {
       flex: 1;
       min-width: 0;
     }
 
     // Item name with link
-    .cibola8-queue-item__name {
+    .boobastudio-queue-item__name {
       display: flex;
       flex-direction: column;
       gap: 0.125rem;
@@ -98,17 +98,17 @@ $cibola-transition-fast: 0.15s ease !default;
     }
 
     // Status badge container
-    .cibola8-queue-item__status {
+    .boobastudio-queue-item__status {
       flex-shrink: 0;
     }
 
     // Progress section
-    .cibola8-queue-item__progress {
+    .boobastudio-queue-item__progress {
       margin-bottom: 0.75rem;
     }
 
     // Details row
-    .cibola8-queue-item__details {
+    .boobastudio-queue-item__details {
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -116,12 +116,12 @@ $cibola-transition-fast: 0.15s ease !default;
     }
 
     // Breakdown positioned to the right
-    .cibola8-queue-breakdown {
+    .boobastudio-queue-breakdown {
       margin-left: auto;
     }
 
     // Delete button positioning
-    .cibola8-queue-item__details .cibola8-btn--icon {
+    .boobastudio-queue-item__details .boobastudio-btn--icon {
       margin-left: auto;
     }
   }

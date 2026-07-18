@@ -50,8 +50,8 @@ for (const language of manifest.languages ?? []) {
   }
 }
 
-if (manifest.id !== "cibola8") {
-  fail(`baseline manifest ID changed unexpectedly: ${manifest.id}`);
+if (manifest.id !== "boobastudio") {
+  fail(`fork manifest ID is unexpected: ${manifest.id}`);
 }
 
 if (manifest.compatibility?.verified !== "14" || manifest.compatibility?.maximum !== "14") {

@@ -9,9 +9,9 @@
 // - $cibola-text, $cibola-text-muted
 // - $cibola-transition-fast
 
-.cibola8.cibola8-dark-theme {
+.boobastudio.boobastudio-dark-theme {
   // Thread container
-  .cibola8-thread {
+  .boobastudio-thread {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -38,7 +38,7 @@
       margin-bottom: 0.75rem;
       position: relative;
 
-      &:hover .cibola8-thread__delete {
+      &:hover .boobastudio-thread__delete {
         opacity: 1;
       }
 
@@ -46,7 +46,7 @@
       &--user {
         flex-direction: row-reverse;
 
-        .cibola8-thread__bubble {
+        .boobastudio-thread__bubble {
           background: rgba($cibola-primary, 0.15);
           border-color: rgba($cibola-primary, 0.3);
         }
@@ -54,7 +54,7 @@
 
       // Assistant message styling
       &--assistant {
-        .cibola8-thread__bubble {
+        .boobastudio-thread__bubble {
           background: rgba(0, 0, 0, 0.3);
           border-color: $cibola-border-subtle;
         }
@@ -168,7 +168,7 @@
   }
 
   // Thread settings page
-  .cibola8-thread-settings {
+  .boobastudio-thread-settings {
     display: flex;
     flex-direction: column;
     gap: 1rem;

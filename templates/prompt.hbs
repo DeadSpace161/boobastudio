@@ -7,15 +7,15 @@
         <span class="manaheader">{{{item.manaHtml}}}</span>
     </h3>
     <div class="modelHotplugSelectorBox">
-        {{> modules/cibola8/templates/innermodelselector.hbs fieldname='choice' selectedModel=item.name}}
-        <p class="hint cibola8-attribution">{{localize 'cibola8.attribution.benchmarkData'}} <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a></p>
+        {{> modules/boobastudio/templates/innermodelselector.hbs fieldname='choice' selectedModel=item.name}}
+        <p class="hint boobastudio-attribution">{{localize 'boobastudio.attribution.benchmarkData'}} <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a></p>
     </div>
     <div class="flexrow modelDescription">
         <p>{{localize modelDescription}}</p>
     </div>
-    <div class="flexrow">        
-        <div class="form-group"  data-tooltip="cibola8.drawingTypeHint">
-            <label>{{localize 'cibola8.mapType'}}</label>
+    <div class="flexrow">
+        <div class="form-group"  data-tooltip="boobastudio.drawingTypeHint">
+            <label>{{localize 'boobastudio.mapType'}}</label>
             <div class="form-fields">
                 <select class="drawingType" name="drawingType">
                     {{selectOptions image.drawingTypes selected=image.drawingType localize=true}}
@@ -23,8 +23,8 @@
             </div>
         </div>
         {{#if (gt level 0)}}
-        <div class="form-group" data-tooltip="cibola8.countHint">
-            <label>{{localize 'cibola8.count'}} <span class="hint"><i class="fas fa-exclamation-triangle"></i></span></label>
+        <div class="form-group" data-tooltip="boobastudio.countHint">
+            <label>{{localize 'boobastudio.count'}} <span class="hint"><i class="fas fa-exclamation-triangle"></i></span></label>
             <div class="form-fields">
                 <range-picker name="count" value="1" min="1" max="4" step="1"></range-picker>
             </div>
@@ -35,15 +35,15 @@
         {{{modelFields}}}
     </div>
     <fieldset class="t-spacer flexcol stretch nopad promptBox relativedisplay">
-        <legend>{{localize 'cibola8.prompt'}}</legend>
-        {{> modules/cibola8/templates/textareahelpers.hbs hasParentApp=true}}
+        <legend>{{localize 'boobastudio.prompt'}}</legend>
+        {{> modules/boobastudio/templates/textareahelpers.hbs hasParentApp=true}}
         {{#if (gt level 0)}}
         <div class="flexrow topoverlaybuttons imageControlContainer">
-            <button type="button" data-tooltip="cibola8.promptbuilder" data-action="promptbuilder" class="smallbutton"><i class="fas fa-plus"></i></button>
+            <button type="button" data-tooltip="boobastudio.promptbuilder" data-action="promptbuilder" class="smallbutton"><i class="fas fa-plus"></i></button>
         </div>
         {{/if}}
         <div class="prompt_tabs flexrow">
-            <textarea class="behavior flexrow stretch cibola8-prompt-textarea" name="prompt_0" data-promptnr="0" placeholder="{{image.initialPlaceholder}}">{{prompt}}</textarea>
-        </div>        
+            <textarea class="behavior flexrow stretch boobastudio-prompt-textarea" name="prompt_0" data-promptnr="0" placeholder="{{image.initialPlaceholder}}">{{prompt}}</textarea>
+        </div>
     </fieldset>
 </div>

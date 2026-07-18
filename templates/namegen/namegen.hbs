@@ -1,89 +1,89 @@
-{{!-- Name Generator - Cibola8 Design System --}}
-<div class="cibola8-namegen scrollable" data-part="config">
+{{!-- Name Generator - BoobaStudio Design System --}}
+<div class="boobastudio-namegen scrollable" data-part="config">
     {{!-- Header Section --}}
-    <div class="cibola8-namegen__header">
-        <div class="cibola8-intro-text">
-            <i class="fas fa-signature cibola8-intro-icon"></i>
-            <span>{{localize 'cibola8.namegen.description'}}</span>
+    <div class="boobastudio-namegen__header">
+        <div class="boobastudio-intro-text">
+            <i class="fas fa-signature boobastudio-intro-icon"></i>
+            <span>{{localize 'boobastudio.namegen.description'}}</span>
         </div>
-        <div class="cibola8-hint">
+        <div class="boobastudio-hint">
             <i class="fas fa-lightbulb"></i>
-            <span>{{localize 'cibola8.namegen.hint'}}</span>
+            <span>{{localize 'boobastudio.namegen.hint'}}</span>
         </div>
     </div>
 
     {{#if tokengroups}}
-    <div class="cibola8-namegen__groups">
+    <div class="boobastudio-namegen__groups">
         {{#each tokengroups as |group|}}
-        <fieldset class="cibola8-namegen__group cibola8-glass tokenGroup">
-            <legend class="cibola8-legend actorOpener handcursor" data-uuid="{{group.actor.uuid}}" data-tooltip="{{localize 'cibola8.namegen.openActor'}}">
-                <i class="fas fa-users"></i> 
+        <fieldset class="boobastudio-namegen__group boobastudio-glass tokenGroup">
+            <legend class="boobastudio-legend actorOpener handcursor" data-uuid="{{group.actor.uuid}}" data-tooltip="{{localize 'boobastudio.namegen.openActor'}}">
+                <i class="fas fa-users"></i>
                 <span>{{group.actor.name}}</span>
-                <span class="cibola8-legend__count">({{group.tokens.length}})</span>
+                <span class="boobastudio-legend__count">({{group.tokens.length}})</span>
             </legend>
-            
+
             {{!-- Prompt Row for Group --}}
-            <div class="cibola8-prompt-section">
-                <div class="cibola8-prompt-header">
-                    <label data-tooltip="{{localize 'cibola8.namegen.promptTooltip'}}">
+            <div class="boobastudio-prompt-section">
+                <div class="boobastudio-prompt-header">
+                    <label data-tooltip="{{localize 'boobastudio.namegen.promptTooltip'}}">
                         <i class="fas fa-wand-magic-sparkles"></i>
-                        {{localize 'cibola8.prompt'}}
+                        {{localize 'boobastudio.prompt'}}
                     </label>
-                    <div class="cibola8-prompt-actions">
-                        <button type="button" class="cibola8-tool-btn cibola8-tool-btn--primary" data-action="rollGroup" data-tooltip="{{localize 'cibola8.namegen.generateAll'}}">
+                    <div class="boobastudio-prompt-actions">
+                        <button type="button" class="boobastudio-tool-btn boobastudio-tool-btn--primary" data-action="rollGroup" data-tooltip="{{localize 'boobastudio.namegen.generateAll'}}">
                             <i class="fas fa-dice"></i>
-                            <span>{{localize 'cibola8.namegen.all'}}</span>
+                            <span>{{localize 'boobastudio.namegen.all'}}</span>
                         </button>
-                        <button type="button" class="cibola8-tool-btn cibola8-tool-btn--success" data-action="saveGroup" data-tooltip="{{localize 'cibola8.namegen.saveAll'}}">
+                        <button type="button" class="boobastudio-tool-btn boobastudio-tool-btn--success" data-action="saveGroup" data-tooltip="{{localize 'boobastudio.namegen.saveAll'}}">
                             <i class="fas fa-save"></i>
-                            <span>{{localize 'cibola8.save'}}</span>
+                            <span>{{localize 'boobastudio.save'}}</span>
                         </button>
                     </div>
                 </div>
-                <textarea 
-                    name="{{group.actor.uuid}}" 
-                    data-dtype="String" 
-                    placeholder="{{localize 'cibola8.namegen.promptplaceholder'}}" 
-                    class="cibola8-textarea"
+                <textarea
+                    name="{{group.actor.uuid}}"
+                    data-dtype="String"
+                    placeholder="{{localize 'boobastudio.namegen.promptplaceholder'}}"
+                    class="boobastudio-textarea"
                     rows="2"
                 ></textarea>
             </div>
 
             {{!-- Token List --}}
-            <div class="cibola8-namegen__tokens">
+            <div class="boobastudio-namegen__tokens">
                 {{#each group.tokens as |token|}}
-                <div class="cibola8-namegen__token cibola8-list-item tokenrow" data-uuid="{{token.uuid}}">
+                <div class="boobastudio-namegen__token boobastudio-list-item tokenrow" data-uuid="{{token.uuid}}">
                     {{!-- Token Portrait --}}
-                    <div class="cibola8-portrait cibola8-portrait--md cibola8-portrait--clickable actorOpener" data-uuid="{{token.uuid}}" data-tooltip="{{localize 'cibola8.namegen.openToken'}}">
+                    <div class="boobastudio-portrait boobastudio-portrait--md boobastudio-portrait--clickable actorOpener" data-uuid="{{token.uuid}}" data-tooltip="{{localize 'boobastudio.namegen.openToken'}}">
                         <img src="{{token.texture.src}}" alt="{{token.name}}" />
                     </div>
-                    
+
                     {{!-- Gender Selection --}}
-                    <div class="cibola8-namegen__genders" data-tooltip="{{localize 'cibola8.namegen.genderTooltip'}}">
-                        <label class="cibola8-toggle-btn cibola8-toggle-btn--female">
+                    <div class="boobastudio-namegen__genders" data-tooltip="{{localize 'boobastudio.namegen.genderTooltip'}}">
+                        <label class="boobastudio-toggle-btn boobastudio-toggle-btn--female">
                             <input class="genders" name="female" type="checkbox" value="w" checked />
                             <i class="fas fa-venus"></i>
                         </label>
-                        <label class="cibola8-toggle-btn cibola8-toggle-btn--male">
+                        <label class="boobastudio-toggle-btn boobastudio-toggle-btn--male">
                             <input class="genders" name="male" type="checkbox" value="m" checked />
                             <i class="fas fa-mars"></i>
                         </label>
                     </div>
 
                     {{!-- Name Input & Actions --}}
-                    <div class="cibola8-namegen__name-section">
-                        <button type="button" class="cibola8-tool-btn cibola8-tool-btn--primary cibola8-tool-btn--icon" data-action="rollName" data-tooltip="{{localize 'cibola8.namegen.generate'}}">
+                    <div class="boobastudio-namegen__name-section">
+                        <button type="button" class="boobastudio-tool-btn boobastudio-tool-btn--primary boobastudio-tool-btn--icon" data-action="rollName" data-tooltip="{{localize 'boobastudio.namegen.generate'}}">
                             <i class="fas fa-dice"></i>
                         </button>
-                        <input 
-                            type="text" 
-                            name="name_{{token.uuid}}" 
-                            value="{{token.name}}" 
-                            data-dtype="String" 
-                            class="cibola8-input"
-                            placeholder="{{localize 'cibola8.namegen.namePlaceholder'}}"
+                        <input
+                            type="text"
+                            name="name_{{token.uuid}}"
+                            value="{{token.name}}"
+                            data-dtype="String"
+                            class="boobastudio-input"
+                            placeholder="{{localize 'boobastudio.namegen.namePlaceholder'}}"
                         />
-                        <button type="button" class="cibola8-tool-btn cibola8-tool-btn--success cibola8-tool-btn--icon" data-action="saveName" data-tooltip="{{localize 'cibola8.namegen.saveName'}}">
+                        <button type="button" class="boobastudio-tool-btn boobastudio-tool-btn--success boobastudio-tool-btn--icon" data-action="saveName" data-tooltip="{{localize 'boobastudio.namegen.saveName'}}">
                             <i class="fas fa-save"></i>
                         </button>
                     </div>
@@ -95,15 +95,15 @@
     </div>
     {{else}}
     {{!-- Empty State --}}
-    <div class="cibola8-namegen__empty cibola8-empty-state">
-        <div class="cibola8-empty-state__icon">
+    <div class="boobastudio-namegen__empty boobastudio-empty-state">
+        <div class="boobastudio-empty-state__icon">
             <i class="fas fa-users-slash"></i>
         </div>
-        <h3 class="cibola8-empty-state__title">{{localize 'cibola8.namegen.no_groups'}}</h3>
-        <p class="cibola8-empty-state__description">{{localize 'cibola8.namegen.no_groups_hint'}}</p>
-        <div class="cibola8-empty-state__help cibola8-hint">
+        <h3 class="boobastudio-empty-state__title">{{localize 'boobastudio.namegen.no_groups'}}</h3>
+        <p class="boobastudio-empty-state__description">{{localize 'boobastudio.namegen.no_groups_hint'}}</p>
+        <div class="boobastudio-empty-state__help boobastudio-hint">
             <i class="fas fa-info-circle"></i>
-            <span>{{localize 'cibola8.namegen.no_groups_help'}}</span>
+            <span>{{localize 'boobastudio.namegen.no_groups_help'}}</span>
         </div>
     </div>
     {{/if}}

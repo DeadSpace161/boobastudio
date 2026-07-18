@@ -4,7 +4,7 @@
     display: flex;
     height: 99%;
 }
-.cibola8 {
+.boobastudio {
     &.ciboladialog {
         .standard-form {
             --scroll-margin: 0.75rem;
@@ -1161,7 +1161,7 @@
 }
 
 .theme-dark {
-    .cibola8.application {
+    .boobastudio.application {
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: white;
         }
@@ -1182,7 +1182,7 @@
     }
 }
 
-.cibola8-random-content {
+.boobastudio-random-content {
     display: none;
     font-size: 1.25em;
     position: absolute;
@@ -1202,12 +1202,12 @@
 }
 
 .editor {
-    &:hover .cibola8-random-content {
+    &:hover .boobastudio-random-content {
         display: block;
     }
 
-    &.tinymce:hover .cibola8-random-content,
-    &.prosemirror:hover .cibola8-random-content {
+    &.tinymce:hover .boobastudio-random-content,
+    &.prosemirror:hover .boobastudio-random-content {
         display: none;
     }
 }
@@ -1268,25 +1268,25 @@
     padding-left: 18px;
 }
 
-.icon-cibola8 {
+.icon-boobastudio {
     background-image: url('../../templates/assets/cibolacoin.webp');
 }
 
-.header-button .icon-cibola8 {
+.header-button .icon-boobastudio {
     width: 22px;
     height: 22px;
     position: absolute;
     left: -5px;
 }
 
-.cibola8-arrow-right {
+.boobastudio-arrow-right {
     background-image: url('../../templates/assets/arrow.webp');
     width: 25px;
     height: 25px;
     margin: 0 10px;
 }
 
-.cibola8-arrow-left {
+.boobastudio-arrow-left {
     background-image: url('../../templates/assets/arrow.webp');
     transform: scale(-1, 1);
     margin: 0 10px;
@@ -1294,8 +1294,8 @@
     height: 25px;
 }
 
-.application .cibola8button,
-.cibola8button {
+.application .boobastudiobutton,
+.boobastudiobutton {
     background-image: radial-gradient(rgb(255, 83, 9) 0%, rgb(255, 147, 0) 100%);
     color: white;
 }
@@ -1331,7 +1331,7 @@
     user-select: text;
 }
 
-.cibola8-narrationbox {
+.boobastudio-narrationbox {
     background-color: black;
     color: white;
     border-radius: 10px;
@@ -1340,7 +1340,7 @@
     padding: 10px;
     position: relative;
 
-    .cibola8-narrationbox-header {
+    .boobastudio-narrationbox-header {
         position: absolute;
         top: -15px;
         right: 0px;
@@ -1373,7 +1373,7 @@
 // Toolbar styles are now in _cibola_components.scss (unified toolbar system)
 // ─────────────────────────────────────────────────────────────────────────────
 
-.cibola8.wall-detection.compact-layout {
+.boobastudio.wall-detection.compact-layout {
     padding: 0;
     display: flex;
     flex-direction: column;

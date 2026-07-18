@@ -1,9 +1,9 @@
 {
-  "cibola8": {
+  "boobastudio": {
     "options": "Options",
     "AiChat": {
-      "chatbutton": "Open Cibola8 or drag and drop the button onto the macro bar.",
-      "chatWithCibola": "Chat with Cibola8",
+      "chatbutton": "Open BoobaStudio or drag and drop the button onto the macro bar.",
+      "chatWithCibola": "Chat with BoobaStudio",
       "newChat": "New Chat"
     },
     "chatModels": {
@@ -310,7 +310,7 @@
       "addToDictionary": "Add to dictionary",
       "addToDictionaryHint": "Add the translation to the <a data-action=\"showTranslations\"><b>dictionary</b></a> to reuse it later. When translating actors, items are automatically pulled from the dictionary. This saves you time and mana and provides a consistent translation.",
       "overwritehint": "Overwrite existing items if they already exist and only add the missing items.",
-      "getHelp": "Contact Cibola8 if you have issues with translations in specific systems.",
+      "getHelp": "Contact BoobaStudio if you have issues with translations in specific systems.",
       "queueing": "Items are queued ({current}/{count}). Please wait until the process is complete.",
       "enqeued": "Item(s) have been queued.",
       "addMatcher": "Add dictionary entry",
@@ -349,7 +349,7 @@
       },
       "title": "Thread (GPT Chat)",
       "explanation": "A thread is a conversation with Chat GTP that remains between sessions (inactive for a maximum of 60 days). Utilize all the capacities of the AI and receive answers to your questions and support for your creativity.",
-      "sendMessage": "Chat with Cibola8.",
+      "sendMessage": "Chat with BoobaStudio.",
       "max_messages": "Maximum messages",
       "editNotSupported": "Editing messages is not supported for GPT threads.",
       "deleteLocalOnly": "This removes the message locally only (server history can’t be changed).",
@@ -372,7 +372,7 @@
       "narrationHint": "Wrap the selected text in a narration box. This adds play and stop controls for text-to-speech playback, letting you read the content aloud as a narrator voice during your session.",
       "narrationUsage": "Select the text you want to narrate, then confirm. The narration box will appear in the journal with audio controls.",
       "narrationApply": "Create narration box",
-      "title": "<i class=\"cib8-icon icon-cibola8\"></i> Cibola8"
+      "title": "<i class=\"cib8-icon icon-boobastudio\"></i> BoobaStudio"
     },
     "AiImageGen": {
       "placeholdertile": "Here are some points you should consider:\nType of tile: What does it show? (e.g., campfire, rug, statue)\nMaterial and color: What is it made of and what colors does it have?\nSize and shape: How big is it and what shape is it? (e.g., 1x1 square, round)\nDetails: Are there special features like shadows, wear, or embellishments?\nUse: What is it used for on the battlemap? (e.g., cover, decoration, obstacle)\nExample: \"A round campfire tile with black coals and scorched ground. It fits on a square and serves as a night camp or light source.\"",
@@ -584,8 +584,8 @@
       "removeSection": "Remove section",
       "generateDocument": "Generate document",
       "hideText": "Hide text (image only)",
-      "name": "Cibola8 Radial Menu",
-      "hint": "The menu provides quick access to the main features of Cibola8.",
+      "name": "BoobaStudio Radial Menu",
+      "hint": "The menu provides quick access to the main features of BoobaStudio.",
       "editCurrentScene": "Edit Current Scene",
       "tileTransformation": "Tile",
       "tileTransformationHint": "Select an area of the current scene, edit it in the image generator, and place it back on the canvas as a tile.",
@@ -633,7 +633,7 @@
       "browser": "Gallery",
       "browserHint": "Display all your generated content. These are stored in the 'storage' directory of this module.",
       "apikey": "API key",
-      "apikeyHint": "Your API key for using the AI services. Keep this key secret and update it if you fear it has been compromised. You can find or regenerate your API key on the Cibola8 website. Due to the nature of Foundry, the key can also be read by other modules and potentially misused.",
+      "apikeyHint": "Your API key for using the AI services. Keep this key secret and update it if you fear it has been compromised. You can find or regenerate your API key on the BoobaStudio website. Due to the nature of Foundry, the key can also be read by other modules and potentially misused.",
       "apiKeyPlaceholder": "Enter your API key here",
       "localizer": "Localization"
     },
@@ -656,7 +656,7 @@
       "modelNotAllowed": "Client-only OpenAI mode only supports ChatGPT 5 or higher.",
       "imageRequiresTextPrompt": "Client-only image generation requires a text prompt."
     },
-    "changelog": "If you want to know more about new features, also check out the <a href=\"https://github.com/Cibola8/cibola8/releases\" target=\"_blank\">Changelog</a>.",
+    "changelog": "If you want to know more about new features, also check out the <a href=\"https://github.com/BoobaStudio/boobastudio/releases\" target=\"_blank\">Changelog</a>.",
     "QueueViewer": {
       "title": "Queue",
       "elementStatus": "Queued/Success/Error/Expected",
@@ -1056,7 +1056,7 @@
       "left": "Left",
       "right": "Right"
     },
-    "accountcreation": "<p class=\"hint\">To use Cibola8, you need an account. For content creation, data is sent to a server that processes and returns it - this involves costs and identification. Here's how to create your account:</p><ol><li>Become a member on Patreon: <a href=\"{patreon}\" target=\"_blank\">Cibola8 Patreon</a></li><li>Log in with your Patreon account on <a href=\"{homepage}\" target=\"_blank\">Cibola8</a>.</li><li>Copy your API key.</li><li>Paste the API key here.</li></ol><p class=\"hint\">Also note that you need an internet connection. Once that is done, you can use all the features of Cibola8.</p>",
+    "accountcreation": "<p class=\"hint\">To use BoobaStudio, you need an account. For content creation, data is sent to a server that processes and returns it - this involves costs and identification. Here's how to create your account:</p><ol><li>Become a member on Patreon: <a href=\"{patreon}\" target=\"_blank\">BoobaStudio Patreon</a></li><li>Log in with your Patreon account on <a href=\"{homepage}\" target=\"_blank\">BoobaStudio</a>.</li><li>Copy your API key.</li><li>Paste the API key here.</li></ol><p class=\"hint\">Also note that you need an internet connection. Once that is done, you can use all the features of BoobaStudio.</p>",
     "advancedConfig": "Advanced Settings",
     "upscalers": {
       "stability-ai/fast": "Quick upscaling up to 4 times.",
@@ -1281,10 +1281,10 @@
         "clientOnlyBody": "Uses a locally stored OpenAI API key and sends requests directly from your Foundry client."
       },
       "ok": "Continue",
-      "radialMacroName": "Cibola8 Radial Menu",
-      "noEmptyHotbarSlot": "No empty macro hotbar slot found. Please drag the Cibola8 radial menu macro to an empty slot manually.",
-      "macroCreateFailed": "Could not create the Cibola8 radial menu macro. Please ask a GM to create it (or create it manually).",
-      "macroAssignFailed": "Could not place the Cibola8 radial menu macro on your hotbar.",
+      "radialMacroName": "BoobaStudio Radial Menu",
+      "noEmptyHotbarSlot": "No empty macro hotbar slot found. Please drag the BoobaStudio radial menu macro to an empty slot manually.",
+      "macroCreateFailed": "Could not create the BoobaStudio radial menu macro. Please ask a GM to create it (or create it manually).",
+      "macroAssignFailed": "Could not place the BoobaStudio radial menu macro on your hotbar.",
       "welcome": {
         "title": "Welcome to Cibola 8",
         "tagline": "AI-powered tools for your tabletop adventures",
@@ -1398,10 +1398,10 @@
   },
   "TYPES": {
     "JournalEntryPage": {
-      "cibola8": {
+      "boobastudio": {
         "threadgpt": "Thread (GPT Chat)"
       }
     }
   },
-  "TYPES.JournalEntryPage.cibola8.threadgpt": "Thread (GPT Chat)"
+  "TYPES.JournalEntryPage.boobastudio.threadgpt": "Thread (GPT Chat)"
 }

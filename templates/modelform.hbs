@@ -1,18 +1,18 @@
 
-<div class="cibola8-field-grid cibola8-mt-2">
+<div class="boobastudio-field-grid boobastudio-mt-2">
     {{#each fields as |field|}}
         {{#if (eq field.type 'range')}}
         <div class="form-group {{#if field.dependency}}hidden{{/if}}" data-tooltip="{{field.tooltip}}" data-dependency="{{field.dependency}}">
-            <label>{{localize (cibolaConcat 'cibola8.fields.' field.id)}}</label>
+            <label>{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}</label>
             <div class="form-fields">
                 <input type="range" name="{{field.id}}" value="{{field.value}}" min="{{field.min}}" max="{{field.max}}" step="{{field.step}}" {{#if field.disabled}}disabled{{/if}}>
                 <span class="range-value">{{field.value}}</span>
             </div>
-        </div>        
+        </div>
         {{ else }}
             {{#if (eq field.type 'select')}}
             <div class="form-group" data-tooltip="{{field.tooltip}}">
-                <label>{{localize (cibolaConcat 'cibola8.fields.' field.id)}}</label>
+                <label>{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}</label>
                 <div class="form-fields">
                     <select name="{{field.id}}">
                         {{selectOptions field.choices selected=field.value localize=field.localize blank=field.blank}}
@@ -23,75 +23,75 @@
             {{else}}
                 {{#if (eq field.type 'checkbox')}}
                     <div class="form-group" data-tooltip="{{field.tooltip}}">
-                        <label for="cb_{{field.id}}">{{localize (cibolaConcat 'cibola8.fields.' field.id)}}</label>
+                        <label for="cb_{{field.id}}">{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}</label>
                         <input id="cb_{{field.id}}" type="checkbox" name="{{field.id}}" {{checked field.value}} {{ifThen field.disabled 'disabled'}}>
                     </div>
                 {{else}}
                     {{#if (eq field.type 'mask')}}
-                    <div class="cibola8-intro-text cibola8-mask-note cibola8-col-full cibola8-mt-1 cibola8-mb-1">
-                        <i class="fas fa-paint-brush cibola8-intro-icon"></i>
-                        <div class="cibola8-mask-note-content">
-                            <div>{{localize 'cibola8.mask.hint'}}</div>
-                            <div class="cibola8-text-muted" style="margin-top:0.25rem">{{localize 'cibola8.mask.hintSecondary'}}</div>
+                    <div class="boobastudio-intro-text boobastudio-mask-note boobastudio-col-full boobastudio-mt-1 boobastudio-mb-1">
+                        <i class="fas fa-paint-brush boobastudio-intro-icon"></i>
+                        <div class="boobastudio-mask-note-content">
+                            <div>{{localize 'boobastudio.mask.hint'}}</div>
+                            <div class="boobastudio-text-muted" style="margin-top:0.25rem">{{localize 'boobastudio.mask.hintSecondary'}}</div>
                         </div>
-                        <img class="cibola8-mask-preview hidden" alt="Mask preview" />
+                        <img class="boobastudio-mask-preview hidden" alt="Mask preview" />
                     </div>
                     {{ else }}
                         {{#if (eq field.type 'canvas')}}
-                            <fieldset class="cibola8-col-full t-spacer flexcol stretch nopad {{field.id}} canvasContainer" data-tooltip="{{field.tooltip}}">
+                            <fieldset class="boobastudio-col-full t-spacer flexcol stretch nopad {{field.id}} canvasContainer" data-tooltip="{{field.tooltip}}">
                                 <div class="flexrow">
-                                    <div class="form-group activate_canvas" data-tooltip="cibola8.fieldtooltips.useSketch">
-                                        <label for="cb_{{field.id}}">{{localize 'cibola8.canvascontrols.use'}}</label>                                        
+                                    <div class="form-group activate_canvas" data-tooltip="boobastudio.fieldtooltips.useSketch">
+                                        <label for="cb_{{field.id}}">{{localize 'boobastudio.canvascontrols.use'}}</label>
                                         <input id="cb_{{field.id}}" type="checkbox">
                                     </div>
                                     <div class="form-group hidden">
-                                        <label>{{localize (cibolaConcat 'cibola8.fields.brushSize')}}</label>
+                                        <label>{{localize (cibolaConcat 'boobastudio.fields.brushSize')}}</label>
                                         <div class="form-fields">
                                             <range-picker name="brush_size" value="2" min="1" max="50" step="1"></range-picker>
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label>{{localize (cibolaConcat 'cibola8.canvascontrols.x')}}</label>
+                                        <label>{{localize (cibolaConcat 'boobastudio.canvascontrols.x')}}</label>
                                         <div class="form-fields">
                                             <range-picker name="brush_x" value="1024" min="512" max="2048" step="1"></range-picker>
                                         </div>
                                     </div>
                                     <div class="form-group hidden">
-                                        <label>{{localize (cibolaConcat 'cibola8.canvascontrols.y')}}</label>
+                                        <label>{{localize (cibolaConcat 'boobastudio.canvascontrols.y')}}</label>
                                         <div class="form-fields">
                                             <range-picker name="brush_y" value="512" min="512" max="2048" step="1"></range-picker>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="flexrow imageControlContainer hidden">
-                                    
-                                    <button class="fas fa-brush smallbutton" data-mode="freehand" data-tooltip="cibola8.canvascontrols.brush"></button>
-                                    <button class="fas fa-arrow-trend-up smallbutton" data-mode="line" data-tooltip="cibola8.canvascontrols.line"></button>
-                                    <button class="fas fa-circle smallbutton" data-mode="circle" data-tooltip="cibola8.canvascontrols.circle"></button>
-                                    <button class="fas fa-square smallbutton" data-mode="square" data-tooltip="cibola8.canvascontrols.square"></button>
-                                    <button class="fas fa-rotate-left smallbutton" data-mode="undo" data-tooltip="cibola8.canvascontrols.undo"></button>
-                                    <button class="fas fa-trash smallbutton" data-mode="reset" data-tooltip="cibola8.reset"></button>
+
+                                    <button class="fas fa-brush smallbutton" data-mode="freehand" data-tooltip="boobastudio.canvascontrols.brush"></button>
+                                    <button class="fas fa-arrow-trend-up smallbutton" data-mode="line" data-tooltip="boobastudio.canvascontrols.line"></button>
+                                    <button class="fas fa-circle smallbutton" data-mode="circle" data-tooltip="boobastudio.canvascontrols.circle"></button>
+                                    <button class="fas fa-square smallbutton" data-mode="square" data-tooltip="boobastudio.canvascontrols.square"></button>
+                                    <button class="fas fa-rotate-left smallbutton" data-mode="undo" data-tooltip="boobastudio.canvascontrols.undo"></button>
+                                    <button class="fas fa-trash smallbutton" data-mode="reset" data-tooltip="boobastudio.reset"></button>
                                 </div>
-                                <legend>{{localize (cibolaConcat 'cibola8.fields.' field.id)}}</legend>
+                                <legend>{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}</legend>
                                 <canvas class="canvasfield hidden" height="512" width="1024"></canvas>
                             </fieldset>
                         {{else}}
                             {{#if (eq field.type 'file')}}
                                 <div class="form-group" data-tooltip="{{field.tooltip}}">
-                                    <label>{{localize (cibolaConcat 'cibola8.fields.' field.id)}}</label>
+                                    <label>{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}</label>
                                     <div class="form-fields">
                                         <file-picker name="{{field.id}}" type="image" value=""></file-picker>
                                     </div>
                                 </div>
                             {{else}}
                                 {{#if (eq field.type 'multifile')}}
-                                    <div class="form-group cibola8-col-full cibolamultipicker" data-tooltip="{{field.tooltip}}" {{#if field.max}}data-max="{{field.max}}"{{/if}}>
-                                        <label>{{localize (cibolaConcat 'cibola8.fields.' field.id)}}{{#if field.max}} <span class="cibola-ref-counter">(0/{{field.max}})</span>{{/if}}</label>
+                                    <div class="form-group boobastudio-col-full cibolamultipicker" data-tooltip="{{field.tooltip}}" {{#if field.max}}data-max="{{field.max}}"{{/if}}>
+                                        <label>{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}{{#if field.max}} <span class="cibola-ref-counter">(0/{{field.max}})</span>{{/if}}</label>
                                         <div class="form-fields">
                                             <file-picker multiple name="{{field.id}}" type="image" value=""></file-picker>
                                             <div class="filepicks flexrow">
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -100,11 +100,11 @@
                                         <input type="hidden" name="{{field.id}}" value="{{field.value}}">
                                     {{ else }}
                                         {{#if (eq field.type 'descriptor')}}
-                                        <p class="cibola8-col-full">{{{localize field.value}}}</p>
+                                        <p class="boobastudio-col-full">{{{localize field.value}}}</p>
                                         {{else}}
                                             {{#if (eq field.type 'number')}}
                                             <div class="form-group {{#if field.dependency}}hidden{{/if}}" data-tooltip="{{field.tooltip}}" data-dependency="{{field.dependency}}">
-                                                <label>{{localize (cibolaConcat 'cibola8.fields.' field.id)}}</label>
+                                                <label>{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}</label>
                                                 <div class="form-fields">
                                                     <input type="number" name="{{field.id}}" value="{{field.value}}" {{#if (ne field.min undefined)}}min="{{field.min}}"{{/if}} {{#if (ne field.max undefined)}}max="{{field.max}}"{{/if}} {{#if field.step}}step="{{field.step}}"{{/if}} placeholder="{{localize field.placeholder}}" {{#if field.disabled}}disabled{{/if}}>
                                                 </div>
@@ -113,12 +113,12 @@
                                         {{/if}}
                                     {{/if}}
                                 {{/if}}
-                                
+
                             {{/if}}
                         {{/if}}
                     {{/if}}
                 {{/if}}
-            {{/if}}        
+            {{/if}}
         {{/if}}
     {{/each}}
 </div>
@@ -127,22 +127,22 @@
     {{#if (eq field.type 'textarea')}}
         {{#if field.optional}}
         <details>
-            <summary><i class="fas fa-cogs"></i> {{localize 'cibola8.advancedConfig'}}</summary>
+            <summary><i class="fas fa-cogs"></i> {{localize 'boobastudio.advancedConfig'}}</summary>
         {{/if}}
             <fieldset class="t-spacer flexcol stretch nopad relativedisplay" data-tooltip="{{field.tooltip}}">
-                <legend>{{{localize (cibolaConcat 'cibola8.fields.' field.id)}}}</legend>
-                {{> modules/cibola8/templates/textareahelpers.hbs hasParentApp=../hasParentApp}}
+                <legend>{{{localize (cibolaConcat 'boobastudio.fields.' field.id)}}}</legend>
+                {{> modules/boobastudio/templates/textareahelpers.hbs hasParentApp=../hasParentApp}}
                 <textarea class="behavior flexrow stretch" placeholder="{{localize field.placeholder}}" name="{{field.id}}" {{#if field.maxLimit}}maxlength="{{field.maxLimit}}" data-maxlimit="{{field.maxLimit}}"{{/if}}>{{#if (eq field.id 'prompt')}}{{../prompt.prompt}}{{/if}}</textarea>
-            </fieldset> 
+            </fieldset>
             {{#if field.maxLimit}}
-            <div class="flexrow cibola8-textarea-meta">
-                <div class="cibola8-textarea-counter" data-field-id="{{field.id}}" data-max="{{field.maxLimit}}">
+            <div class="flexrow boobastudio-textarea-meta">
+                <div class="boobastudio-textarea-counter" data-field-id="{{field.id}}" data-max="{{field.maxLimit}}">
                     <span class="current">0</span>/<span class="max">{{field.maxLimit}}</span>
                 </div>
                 {{#if (eq field.id 'speechcontent')}}
-                <div class="cibola8-notice cibola8-notice--info cibola8-notice--compact cibola8-textarea-hint hidden" data-field-id="{{field.id}}" data-threshold="500">
-                    <i class="cibola8-notice__icon fas fa-circle-info"></i>
-                    <div class="cibola8-notice__content">{{localize 'cibola8.musicgen.ttsLongHint'}}</div>
+                <div class="boobastudio-notice boobastudio-notice--info boobastudio-notice--compact boobastudio-textarea-hint hidden" data-field-id="{{field.id}}" data-threshold="500">
+                    <i class="boobastudio-notice__icon fas fa-circle-info"></i>
+                    <div class="boobastudio-notice__content">{{localize 'boobastudio.musicgen.ttsLongHint'}}</div>
                 </div>
                 {{/if}}
             </div>
@@ -162,7 +162,7 @@
     {{#each fields as |field|}}
     {{#if (eq field.type 'template')}}
         {{{field.customHtml}}}
-    {{/if}}  
+    {{/if}}
     {{/each}}
 </div>
 

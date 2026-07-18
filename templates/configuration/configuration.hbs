@@ -1,77 +1,77 @@
-<form class="scrollable standard-form cibola8-config-form">
+<form class="scrollable standard-form boobastudio-config-form">
   {{!-- Header with connection status --}}
-  <div class="cibola8-config-header">
-    <div class="cibola8-config-title">
-      <i class="cib8-icon icon-cibola8"></i>
-      <span>{{localize "cibola8.configuration"}}</span>
+  <div class="boobastudio-config-header">
+    <div class="boobastudio-config-title">
+      <i class="cib8-icon icon-boobastudio"></i>
+      <span>{{localize "boobastudio.configuration"}}</span>
     </div>
     {{#if userInfo.alive}}
-      <span class="cibola8-onboarding__connection-status cibola8-onboarding__connection-status--connected">
+      <span class="boobastudio-onboarding__connection-status boobastudio-onboarding__connection-status--connected">
         <i class="fas fa-check-circle"></i>
-        {{localize "cibola8.onboarding.welcome.modes.connected"}}
+        {{localize "boobastudio.onboarding.welcome.modes.connected"}}
       </span>
     {{/if}}
   </div>
 
   {{!-- API Settings Quick Access --}}
-  <fieldset class="cibola8-glass cibola8-mb-3">
-    <legend><i class="fas fa-key"></i> {{localize "cibola8.config.apiAccess"}}</legend>
-    
-    <div class="cibola8-hint cibola8-mb-2">
+  <fieldset class="boobastudio-glass boobastudio-mb-3">
+    <legend><i class="fas fa-key"></i> {{localize "boobastudio.config.apiAccess"}}</legend>
+
+    <div class="boobastudio-hint boobastudio-mb-2">
       <i class="fas fa-info-circle"></i>
-      {{localize "cibola8.config.apiAccessHint"}}
+      {{localize "boobastudio.config.apiAccessHint"}}
     </div>
-    
-    <div class="cibola8-config-api-actions">
-      <button type="button" class="cibola8-btn cibola8-btn--accent" data-action="connectPatreon">
-        <i class="fab fa-patreon"></i> {{localize "cibola8.connect.button"}}
+
+    <div class="boobastudio-config-api-actions">
+      <button type="button" class="boobastudio-btn boobastudio-btn--accent" data-action="connectPatreon">
+        <i class="fab fa-patreon"></i> {{localize "boobastudio.connect.button"}}
       </button>
-      <button type="button" class="cibola8-btn cibola8-btn--primary" data-action="openTokenSettings">
-        <i class="fas fa-keyboard"></i> {{localize "cibola8.connect.manualEntry"}}
+      <button type="button" class="boobastudio-btn boobastudio-btn--primary" data-action="openTokenSettings">
+        <i class="fas fa-keyboard"></i> {{localize "boobastudio.connect.manualEntry"}}
       </button>
-      
-      <div class="cibola8-link-list">
-        <a href="{{urls.patreon}}" target="_blank" class="cibola8-link-item">
-          <i class="fab fa-patreon"></i> {{localize "cibola8.token.getKeyPatreon"}}
+
+      <div class="boobastudio-link-list">
+        <a href="{{urls.patreon}}" target="_blank" class="boobastudio-link-item">
+          <i class="fab fa-patreon"></i> {{localize "boobastudio.token.getKeyPatreon"}}
         </a>
-        <a href="{{urls.app}}" target="_blank" class="cibola8-link-item">
-          <i class="fas fa-globe"></i> {{localize "cibola8.token.getKeyApp"}}
+        <a href="{{urls.app}}" target="_blank" class="boobastudio-link-item">
+          <i class="fas fa-globe"></i> {{localize "boobastudio.token.getKeyApp"}}
         </a>
       </div>
     </div>
   </fieldset>
 
   {{!-- Quick Actions Section --}}
-  <fieldset class="cibola8-glass cibola8-mb-3">
-    <legend><i class="fas fa-tools"></i> {{localize "cibola8.config.quickActions"}}</legend>
-    
-    <div class="cibola8-hint cibola8-mb-2">
+  <fieldset class="boobastudio-glass boobastudio-mb-3">
+    <legend><i class="fas fa-tools"></i> {{localize "boobastudio.config.quickActions"}}</legend>
+
+    <div class="boobastudio-hint boobastudio-mb-2">
       <i class="fas fa-info-circle"></i>
-      {{localize "cibola8.config.quickActionsHint"}}
+      {{localize "boobastudio.config.quickActionsHint"}}
     </div>
-    
-    <div class="cibola8-quick-actions-grid">
+
+    <div class="boobastudio-quick-actions-grid">
       {{#each buttons}}
-        <button type="button" class="cibola8-quick-action-btn" data-action="clickButton" data-type="{{this.type}}" data-tooltip="{{localize this.hint}}">
+        <button type="button" class="boobastudio-quick-action-btn" data-action="clickButton" data-type="{{this.type}}" data-tooltip="{{localize this.hint}}">
           <i class="{{this.icon}}"></i>
-          <span class="cibola8-quick-action-label">{{localize this.name}}</span>
+          <span class="boobastudio-quick-action-label">{{localize this.name}}</span>
         </button>
       {{/each}}
     </div>
   </fieldset>
 
   {{!-- General Settings Section --}}
-  <fieldset class="cibola8-glass cibola8-mb-3">
-    <legend><i class="fas fa-sliders-h"></i> {{localize "cibola8.config.generalSettings"}}</legend>
-    
-    <div class="cibola8-hint cibola8-mb-2">
+  <fieldset class="boobastudio-glass boobastudio-mb-3">
+    <legend><i class="fas fa-sliders-h"></i> {{localize "boobastudio.config.generalSettings"}}</legend>
+
+    <div class="boobastudio-hint boobastudio-mb-2">
       <i class="fas fa-info-circle"></i>
-      {{localize "cibola8.config.generalSettingsHint"}}
+      {{localize "boobastudio.config.generalSettingsHint"}}
     </div>
-    
+
     {{#each settings}}
       {{#unless this.isButton}}
-        <div class='form-group cibola8-form-group-animated' data-setting-id='{{this.id}}'>
+        <div class='form-group boobastudio-form-group-animated' data-setting-id='{{this.id}}'>
           <label>
             <i class="fas fa-cog"></i>
             {{localize this.name}}
@@ -84,13 +84,13 @@
               <input type='checkbox' name='{{this.id}}' data-dtype='Boolean' {{checked this.value}} />
 
             {{else if this.isSelect}}
-              <select name='{{this.id}}' data-dtype='{{this.type}}' class="cibola8-select">
+              <select name='{{this.id}}' data-dtype='{{this.type}}' class="boobastudio-select">
                 {{selectOptions this.choices selected=this.value localize=true}}
               </select>
 
             {{else if this.isRange}}
               <input type='range' name='{{this.id}}' data-dtype='Number' value='{{this.value}}' min='{{this.range.min}}' max='{{this.range.max}}' step='{{this.range.step}}' />
-              <span class='range-value cibola8-range-value'>{{this.value}}</span>
+              <span class='range-value boobastudio-range-value'>{{this.value}}</span>
 
             {{else if this.filePicker}}
               <file-picker name='{{this.id}}' type='{{this.filePickerType}}' value='{{this.value}}'></file-picker>
@@ -99,31 +99,31 @@
               {{numberInput this.value name=this.id}}
 
             {{else}}
-              <input type='text' name='{{this.id}}' value='{{this.value}}' data-dtype='{{this.type}}' class="cibola8-input" />
+              <input type='text' name='{{this.id}}' value='{{this.value}}' data-dtype='{{this.type}}' class="boobastudio-input" />
             {{/if}}
           </div>
-          <p class='hint cibola8-hint'>{{localize this.hint}}</p>
+          <p class='hint boobastudio-hint'>{{localize this.hint}}</p>
         </div>
       {{/unless}}
     {{/each}}
   </fieldset>
 
   {{!-- Help & Resources --}}
-  <fieldset class="cibola8-glass cibola8-mb-3">
-    <legend><i class="fas fa-life-ring"></i> {{localize "cibola8.config.helpResources"}}</legend>
-    
-    <div class="cibola8-link-list cibola8-resources-list">
-      <a href="{{urls.homepage}}" target="_blank" class="cibola8-link-item">
-        <i class="fas fa-home"></i> {{localize "cibola8.config.homepage"}}
+  <fieldset class="boobastudio-glass boobastudio-mb-3">
+    <legend><i class="fas fa-life-ring"></i> {{localize "boobastudio.config.helpResources"}}</legend>
+
+    <div class="boobastudio-link-list boobastudio-resources-list">
+      <a href="{{urls.homepage}}" target="_blank" class="boobastudio-link-item">
+        <i class="fas fa-home"></i> {{localize "boobastudio.config.homepage"}}
       </a>
-      <a href="{{urls.faq}}" target="_blank" class="cibola8-link-item">
-        <i class="fas fa-question-circle"></i> {{localize "cibola8.config.faq"}}
+      <a href="{{urls.faq}}" target="_blank" class="boobastudio-link-item">
+        <i class="fas fa-question-circle"></i> {{localize "boobastudio.config.faq"}}
       </a>
-      <a href="{{urls.discord}}" target="_blank" class="cibola8-link-item">
-        <i class="fab fa-discord"></i> {{localize "cibola8.config.discord"}}
+      <a href="{{urls.discord}}" target="_blank" class="boobastudio-link-item">
+        <i class="fab fa-discord"></i> {{localize "boobastudio.config.discord"}}
       </a>
-      <a href="{{urls.patreon}}" target="_blank" class="cibola8-link-item">
-        <i class="fab fa-patreon"></i> {{localize "cibola8.config.patreon"}}
+      <a href="{{urls.patreon}}" target="_blank" class="boobastudio-link-item">
+        <i class="fab fa-patreon"></i> {{localize "boobastudio.config.patreon"}}
       </a>
     </div>
   </fieldset>

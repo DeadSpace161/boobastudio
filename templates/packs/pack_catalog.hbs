@@ -4,15 +4,15 @@
   <div class="gallery-filters pack-catalog-search">
     <div class="gallery-search">
       <i class="fas fa-search"></i>
-      <input type="text" name="packSearch" 
-             placeholder="{{localize 'cibola8.packs.searchPlaceholder'}}" 
-             data-tooltip="cibola8.packs.searchHint"
+      <input type="text" name="packSearch"
+             placeholder="{{localize 'boobastudio.packs.searchPlaceholder'}}"
+             data-tooltip="boobastudio.packs.searchHint"
              value="{{searchQuery}}" />
     </div>
-    <button class="cibola8-btn cibola8-btn--secondary cibola8-btn--sm" 
-            data-action="showMyPacks" data-tooltip="cibola8.packs.myPacksHint" type="button">
+    <button class="boobastudio-btn boobastudio-btn--secondary boobastudio-btn--sm"
+            data-action="showMyPacks" data-tooltip="boobastudio.packs.myPacksHint" type="button">
       <i class="fas fa-folder-open"></i>
-      {{localize 'cibola8.packs.myPacks'}}
+      {{localize 'boobastudio.packs.myPacks'}}
     </button>
   </div>
 
@@ -21,12 +21,12 @@
   <div class="pack-tag-group pack-tag-group--featured">
     <h3 class="pack-tag-group-title">
       <i class="fas fa-star"></i>
-      {{localize 'cibola8.packs.featured'}}
-      <span class="cibola8-text-muted">({{featured.length}})</span>
+      {{localize 'boobastudio.packs.featured'}}
+      <span class="boobastudio-text-muted">({{featured.length}})</span>
     </h3>
     <div class="gallery-masonry pack-grid">
       {{#each featured}}
-        {{> modules/cibola8/templates/packs/pack_card.hbs this}}
+        {{> modules/boobastudio/templates/packs/pack_card.hbs this}}
       {{/each}}
     </div>
   </div>
@@ -38,11 +38,11 @@
     <h3 class="pack-tag-group-title">
       <i class="fas fa-tag"></i>
       {{this.tag}}
-      <span class="cibola8-text-muted">({{this.packs.length}})</span>
+      <span class="boobastudio-text-muted">({{this.packs.length}})</span>
     </h3>
     <div class="gallery-masonry pack-grid">
       {{#each this.packs}}
-        {{> modules/cibola8/templates/packs/pack_card.hbs this}}
+        {{> modules/boobastudio/templates/packs/pack_card.hbs this}}
       {{/each}}
     </div>
   </div>
@@ -52,7 +52,7 @@
   {{#unless hasAnyPacks}}
   <div class="gallery-empty">
     <i class="fas fa-box-open"></i>
-    <p>{{localize 'cibola8.packs.noPacks'}}</p>
+    <p>{{localize 'boobastudio.packs.noPacks'}}</p>
   </div>
   {{/unless}}
 </div>

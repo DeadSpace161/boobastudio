@@ -7,23 +7,23 @@
 </div>
 
 <fieldset class="eleven_voice_search">
-    <legend>{{localize 'cibola8.musicgen.searchVoice'}}</legend>
+    <legend>{{localize 'boobastudio.musicgen.searchVoice'}}</legend>
 
     {{!-- Favorites section --}}
     <details class="voice-favorites-section" open>
-        <summary class="voice-section-header"><i class="fas fa-star"></i> {{localize 'cibola8.musicgen.favorites'}}</summary>
+        <summary class="voice-section-header"><i class="fas fa-star"></i> {{localize 'boobastudio.musicgen.favorites'}}</summary>
         <ul class="voiceresults voicefavorites wrapping"></ul>
-        <div class="voice-favorites-empty"><i class="fas fa-star"></i> {{localize 'cibola8.musicgen.favoritesEmpty'}}</div>
+        <div class="voice-favorites-empty"><i class="fas fa-star"></i> {{localize 'boobastudio.musicgen.favoritesEmpty'}}</div>
     </details>
 
     {{!-- Comparison bar (hidden until 2+ favorites selected) --}}
     <div class="voice-compare-bar" style="display: none;">
-        <button type="button" class="voice-compare-btn" data-action="compareVoices"><i class="fas fa-exchange-alt"></i> {{localize 'cibola8.musicgen.compareVoices'}}</button>
+        <button type="button" class="voice-compare-btn" data-action="compareVoices"><i class="fas fa-exchange-alt"></i> {{localize 'boobastudio.musicgen.compareVoices'}}</button>
         <span class="voice-compare-count"></span>
     </div>
 
     {{!-- Search + filters --}}
-    <input type="search" name="search" placeholder="{{localize 'cibola8.musicgen.searchVoice'}}">
+    <input type="search" name="search" placeholder="{{localize 'boobastudio.musicgen.searchVoice'}}">
 
     {{!-- Category tabs --}}
     <div class="voice-category-tabs">
@@ -35,7 +35,7 @@
 
     <div class="flexrow wrapping t-spacer">
     <div class="form-group">
-        <label>{{localize 'cibola8.AiTranslator.language'}}</label>
+        <label>{{localize 'boobastudio.AiTranslator.language'}}</label>
         <div class="form-fields">
             <select name="language">
                 {{selectOptions languages}}
@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label>{{localize 'cibola8.musicgen.age'}}</label>
+        <label>{{localize 'boobastudio.musicgen.age'}}</label>
         <div class="form-fields">
             <select name="age">
                 {{selectOptions age}}
@@ -51,7 +51,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label>{{localize 'cibola8.musicgen.gender'}}</label>
+        <label>{{localize 'boobastudio.musicgen.gender'}}</label>
         <div class="form-fields">
             <select name="gender">
                 {{selectOptions gender}}

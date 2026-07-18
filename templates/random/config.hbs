@@ -1,26 +1,26 @@
 <section class="tab standard-form scrollable {{tabs.config.cssClass}}" data-tab="config"
     data-group="{{tabs.config.group}}">
     <div class="flexcol" style="flex: 1">
-        
+
         <fieldset class="stretch t-spacer">
-            <legend><i class="fas fa-cogs"></i> {{localize 'cibola8.AiRandomGen.title'}}</legend>
+            <legend><i class="fas fa-cogs"></i> {{localize 'boobastudio.AiRandomGen.title'}}</legend>
             <div class="flexrow imagesGroupLabel">
-                <label class="flexrow" data-tooltip="cibola8.behaviorHint"><div>{{localize 'cibola8.behavior'}}</div><div class="centeredText"><i class="fas fa-info"></i></div></label>
+                <label class="flexrow" data-tooltip="boobastudio.behaviorHint"><div>{{localize 'boobastudio.behavior'}}</div><div class="centeredText"><i class="fas fa-info"></i></div></label>
             </div>
                 <div class="imagesGroupParent">
                 <div class="radioImagesGroup flexrow wrapping hideChoices">
                     {{#each random.behaviors as |item key|}}
                         <input type="radio" id="random_{{key}}_{{../randomId}}" name="random.behavior" value="{{key}}" {{#if (eq key ../random.behavior)}}checked{{/if}}>
                         <label for="random_{{key}}_{{../randomId}}">
-                            <img src="modules/cibola8/templates/assets/{{key}}.webp" alt="{{key}}">
-                            <div class="img-overlay">{{localize (cibolaConcat 'cibola8.behaviors.' key)}}</div>
+                            <img src="modules/boobastudio/templates/assets/{{key}}.webp" alt="{{key}}">
+                            <div class="img-overlay">{{localize (cibolaConcat 'boobastudio.behaviors.' key)}}</div>
                             <i class="fas fa-edit"></i>
                         </label>
                     {{/each}}
                 </div>
             </div>
         </fieldset>
-        
+
     </div>
 
 </section>

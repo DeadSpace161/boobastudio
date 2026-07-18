@@ -1,9 +1,9 @@
 {
-  "cibola8": {
+  "boobastudio": {
     "options": "Opciones",
     "AiChat": {
-      "chatbutton": "Abre Cibola8 o arrastra el botón con Drag & Drop a la barra de macros.",
-      "chatWithCibola": "Chat con Cibola8",
+      "chatbutton": "Abre BoobaStudio o arrastra el botón con Drag & Drop a la barra de macros.",
+      "chatWithCibola": "Chat con BoobaStudio",
       "newChat": "Nuevo Chat"
     },
     "chatModels": {
@@ -312,7 +312,7 @@
       "addToDictionary": "Agregar al diccionario",
       "addToDictionaryHint": "Agrega la traducción al <a data-action=\"showTranslations\"><b>Diccionario</b></a> para reutilizarla más tarde. Al traducir a los actores, los elementos se extraen automáticamente del diccionario. Así ahorras tiempo y maná y tienes una traducción uniforme.",
       "overwritehint": "Sobrescribe elementos existentes si ya existen y solo agrega los elementos faltantes.",
-      "getHelp": "Contacta con Cibola8 si tienes problemas con las traducciones en ciertos sistemas.",
+      "getHelp": "Contacta con BoobaStudio si tienes problemas con las traducciones en ciertos sistemas.",
       "queueing": "Los elementos se han enqueued ({current}/{count}). Por favor espera hasta que el proceso se complete.",
       "enqeued": "Elemento(s) han sido enqueued.",
       "packageouthint": "Elige el compendio en el que se debe guardar la traducción (solo se permiten compendios desbloqueados).",
@@ -351,7 +351,7 @@
       },
       "title": "Hilo (GPT Chat)",
       "explanation": "Un hilo es una conversación con Chat GTP que permanece entre sesiones (con un máximo de inactividad de 60 días). Utiliza todas las capacidades de la IA y recibe una respuesta a tus preguntas y apoyo para tu creatividad.",
-      "sendMessage": "Chatear con Cibola8.",
+      "sendMessage": "Chatear con BoobaStudio.",
       "max_messages": "Máximas mensajes",
       "editNotSupported": "No se admite editar mensajes en hilos GPT.",
       "deleteLocalOnly": "Esto elimina el mensaje solo localmente (no se puede cambiar el historial del servidor).",
@@ -374,7 +374,7 @@
       "narrationHint": "Envuelve el texto seleccionado en un cuadro de narración. Esto añade controles de reproducción y parada para la síntesis de voz, permitiéndote leer el contenido en voz alta como voz de narrador durante tu sesión.",
       "narrationUsage": "Selecciona el texto que deseas narrar y confirma. El cuadro de narración aparecerá en el diario con controles de audio.",
       "narrationApply": "Crear cuadro de narración",
-      "title": "<i class=\"cib8-icon icon-cibola8\"></i> Cibola8"
+      "title": "<i class=\"cib8-icon icon-boobastudio\"></i> BoobaStudio"
     },
     "vector": {
       "uploadToStore": "Cargar archivo en el Vector Store",
@@ -564,8 +564,8 @@
       "removeSection": "Eliminar sección",
       "generateDocument": "Generar documento",
       "hideText": "Ocultar texto (solo imagen)",
-      "name": "Menú radial Cibola8",
-      "hint": "El menú ofrece acceso rápido a las funciones principales de Cibola8.",
+      "name": "Menú radial BoobaStudio",
+      "hint": "El menú ofrece acceso rápido a las funciones principales de BoobaStudio.",
       "headerDescription": "Personaliza tu menú radial con macros, documentos y secciones personalizadas.",
       "howToUse": "Cómo se usa",
       "tipDragDrop": "Arrastra macros o documentos a las secciones",
@@ -609,7 +609,7 @@
       "apikey": "Clave API",
       "chatModel": "Modelo de chat",
       "chatModelHint": "Selecciona el modelo de idioma que se usará para la solicitud directa a la IA correspondiente en el chat (comienza un mensaje con /c8 en el chat).",
-      "apikeyHint": "Tu clave API para el uso de los servicios de IA. Mantén esta clave en secreto y actualízala si sospechas que ha sido robada. Puedes encontrar o regenerar tu clave API en el sitio web de Cibola8. Debido a la naturaleza de Foundry, la clave también puede ser leída y potencialmente mal utilizada por otros módulos.",
+      "apikeyHint": "Tu clave API para el uso de los servicios de IA. Mantén esta clave en secreto y actualízala si sospechas que ha sido robada. Puedes encontrar o regenerar tu clave API en el sitio web de BoobaStudio. Debido a la naturaleza de Foundry, la clave también puede ser leída y potencialmente mal utilizada por otros módulos.",
       "apiKeyPlaceholder": "Introduce tu clave API aquí",
       "localizer": "Localización",
       "localizerHint": "Traduce elementos de la interfaz gráfica a tu idioma.",
@@ -637,7 +637,7 @@
       "imageRequiresTextPrompt": "La generación de imágenes en modo solo-cliente requiere un prompt de texto.",
       "description": "Usa tu propia clave API de OpenAI en lugar de créditos de Cibola para las funciones solo-cliente compatibles. Tu clave permanece local."
     },
-    "changelog": "Si quieres saber más sobre nuevas funciones, también echa un vistazo al <a href=\"https://github.com/Cibola8/cibola8/releases\" target=\"_blank\">Changelog</a>.",
+    "changelog": "Si quieres saber más sobre nuevas funciones, también echa un vistazo al <a href=\"https://github.com/BoobaStudio/boobastudio/releases\" target=\"_blank\">Changelog</a>.",
     "QueueViewer": {
       "title": "Cola",
       "elementStatus": "En cola/Éxito/Error/Esperado",
@@ -752,12 +752,12 @@
     "searchAndReplaceWarning": "<fieldset><legend><i class=\"fas fa-warning\"></i> Advertencia</legend><p>Esta función es solo para usuarios experimentados. La función <b>Inpaint/Reemplazar</b> se recomienda en su lugar.</p></fieldset>",
     "count": "Cantidad",
     "countHint": "Genera varias variantes a la vez. Precaución, los costos de maná se multiplicarán por la cantidad.",
-    "describe": "<div class=\"flexcol centeredText manahtmlcontainer cibola8\">Describe la imagen actualmente seleccionada<div class=\"flexrow\"><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div></div></div>",
+    "describe": "<div class=\"flexcol centeredText manahtmlcontainer boobastudio\">Describe la imagen actualmente seleccionada<div class=\"flexrow\"><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div></div></div>",
     "promptbuilder": "Genera promesas para un conjunto de imágenes, por ejemplo, un grupo de matones",
     "promptset": "Crear conjunto de promesas",
     "promptbuilderhint": "Instrucción para generar un grupo de promesas\nEjemplo: zombis medievales humanos, enanos y élficos",
     "improviseprompttitle": "Improvisar promesa",
-    "improviseprompt": "<div class=\"flexcol centeredText manahtmlcontainer cibola8\">Improvisa o cambia la promesa<div class=\"flexrow\"><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div></div></div>",
+    "improviseprompt": "<div class=\"flexcol centeredText manahtmlcontainer boobastudio\">Improvisa o cambia la promesa<div class=\"flexrow\"><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div><div class=\"manapot empty\"></div></div></div>",
     "adapt": "Ajustar",
     "promptImprovise": "¿Qué te gustaría cambiar?",
     "improvisePromptHint": "Indica a la IA cómo ajustar tu prompt de imagen. Reescribirá el prompt según tus instrucciones.",
@@ -1041,7 +1041,7 @@
     "NoUploadPermission": "No tienes permiso para subir imágenes o editar el elemento. Por favor contacta al director del juego para obtener permiso.",
     "showArtwork": "Mostrar gráficos",
     "formatHint": "Selecciona el formato de la imagen. Las altas resoluciones requieren más Mana.",
-    "accountcreation": "<p class=\"hint\">Para utilizar Cibola8, necesitas una cuenta. Para la creación de contenido, se envían datos a un servidor que los procesa y devuelve; esto conlleva costos y una identificación. Así es como puedes crear tu cuenta:</p><ol><li>Hazte miembro en Patreon: <a href=\"{patreon}\" target=\"_blank\">Cibola8 Patreon</a></li><li>Inicia sesión con tu cuenta de Patreon en <a href=\"{homepage}\" target=\"_blank\">Cibola8</a>.</li><li>Copia tu clave API.</li><li>Pega la clave API aquí.</li></ol><p class=\"hint\">Ten en cuenta que también necesitas una conexión a internet. Una vez que esto esté listo, podrás utilizar todas las funciones de Cibola8.</p>",
+    "accountcreation": "<p class=\"hint\">Para utilizar BoobaStudio, necesitas una cuenta. Para la creación de contenido, se envían datos a un servidor que los procesa y devuelve; esto conlleva costos y una identificación. Así es como puedes crear tu cuenta:</p><ol><li>Hazte miembro en Patreon: <a href=\"{patreon}\" target=\"_blank\">BoobaStudio Patreon</a></li><li>Inicia sesión con tu cuenta de Patreon en <a href=\"{homepage}\" target=\"_blank\">BoobaStudio</a>.</li><li>Copia tu clave API.</li><li>Pega la clave API aquí.</li></ol><p class=\"hint\">Ten en cuenta que también necesitas una conexión a internet. Una vez que esto esté listo, podrás utilizar todas las funciones de BoobaStudio.</p>",
     "delete": "Eliminar elemento",
     "save": "Guardar",
     "defineProperties": "El prompt para la generación puede ser predefinido con el contenido de este atributo. Por favor selecciona el que describa el objeto.",
@@ -1098,10 +1098,10 @@
         "clientOnlyBody": "Usa una clave de OpenAI almacenada localmente y envía peticiones directamente desde tu cliente de Foundry."
       },
       "ok": "Continuar",
-      "radialMacroName": "Menú radial Cibola8",
-      "noEmptyHotbarSlot": "No se encontró un espacio vacío en la barra de macros. Arrastra la macro del menú radial de Cibola8 a un espacio vacío manualmente.",
-      "macroCreateFailed": "No se pudo crear la macro del menú radial de Cibola8. Pide a un GM que la cree (o créala manualmente).",
-      "macroAssignFailed": "No se pudo colocar la macro del menú radial de Cibola8 en tu barra de macros.",
+      "radialMacroName": "Menú radial BoobaStudio",
+      "noEmptyHotbarSlot": "No se encontró un espacio vacío en la barra de macros. Arrastra la macro del menú radial de BoobaStudio a un espacio vacío manualmente.",
+      "macroCreateFailed": "No se pudo crear la macro del menú radial de BoobaStudio. Pide a un GM que la cree (o créala manualmente).",
+      "macroAssignFailed": "No se pudo colocar la macro del menú radial de BoobaStudio en tu barra de macros.",
       "welcome": {
         "findCibola": {
           "title": "Busca este icono",
@@ -1398,10 +1398,10 @@
   },
   "TYPES": {
     "JournalEntryPage": {
-      "cibola8": {
+      "boobastudio": {
         "threadgpt": "Hilo (GPT Chat)"
       }
     }
   },
-  "TYPES.JournalEntryPage.cibola8.threadgpt": "Hilo (chat GPT)"
+  "TYPES.JournalEntryPage.boobastudio.threadgpt": "Hilo (chat GPT)"
 }

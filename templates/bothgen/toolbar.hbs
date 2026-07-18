@@ -1,189 +1,189 @@
 {{!-- UNIFIED TOOLBAR CONTAINER --}}
-<div class="cibola8-toolbar-container imagegentoolbar">
+<div class="boobastudio-toolbar-container imagegentoolbar">
     {{!-- ROW 1: Source | Create | Transform | Spacer | Output --}}
-    <div class="cibola8-toolbar cibola8-toolbar">
+    <div class="boobastudio-toolbar boobastudio-toolbar">
         {{!-- SOURCE DROPDOWN --}}
-        <div class="cibola8-toolbar__group cibola8-dropdown" data-group="source">
-            <button type="button" class="cibola8-tool-btn cibola8-dropdown__trigger"
-                data-tooltip="cibola8.toolbar.sourceOptions" data-tooltip-direction="UP" aria-haspopup="true"
+        <div class="boobastudio-toolbar__group boobastudio-dropdown" data-group="source">
+            <button type="button" class="boobastudio-tool-btn boobastudio-dropdown__trigger"
+                data-tooltip="boobastudio.toolbar.sourceOptions" data-tooltip-direction="UP" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="fas fa-file-import"></i>
-                <i class="fas fa-caret-down cibola8-dropdown__caret"></i>
+                <i class="fas fa-caret-down boobastudio-dropdown__caret"></i>
             </button>
-            <div class="cibola8-dropdown__menu" role="menu">
-                <button type="button" data-action="browse" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.toolbar.browseHint" data-tooltip-direction="RIGHT">
+            <div class="boobastudio-dropdown__menu" role="menu">
+                <button type="button" data-action="browse" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.toolbar.browseHint" data-tooltip-direction="RIGHT">
                     <i class="fas fa-file-import"></i>
-                    <span>{{localize 'cibola8.browse'}}</span>
+                    <span>{{localize 'boobastudio.browse'}}</span>
                 </button>
-                <button type="button" data-action="pickFromGallery" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.tooltip.pickFromGallery" data-tooltip-direction="RIGHT"
+                <button type="button" data-action="pickFromGallery" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.tooltip.pickFromGallery" data-tooltip-direction="RIGHT"
                     {{#unless canUseGallery}}disabled{{/unless}}>
                     <i class="fas fa-images"></i>
-                    <span>{{localize 'cibola8.toolbar.gallery'}}</span>
+                    <span>{{localize 'boobastudio.toolbar.gallery'}}</span>
                 </button>
-                <button type="button" data-action="pickFromScene" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.tooltip.pickFromScene" data-tooltip-direction="RIGHT">
+                <button type="button" data-action="pickFromScene" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.tooltip.pickFromScene" data-tooltip-direction="RIGHT">
                     <i class="far fa-map"></i>
-                    <span>{{localize 'cibola8.toolbar.fromScene'}}</span>
+                    <span>{{localize 'boobastudio.toolbar.fromScene'}}</span>
                 </button>
-                <button type="button" data-action="selectRegion" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.regionSelector.selectRegionHint" data-tooltip-direction="RIGHT">
+                <button type="button" data-action="selectRegion" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.regionSelector.selectRegionHint" data-tooltip-direction="RIGHT">
                     <i class="fas fa-object-group"></i>
-                    <span>{{localize 'cibola8.regionSelector.selectRegion'}}</span>
+                    <span>{{localize 'boobastudio.regionSelector.selectRegion'}}</span>
                 </button>
             </div>
         </div>
 
-        <div class="cibola8-toolbar__separator"></div>
+        <div class="boobastudio-toolbar__separator"></div>
 
         {{!-- CREATE GROUP --}}
-        <div class="cibola8-toolbar__group" data-group="create">
-            <button type="button" data-action="goPrompt" data-tooltip="cibola8.toolbar.generateHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn cibola8-tool-btn--primary hasManaTooltip">
+        <div class="boobastudio-toolbar__group" data-group="create">
+            <button type="button" data-action="goPrompt" data-tooltip="boobastudio.toolbar.generateHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn boobastudio-tool-btn--primary hasManaTooltip">
                 <i class="fas fa-wand-magic-sparkles"></i>
             </button>
         </div>
 
-        <div class="cibola8-toolbar__separator"></div>
+        <div class="boobastudio-toolbar__separator"></div>
 
         {{!-- TRANSFORM GROUP --}}
-        <div class="cibola8-toolbar__group" data-group="transform">
-            <button type="button" data-action="crop" data-tooltip="cibola8.toolbar.cropHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn imgControls" {{#unless image.latestImg}}disabled
-                data-disabled-reason="cibola8.toolbar.loadImageFirst" {{/unless}}>
+        <div class="boobastudio-toolbar__group" data-group="transform">
+            <button type="button" data-action="crop" data-tooltip="boobastudio.toolbar.cropHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn imgControls" {{#unless image.latestImg}}disabled
+                data-disabled-reason="boobastudio.toolbar.loadImageFirst" {{/unless}}>
                 <i class="fas fa-crop"></i>
             </button>
             <button type="button" data-action="subModelFunction" data-mode="outpaint"
-                data-tooltip="cibola8.toolbar.outpaintHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn hasManaTooltip imgControls" {{#unless image.latestImg}}disabled
-                data-disabled-reason="cibola8.toolbar.loadImageFirst" {{/unless}}>
+                data-tooltip="boobastudio.toolbar.outpaintHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn hasManaTooltip imgControls" {{#unless image.latestImg}}disabled
+                data-disabled-reason="boobastudio.toolbar.loadImageFirst" {{/unless}}>
                 <i class="fas fa-expand"></i>
             </button>
-            <button type="button" data-action="upscale" data-tooltip="cibola8.toolbar.upscaleHint"
-                data-tooltip-direction="UP" class="cibola8-tool-btn hasManaTooltip imgControls" {{#unless
-                image.latestImg}}disabled data-disabled-reason="cibola8.toolbar.loadImageFirst" {{/unless}}>
+            <button type="button" data-action="upscale" data-tooltip="boobastudio.toolbar.upscaleHint"
+                data-tooltip-direction="UP" class="boobastudio-tool-btn hasManaTooltip imgControls" {{#unless
+                image.latestImg}}disabled data-disabled-reason="boobastudio.toolbar.loadImageFirst" {{/unless}}>
                 <i class="fas fa-up-right-and-down-left-from-center"></i>
             </button>
         </div>
 
         {{!-- SPACER --}}
-        <div class="cibola8-toolbar__spacer"></div>
+        <div class="boobastudio-toolbar__spacer"></div>
 
         {{!-- OUTPUT DROPDOWN --}}
-        <div class="cibola8-toolbar__group cibola8-dropdown" data-group="output">
-            <button type="button" class="cibola8-tool-btn cibola8-tool-btn--success cibola8-dropdown__trigger"
-                data-tooltip="cibola8.toolbar.outputOptions" data-tooltip-direction="UP" aria-haspopup="true"
+        <div class="boobastudio-toolbar__group boobastudio-dropdown" data-group="output">
+            <button type="button" class="boobastudio-tool-btn boobastudio-tool-btn--success boobastudio-dropdown__trigger"
+                data-tooltip="boobastudio.toolbar.outputOptions" data-tooltip-direction="UP" aria-haspopup="true"
                 aria-expanded="false" {{#unless image.latestImg}}disabled{{/unless}}>
                 <i class="fas fa-floppy-disk"></i>
-                <i class="fas fa-caret-down cibola8-dropdown__caret"></i>
+                <i class="fas fa-caret-down boobastudio-dropdown__caret"></i>
             </button>
-            <div class="cibola8-dropdown__menu" role="menu">
-                <button type="button" data-action="saveImg" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.tooltip.saveResult" data-tooltip-direction="LEFT">
+            <div class="boobastudio-dropdown__menu" role="menu">
+                <button type="button" data-action="saveImg" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.tooltip.saveResult" data-tooltip-direction="LEFT">
                     <i class="fas fa-floppy-disk"></i>
-                    <span>{{localize 'cibola8.save'}}</span>
+                    <span>{{localize 'boobastudio.save'}}</span>
                 </button>
-                <button type="button" data-action="saveAsImg" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.tooltip.saveAsResult" data-tooltip-direction="LEFT">
+                <button type="button" data-action="saveAsImg" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.tooltip.saveAsResult" data-tooltip-direction="LEFT">
                     <i class="fas fa-folder-plus"></i>
-                    <span>{{localize 'cibola8.toolbar.saveAs'}}</span>
+                    <span>{{localize 'boobastudio.toolbar.saveAs'}}</span>
                 </button>
                 {{#if image.canTokenHorde}}
-                <button type="button" data-action="saveAsTokenHorde" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.tokenhorde.saveAsTokenHordeHint" data-tooltip-direction="LEFT">
+                <button type="button" data-action="saveAsTokenHorde" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.tokenhorde.saveAsTokenHordeHint" data-tooltip-direction="LEFT">
                     <i class="fas fa-locust"></i>
-                    <span>{{localize 'cibola8.tokenhorde.saveAsTokenHorde'}}</span>
+                    <span>{{localize 'boobastudio.tokenhorde.saveAsTokenHorde'}}</span>
                 </button>
                 {{/if}}
-                <button type="button" data-action="applyAsTile" class="cibola8-dropdown__item hidden" role="menuitem"
-                    data-tooltip="cibola8.regionSelector.applyAsTileHint" data-tooltip-direction="LEFT">
+                <button type="button" data-action="applyAsTile" class="boobastudio-dropdown__item hidden" role="menuitem"
+                    data-tooltip="boobastudio.regionSelector.applyAsTileHint" data-tooltip-direction="LEFT">
                     <i class="fas fa-layer-group"></i>
-                    <span>{{localize 'cibola8.regionSelector.applyAsTile'}}</span>
+                    <span>{{localize 'boobastudio.regionSelector.applyAsTile'}}</span>
                 </button>
-                <div class="cibola8-dropdown__divider"></div>
-                <button type="button" data-action="download" class="cibola8-dropdown__item" role="menuitem"
-                    data-tooltip="cibola8.toolbar.downloadHint" data-tooltip-direction="LEFT">
+                <div class="boobastudio-dropdown__divider"></div>
+                <button type="button" data-action="download" class="boobastudio-dropdown__item" role="menuitem"
+                    data-tooltip="boobastudio.toolbar.downloadHint" data-tooltip-direction="LEFT">
                     <i class="fas fa-download"></i>
-                    <span>{{localize 'cibola8.download'}}</span>
+                    <span>{{localize 'boobastudio.download'}}</span>
                 </button>
-                <button type="button" data-action="share" class="cibola8-dropdown__item imgControls hidden"
-                    role="menuitem" data-tooltip="cibola8.tooltip.togglePublic" data-tooltip-direction="LEFT">
+                <button type="button" data-action="share" class="boobastudio-dropdown__item imgControls hidden"
+                    role="menuitem" data-tooltip="boobastudio.tooltip.togglePublic" data-tooltip-direction="LEFT">
                     <i class="fas fa-share"></i>
-                    <span>{{localize 'cibola8.toolbar.share'}}</span>
+                    <span>{{localize 'boobastudio.toolbar.share'}}</span>
                 </button>
             </div>
         </div>
     </div>
 
     {{!-- ROW 2: Select | AI Edit | Spacer | History --}}
-    <div class="cibola8-toolbar cibola8-toolbar">
+    <div class="boobastudio-toolbar boobastudio-toolbar">
         {{!-- SELECT GROUP (toggleable) --}}
-        <div class="cibola8-toolbar__group cibola8-toolbar__group--toggleable" data-group="select">
-            <button type="button" data-action="setTool" data-tool="selectRect" data-tooltip="cibola8.toolbar.selectRectHint"
-                data-tooltip-direction="UP" class="cibola8-tool-btn">
+        <div class="boobastudio-toolbar__group boobastudio-toolbar__group--toggleable" data-group="select">
+            <button type="button" data-action="setTool" data-tool="selectRect" data-tooltip="boobastudio.toolbar.selectRectHint"
+                data-tooltip-direction="UP" class="boobastudio-tool-btn">
                 <i class="fas fa-vector-square"></i>
             </button>
             <button type="button" data-action="setTool" data-tool="brushSelect"
-                data-tooltip="cibola8.toolbar.brushSelectHint" data-tooltip-direction="UP" class="cibola8-tool-btn">
+                data-tooltip="boobastudio.toolbar.brushSelectHint" data-tooltip-direction="UP" class="boobastudio-tool-btn">
                 <i class="fas fa-paintbrush"></i>
             </button>
-            <button type="button" data-action="setTool" data-tool="pan" data-tooltip="cibola8.toolbar.panHint"
-                data-tooltip-direction="UP" class="cibola8-tool-btn cibola8-tool-btn--active">
+            <button type="button" data-action="setTool" data-tool="pan" data-tooltip="boobastudio.toolbar.panHint"
+                data-tooltip-direction="UP" class="boobastudio-tool-btn boobastudio-tool-btn--active">
                 <i class="fas fa-hand"></i>
             </button>
         </div>
 
-        <div class="cibola8-toolbar__separator"></div>
+        <div class="boobastudio-toolbar__separator"></div>
 
         {{!-- AI EDIT GROUP --}}
-        <div class="cibola8-toolbar__group" data-group="aiEdit">
+        <div class="boobastudio-toolbar__group" data-group="aiEdit">
             <button type="button" data-action="subModelFunction" data-mode="editPrompt"
-                data-tooltip="cibola8.toolbar.editPromptHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn hasManaTooltip">
+                data-tooltip="boobastudio.toolbar.editPromptHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn hasManaTooltip">
                 <i class="fas fa-palette"></i>
             </button>
             <button type="button" data-action="subModelFunction" data-mode="inpaint"
-                data-tooltip="cibola8.toolbar.inpaintHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn hasManaTooltip">
+                data-tooltip="boobastudio.toolbar.inpaintHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn hasManaTooltip">
                 <i class="fas fa-fill-drip"></i>
             </button>
             <button type="button" data-action="subModelFunction" data-mode="erase"
-                data-tooltip="cibola8.toolbar.eraseHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn hasManaTooltip">
+                data-tooltip="boobastudio.toolbar.eraseHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn hasManaTooltip">
                 <i class="fas fa-eraser"></i>
             </button>
             <button type="button" data-action="subModelFunction" data-mode="style"
-                data-tooltip="cibola8.toolbar.styleHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn hasManaTooltip">
+                data-tooltip="boobastudio.toolbar.styleHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn hasManaTooltip">
                 <i class="fas fa-brush"></i>
             </button>
             <button type="button" data-action="subModelFunction" data-mode="stability-ai/relight"
-                data-tooltip="cibola8.toolbar.relightHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn hasManaTooltip">
+                data-tooltip="boobastudio.toolbar.relightHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn hasManaTooltip">
                 <i class="fas fa-lightbulb"></i>
             </button>
-            <button type="button" data-action="removebg" data-tooltip="cibola8.toolbar.removeBgHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn hasManaTooltip">
+            <button type="button" data-action="removebg" data-tooltip="boobastudio.toolbar.removeBgHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn hasManaTooltip">
                 <i class="fas fa-user-large-slash"></i>
             </button>
         </div>
 
         {{!-- SPACER --}}
-        <div class="cibola8-toolbar__spacer"></div>
+        <div class="boobastudio-toolbar__spacer"></div>
 
         {{!-- HISTORY GROUP --}}
-        <div class="cibola8-toolbar__group" data-group="history">
-            <button type="button" data-action="undo" data-tooltip="cibola8.toolbar.undoHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn" {{#unless image.canUndo}}disabled
-                data-disabled-reason="cibola8.toolbar.nothingToUndo" {{/unless}}>
+        <div class="boobastudio-toolbar__group" data-group="history">
+            <button type="button" data-action="undo" data-tooltip="boobastudio.toolbar.undoHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn" {{#unless image.canUndo}}disabled
+                data-disabled-reason="boobastudio.toolbar.nothingToUndo" {{/unless}}>
                 <i class="fas fa-rotate-left"></i>
             </button>
-            <button type="button" data-action="redo" data-tooltip="cibola8.toolbar.redoHint" data-tooltip-direction="UP"
-                class="cibola8-tool-btn" {{#unless image.canRedo}}disabled
-                data-disabled-reason="cibola8.toolbar.nothingToRedo" {{/unless}}>
+            <button type="button" data-action="redo" data-tooltip="boobastudio.toolbar.redoHint" data-tooltip-direction="UP"
+                class="boobastudio-tool-btn" {{#unless image.canRedo}}disabled
+                data-disabled-reason="boobastudio.toolbar.nothingToRedo" {{/unless}}>
                 <i class="fas fa-rotate-right"></i>
             </button>
         </div>
     </div>
-</div>{{!-- end cibola8-toolbar-container --}}
+</div>{{!-- end boobastudio-toolbar-container --}}

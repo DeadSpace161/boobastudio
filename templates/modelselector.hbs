@@ -1,6 +1,6 @@
 <fieldset class="stretch t-spacer">
-    <legend>{{localize 'cibola8.model'}}</legend>
-    <p class="hint">{{localize 'cibola8.modelHint'}}</p>
+    <legend>{{localize 'boobastudio.model'}}</legend>
+    <p class="hint">{{localize 'boobastudio.modelHint'}}</p>
     <div class="form-group">
         <label></label>
         <div class="form-fields">
@@ -9,17 +9,17 @@
             </div>
             <select class="filterModels">
                 <option value=""></option>
-                <option value="mana">{{localize 'cibola8.mana'}}</option>
-                <option value="speed">{{localize 'cibola8.fields.speed'}}</option>
-                <option value="elo">{{localize 'cibola8.tooltip.perceivedElo'}}</option>
+                <option value="mana">{{localize 'boobastudio.mana'}}</option>
+                <option value="speed">{{localize 'boobastudio.fields.speed'}}</option>
+                <option value="elo">{{localize 'boobastudio.tooltip.perceivedElo'}}</option>
             </select>
         </div>
-        
+
     </div>
     <div class="flexrow">
         <div class="imagesGroupParent">
-            {{> modules/cibola8/templates/innermodelselector.hbs models=image.models selectedModel=image.model}}
+            {{> modules/boobastudio/templates/innermodelselector.hbs models=image.models selectedModel=image.model}}
         </div>
     </div>
-    <p class="hint cibola8-attribution">{{localize 'cibola8.attribution.benchmarkData'}} <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a></p>
+    <p class="hint boobastudio-attribution">{{localize 'boobastudio.attribution.benchmarkData'}} <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a></p>
 </fieldset>

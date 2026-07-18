@@ -4,7 +4,7 @@
 // ==========================================================================
 
 // Gallery namespace
-.cibola8 {
+.boobastudio {
   // ========================================================================
   // GALLERY CONTAINER - CSS Grid Layout (fills available space)
   // ========================================================================
@@ -465,7 +465,7 @@
   // ========================================================================
   // GALLERY CONTROL PANEL ("Verwalte deine Inhalte")
   // ========================================================================
-  .cibola8-control-panel {
+  .boobastudio-control-panel {
     background: rgba(30, 30, 50, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
@@ -490,7 +490,7 @@
       }
     }
 
-    .cibola8-action-bar,
+    .boobastudio-action-bar,
     .detail-actions {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -570,7 +570,7 @@
   // PACK LIBRARY — Cards, tag groups, detail, dropdown
   // Only styles that are truly unique to packs; everything else reuses
   // gallery-masonry, gallery-search, gallery-filters, gallery-loader,
-  // gallery-empty, cibola8-badge, cibola8-action-bar, etc.
+  // gallery-empty, boobastudio-badge, boobastudio-action-bar, etc.
   // ==========================================================================
 
   .gallery-masonry > .pack-container {

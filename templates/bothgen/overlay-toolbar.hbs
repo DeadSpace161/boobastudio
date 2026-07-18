@@ -1,89 +1,89 @@
 {{!-- Overlay Toolbar Partial (zoom, brush, selection controls) --}}
-<div class="cibola8-toolbar-container cibola8-toolbar-container--overlay hideOnCrop imageControlContainer">
+<div class="boobastudio-toolbar-container boobastudio-toolbar-container--overlay hideOnCrop imageControlContainer">
     {{!-- Main row: existing controls --}}
-    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay">
-        <button type="button" data-tooltip="cibola8.showArtwork" data-action="showArtwork"
-            class="imgControls {{ifThen image.latestImg '' 'hidden'}} cibola8-tool-btn"><i
+    <div class="flexrow boobastudio-toolbar boobastudio-toolbar--overlay">
+        <button type="button" data-tooltip="boobastudio.showArtwork" data-action="showArtwork"
+            class="imgControls {{ifThen image.latestImg '' 'hidden'}} boobastudio-tool-btn"><i
                 class="fas fa-maximize"></i></button>
-        <button type="button" data-tooltip="cibola8.postChat" data-action="postChat"
-            class="imgControls hidden cibola8-tool-btn"><i class="fas fa-comment"></i></button>
+        <button type="button" data-tooltip="boobastudio.postChat" data-action="postChat"
+            class="imgControls hidden boobastudio-tool-btn"><i class="fas fa-comment"></i></button>
         {{!-- Zoom controls --}}
-        <span class="cibola8-zoom-controls">
-            <button type="button" data-action="zoomOut" data-tooltip="cibola8.canvas.zoomOut"
-                class="cibola8-tool-btn"><i class="fas fa-minus"></i></button>
-            <span class="cibola8-zoom-value">100%</span>
-            <button type="button" data-action="zoomIn" data-tooltip="cibola8.canvas.zoomIn"
-                class="cibola8-tool-btn"><i class="fas fa-plus"></i></button>
-            <button type="button" data-action="fitToView" data-tooltip="cibola8.canvas.fitToView"
-                class="cibola8-tool-btn"><i class="fas fa-expand"></i></button>
+        <span class="boobastudio-zoom-controls">
+            <button type="button" data-action="zoomOut" data-tooltip="boobastudio.canvas.zoomOut"
+                class="boobastudio-tool-btn"><i class="fas fa-minus"></i></button>
+            <span class="boobastudio-zoom-value">100%</span>
+            <button type="button" data-action="zoomIn" data-tooltip="boobastudio.canvas.zoomIn"
+                class="boobastudio-tool-btn"><i class="fas fa-plus"></i></button>
+            <button type="button" data-action="fitToView" data-tooltip="boobastudio.canvas.fitToView"
+                class="boobastudio-tool-btn"><i class="fas fa-expand"></i></button>
         </span>
     </div>
 
     {{!-- Second row: Brush size (shown when brush tool active) --}}
-    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay cibola8-brush-context hidden">
-        <label class="cibola8-context-label">
+    <div class="flexrow boobastudio-toolbar boobastudio-toolbar--overlay boobastudio-brush-context hidden">
+        <label class="boobastudio-context-label">
             <i class="fas fa-paintbrush"></i>
-            <span>{{localize 'cibola8.canvas.brushSize'}}</span>
+            <span>{{localize 'boobastudio.canvas.brushSize'}}</span>
         </label>
-        <input type="range" class="cibola8-brush-size-slider" min="1" max="200" value="20" />
-        <span class="cibola8-brush-size-value">20px</span>
+        <input type="range" class="boobastudio-brush-size-slider" min="1" max="200" value="20" />
+        <span class="boobastudio-brush-size-value">20px</span>
     </div>
 
     {{!-- Third row: Selection actions (shown when selection tool active) --}}
-    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay cibola8-selection-actions hidden">
-        <button type="button" data-action="clearSelection" data-tooltip="cibola8.canvas.clearSelection"
-            class="cibola8-tool-btn">
+    <div class="flexrow boobastudio-toolbar boobastudio-toolbar--overlay boobastudio-selection-actions hidden">
+        <button type="button" data-action="clearSelection" data-tooltip="boobastudio.canvas.clearSelection"
+            class="boobastudio-tool-btn">
             <i class="fas fa-times"></i>
         </button>
-        <button type="button" data-action="invertSelection" data-tooltip="cibola8.canvas.invertSelection"
-            class="cibola8-tool-btn">
+        <button type="button" data-action="invertSelection" data-tooltip="boobastudio.canvas.invertSelection"
+            class="boobastudio-tool-btn">
             <i class="fas fa-arrows-rotate"></i>
         </button>
-        <button type="button" data-action="selectAll" data-tooltip="cibola8.canvas.selectAll"
-            class="cibola8-tool-btn">
+        <button type="button" data-action="selectAll" data-tooltip="boobastudio.canvas.selectAll"
+            class="boobastudio-tool-btn">
             <i class="fas fa-border-all"></i>
         </button>
     </div>
 
     {{!-- Fourth row: Crop context (shown when crop tool active) --}}
-    <div class="flexrow cibola8-toolbar cibola8-toolbar--overlay cibola8-crop-context hidden">
-        <button type="button" data-tooltip="cibola8.toolbar.cropHint" class="cibola8-tool-btn" disabled>
+    <div class="flexrow boobastudio-toolbar boobastudio-toolbar--overlay boobastudio-crop-context hidden">
+        <button type="button" data-tooltip="boobastudio.toolbar.cropHint" class="boobastudio-tool-btn" disabled>
             <i class="fas fa-crop"></i>
         </button>
-        <div class="cibola8-toolbar__separator"></div>
-        <button type="button" data-action="setCropRatio" data-ratio="16:9" 
-            data-tooltip="cibola8.toolbar.ratio16x9"
-            class="cibola8-tool-btn">
+        <div class="boobastudio-toolbar__separator"></div>
+        <button type="button" data-action="setCropRatio" data-ratio="16:9"
+            data-tooltip="boobastudio.toolbar.ratio16x9"
+            class="boobastudio-tool-btn">
             <i class="fas fa-rectangle-wide"></i>
             <span>16:9</span>
         </button>
-        <button type="button" data-action="setCropRatio" data-ratio="4:3" 
-            data-tooltip="cibola8.toolbar.ratio4x3"
-            class="cibola8-tool-btn">
+        <button type="button" data-action="setCropRatio" data-ratio="4:3"
+            data-tooltip="boobastudio.toolbar.ratio4x3"
+            class="boobastudio-tool-btn">
             <i class="fas fa-rectangle-landscape"></i>
             <span>4:3</span>
         </button>
-        <button type="button" data-action="setCropRatio" data-ratio="1:1" 
-            data-tooltip="cibola8.toolbar.ratio1x1"
-            class="cibola8-tool-btn">
+        <button type="button" data-action="setCropRatio" data-ratio="1:1"
+            data-tooltip="boobastudio.toolbar.ratio1x1"
+            class="boobastudio-tool-btn">
             <i class="fas fa-square"></i>
             <span>1:1</span>
         </button>
-        <button type="button" data-action="setCropRatio" data-ratio="free" 
-            data-tooltip="cibola8.toolbar.ratioFree"
-            class="cibola8-tool-btn cibola8-tool-btn--active">
+        <button type="button" data-action="setCropRatio" data-ratio="free"
+            data-tooltip="boobastudio.toolbar.ratioFree"
+            class="boobastudio-tool-btn boobastudio-tool-btn--active">
             <i class="fas fa-expand"></i>
-            <span>{{localize 'cibola8.free'}}</span>
+            <span>{{localize 'boobastudio.free'}}</span>
         </button>
-        <div class="cibola8-toolbar__separator"></div>
-        <button type="button" data-action="cropConfirm" 
-            data-tooltip="cibola8.toolbar.cropConfirm"
-            class="cibola8-tool-btn cibola8-tool-btn--success">
+        <div class="boobastudio-toolbar__separator"></div>
+        <button type="button" data-action="cropConfirm"
+            data-tooltip="boobastudio.toolbar.cropConfirm"
+            class="boobastudio-tool-btn boobastudio-tool-btn--success">
             <i class="fas fa-check"></i>
         </button>
-        <button type="button" data-action="cropCancel" 
-            data-tooltip="cibola8.toolbar.cropCancel"
-            class="cibola8-tool-btn cibola8-tool-btn--danger">
+        <button type="button" data-action="cropCancel"
+            data-tooltip="boobastudio.toolbar.cropCancel"
+            class="boobastudio-tool-btn boobastudio-tool-btn--danger">
             <i class="fas fa-times"></i>
         </button>
     </div>
