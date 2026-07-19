@@ -166,6 +166,11 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
+  if (!game.settings.settings.has(`${NAMESPACE}.${S.imageProvider}`)) {
+    game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images or replicate for Replicate predictions.", scope: "client", config: true, type: String, default: "openai" });
+    game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
+    game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
+  }
   if (isEnabled() && String(get(S.apiKey) || "").trim()) {
     await game.settings.set(NAMESPACE, "openaiApiKey", String(get(S.apiKey)).trim());
     await game.settings.set(NAMESPACE, "clientOnlyMode", true);
