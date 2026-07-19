@@ -27,7 +27,7 @@ await import("../bundle/modules/boobastudio-openai-compatible.js");
 await hooks.get("init")();
 values.set("boobastudio.providerEnabled", true);
 values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
-values.set("boobastudio.providerApiKey", "test-key");
+values.set("boobastudio.openaiApiKey", "test-key");
 values.set("boobastudio.providerModel", "local-model");
 values.set("boobastudio.providerHeaders", JSON.stringify({ "X-Test": "yes" }));
 await hooks.get("ready")();

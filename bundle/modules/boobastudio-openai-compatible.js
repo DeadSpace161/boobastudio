@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", baseUrl: "providerBaseUrl", apiKey: "providerApiKey", model: "providerModel", imageProvider: "imageProvider", replicateToken: "replicateApiToken", replicateModel: "replicateModel", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", imageProvider: "imageProvider", replicateToken: "replicateApiToken", replicateModel: "replicateModel", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -159,7 +159,6 @@ function install() {
 Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.enabled, { name: "BoobaStudio: Enable OpenAI-compatible provider", hint: "Routes the existing client-only text and image workflows to your configured OpenAI-compatible endpoint.", scope: "client", config: true, type: Boolean, default: false });
   game.settings.register(NAMESPACE, S.baseUrl, { name: "BoobaStudio: Provider base URL", hint: "For example https://api.openai.com/v1, http://localhost:11434/v1, or an OpenRouter-compatible URL.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
-  game.settings.register(NAMESPACE, S.apiKey, { name: "BoobaStudio: Provider API key", hint: "Stored in this Foundry client; browser-side keys can be read by other modules.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.model, { name: "BoobaStudio: Provider model", scope: "client", config: true, type: String, default: "gpt-5-mini" });
   game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images or replicate for Replicate predictions.", scope: "client", config: true, type: String, default: "openai" });
   game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
@@ -177,7 +176,6 @@ Hooks.once("ready", async () => {
     game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
   }
   if (isEnabled() && String(get(S.apiKey) || "").trim()) {
-    await game.settings.set(NAMESPACE, "openaiApiKey", String(get(S.apiKey)).trim());
     await game.settings.set(NAMESPACE, "clientOnlyMode", true);
   }
   install();
