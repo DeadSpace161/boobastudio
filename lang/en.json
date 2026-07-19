@@ -1259,7 +1259,7 @@
       "type": "Type"
     },
     "onboarding": {
-      "title": "Welcome to Cibola 8",
+      "title": "Welcome to BoobaStudio",
       "intro": "Cibola 8 adds AI-powered tools to Foundry. Here is a quick overview of what you can do.",
       "featuresTitle": "Features",
       "features": {
@@ -1286,13 +1286,13 @@
       "macroCreateFailed": "Could not create the BoobaStudio radial menu macro. Please ask a GM to create it (or create it manually).",
       "macroAssignFailed": "Could not place the BoobaStudio radial menu macro on your hotbar.",
       "welcome": {
-        "title": "Welcome to Cibola 8",
+        "title": "Welcome to BoobaStudio",
         "tagline": "AI-powered tools for your tabletop adventures",
         "disclaimer": {
           "title": "Important Notice",
           "ai": "This module uses <strong>Artificial Intelligence</strong> (AI) to generate content.",
           "external": "Features communicate with <strong>external API servers</strong> outside of Foundry VTT.",
-          "subscription": "Most features require a <strong>Patreon subscription</strong> to access the Cibola backend."
+          "subscription": "No hosted subscription is required. Configure a provider endpoint that you control."
         },
         "dragToHotbar": "Drag to Hotbar",
         "openSettings": "Settings",
@@ -1349,18 +1349,17 @@
         },
         "findCibola": {
           "title": "Look for This Icon",
-          "desc": "Wherever you see the Cibola icon, AI-powered features are just a click away. It appears throughout Foundry VTT to give you quick access to generation tools.",
+          "desc": "Wherever you see the BoobaStudio icon, AI-powered features are just a click away. It appears throughout Foundry VTT to give you quick access to generation tools.",
           "contextMenu": "Header bar options on items, journals, actors, and scenes include AI features",
-          "editorToolbar": "Text editor toolbars include Cibola AI writing tools",
+          "editorToolbar": "Text editor toolbars include BoobaStudio AI writing tools",
           "sceneControls": "Scene controls offer AI-powered wall detection and more"
         },
         "modes": {
-          "backendTitle": "Cibola Backend",
-          "backendDesc": "Connect with a Cibola token to access all features including image generation, gallery, and more.",
-          "backendAction": "Setup Token",
-          "clientTitle": "Client-Only Mode",
-          "clientDesc": "Limited mode: uses your local OpenAI API key for generic text chat and text-to-image generation with gpt-image-1.5 / gpt-image-2 only. Threads, gallery, TTS, translation, and other backend features still require Cibola backend access.",
-          "clientAction": "Configure",
+          "localTitle": "Local Provider",
+          "localDesc": "Use OpenAI, OpenRouter, Ollama, LM Studio, or another OpenAI-compatible endpoint directly from this Foundry client.",
+          "localAction": "Configure Provider",
+          "compatibilityTitle": "Feature Compatibility",
+          "compatibilityDesc": "Existing local text, image, document, history, and Foundry integration workflows remain available. Provider support varies by workflow.",
           "connected": "Connected"
         },
         "gallery": {

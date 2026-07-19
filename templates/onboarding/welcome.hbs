@@ -20,7 +20,7 @@
       <img
         class="boobastudio-onboarding__logo"
         src="modules/boobastudio/templates/assets/cibolacoin.webp"
-        alt="Cibola 8"
+        alt="BoobaStudio"
       />
       <h1 class="boobastudio-onboarding__title">{{localize "boobastudio.onboarding.welcome.title"}}</h1>
       <p class="boobastudio-onboarding__tagline">{{localize "boobastudio.onboarding.welcome.tagline"}}</p>
@@ -38,19 +38,10 @@
         <button
           type="button"
           class="boobastudio-btn boobastudio-btn--secondary"
-          data-action="openSettings"
+          data-action="openModuleSettings"
         >
           <i class="fas fa-cog"></i>
           {{localize "boobastudio.onboarding.welcome.openSettings"}}
-        </button>
-        <button
-          type="button"
-          class="boobastudio-btn boobastudio-btn--secondary"
-          data-action="openApp"
-          data-tooltip="{{localize 'boobastudio.onboarding.welcome.openAppHint'}}"
-        >
-          <i class="fas fa-external-link-alt"></i>
-          {{localize "boobastudio.onboarding.welcome.openApp"}}
         </button>
       </div>
     </section>
@@ -83,7 +74,7 @@
       </div>
     </section>
 
-    {{!-- Finding Cibola Section --}}
+    {{!-- Finding BoobaStudio Section --}}
     <section class="boobastudio-onboarding__find-cibola">
       <h2 class="boobastudio-onboarding__section-title">{{localize "boobastudio.onboarding.welcome.findCibola.title"}}</h2>
       <div class="boobastudio-onboarding__find-cibola-card">
@@ -101,61 +92,30 @@
       </div>
     </section>
 
-    {{!-- Connection Modes Section --}}
+    {{!-- Provider Setup Section --}}
     <section class="boobastudio-onboarding__modes">
       <h2 class="boobastudio-onboarding__section-title">{{localize "boobastudio.onboarding.modesTitle"}}</h2>
       <div class="boobastudio-onboarding__mode-grid">
-        {{!-- Cibola Backend --}}
-        <div class="boobastudio-onboarding__mode-card {{#if backendConnected}}boobastudio-onboarding__mode-card--connected{{/if}}">
-          <div class="boobastudio-onboarding__mode-header">
-            <i class="fas fa-cloud"></i>
-            <span>{{localize "boobastudio.onboarding.welcome.modes.backendTitle"}}</span>
-            {{#if backendConnected}}
-            <span class="boobastudio-badge boobastudio-badge--success boobastudio-badge--sm">
-              <i class="fas fa-check-circle"></i>
-              {{localize "boobastudio.onboarding.welcome.modes.connected"}}
-            </span>
-            {{/if}}
-          </div>
-          <p class="boobastudio-onboarding__mode-desc">
-            {{localize "boobastudio.onboarding.welcome.modes.backendDesc"}}
-          </p>
-          {{#unless backendConnected}}
-          <div class="boobastudio-onboarding__mode-actions">
-            <button
-              type="button"
-              class="boobastudio-btn boobastudio-btn--accent boobastudio-btn--sm"
-              data-action="connectPatreon"
-            >
-              <i class="fab fa-patreon"></i>
-              {{localize "boobastudio.connect.button"}}
-            </button>
-            <button
-              type="button"
-              class="boobastudio-btn boobastudio-btn--secondary boobastudio-btn--sm"
-              data-action="setupToken"
-            >
-              <i class="fas fa-keyboard"></i>
-              {{localize "boobastudio.connect.manualEntry"}}
-            </button>
-          </div>
-          {{/unless}}
-        </div>
-
-        {{!-- Client-Only Mode --}}
+        {{!-- Local Provider --}}
         <div class="boobastudio-onboarding__mode-card">
           <div class="boobastudio-onboarding__mode-header">
-            <i class="fas fa-key"></i>
-            <span>{{localize "boobastudio.onboarding.welcome.modes.clientTitle"}}</span>
+            <i class="fas fa-plug"></i>
+            <span>{{localize "boobastudio.onboarding.welcome.modes.localTitle"}}</span>
           </div>
-          <p class="boobastudio-onboarding__mode-desc">{{localize "boobastudio.onboarding.welcome.modes.clientDesc"}}</p>
-          <button
-            type="button"
-            class="boobastudio-btn boobastudio-btn--secondary boobastudio-btn--sm"
-            data-action="configureClientOnly"
-          >
-            {{localize "boobastudio.onboarding.welcome.modes.clientAction"}}
+          <p class="boobastudio-onboarding__mode-desc">{{localize "boobastudio.onboarding.welcome.modes.localDesc"}}</p>
+          <button type="button" class="boobastudio-btn boobastudio-btn--accent boobastudio-btn--sm" data-action="openModuleSettings">
+            <i class="fas fa-sliders"></i>
+            {{localize "boobastudio.onboarding.welcome.modes.localAction"}}
           </button>
+        </div>
+
+        {{!-- Compatibility --}}
+        <div class="boobastudio-onboarding__mode-card">
+          <div class="boobastudio-onboarding__mode-header">
+            <i class="fas fa-shield-halved"></i>
+            <span>{{localize "boobastudio.onboarding.welcome.modes.compatibilityTitle"}}</span>
+          </div>
+          <p class="boobastudio-onboarding__mode-desc">{{localize "boobastudio.onboarding.welcome.modes.compatibilityDesc"}}</p>
         </div>
       </div>
     </section>
@@ -213,15 +173,6 @@
         >
           <i class="fab fa-discord"></i>
           {{localize "boobastudio.onboarding.welcome.resources.discord"}}
-        </a>
-        <a
-          href="{{urls.patreon}}"
-          target="_blank"
-          class="boobastudio-btn boobastudio-btn--ghost boobastudio-btn--sm"
-          data-resource="patreon"
-        >
-          <i class="fab fa-patreon"></i>
-          {{localize "boobastudio.onboarding.welcome.resources.patreon"}}
         </a>
       </div>
     </section>
