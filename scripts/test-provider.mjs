@@ -39,4 +39,9 @@ const imageResponse = await fetch("https://api.openai.com/v1/images/generations"
 assert.equal((await imageResponse.json()).data[0].b64_json, "aGVsbG8=");
 assert.equal(requests[1].input, "http://provider.test/v1/images/generations");
 
+let queryResult;
+await globalThis.__boobastudioLocalQuery("Write a tavern description", "{\"type\":\"object\"}", (result) => { queryResult = result; });
+assert.deepEqual(queryResult, { status: "done", result: "provider response" });
+assert.equal(requests[2].input, "http://provider.test/v1/chat/completions");
+
 console.log("BoobaStudio provider smoke test passed");

@@ -26,12 +26,13 @@ The current checks validate the manifest, referenced files, localization JSON, J
 5. Confirm the module initializes without a Cibola account, Patreon token, or request to `app.cibola.world`.
 6. Use the existing chat control and send a `/c8` prompt.
 7. Confirm the provider receives a `POST /chat/completions` request with the configured model and returns a visible response in Foundry chat.
-8. Confirm the browser console contains no API key and that a disabled provider setting leaves ordinary requests untouched.
-9. If testing image generation, use a text prompt and confirm the provider receives `POST /images/generations` and returns the existing image preview shape.
-10. In a world containing legacy Cibola settings, confirm the new settings, `/c8` history, and radial macro marker are copied and the old values remain present.
+8. Open the existing prose/text-generation UI, submit a prompt, accept a generated result, and confirm the content is inserted into the existing Journal/editor surface.
+9. Confirm the browser console contains no API key and that a disabled provider setting leaves ordinary requests untouched.
+10. If testing image generation, use a text prompt and confirm the provider receives `POST /images/generations` and returns the existing image preview shape.
+11. In a world containing legacy Cibola settings, confirm the new settings, `/c8` history, and radial macro marker are copied and the old values remain present.
 
 ## Known checkpoint limitations
 
-- The adapter currently reuses Cibola's existing client-only chat/image path. The existing prose/document `query` path still requires the next adapter change before it can insert generated text into a Journal without hosted Cibola access.
+- The adapter reuses Cibola's existing client-only chat/image path and now provides a guarded local fallback for the existing prose/document `query` path.
 - Direct browser requests require provider CORS support. A CORS error is not fixed by changing module settings; use a provider endpoint that permits the Foundry origin or a user-managed compatible proxy.
 - Foundry v14 runtime testing has not been performed in this workspace. The package has passed static and Node-based checks only.

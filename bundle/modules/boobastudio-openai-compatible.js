@@ -59,6 +59,30 @@ async function routeImages(body) {
   return post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.model) || body.model || "gpt-image-1") });
 }
 
+async function localQuery(prompt, behavior, callback) {
+  if (!isEnabled()) return false;
+  try {
+    const response = await post(`${baseUrl()}/chat/completions`, {
+      model: String(get(S.model) || "gpt-5-mini"),
+      messages: [{ role: "user", content: `${String(prompt ?? "").trim()}\n\nGeneration instructions:\n${String(behavior ?? "").trim()}` }],
+      temperature: Number(get(S.temperature)),
+      max_tokens: Math.max(1, Number(get(S.maxTokens)) || 2048),
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) {
+      callback?.({ status: "error", errors: [result?.error?.message || `Provider request failed (${response.status})`] });
+      return true;
+    }
+    const content = result?.choices?.[0]?.message?.content;
+    callback?.(typeof content === "string" ? { status: "done", result: content } : { status: "error", errors: ["Provider response did not contain choices[0].message.content"] });
+  } catch (error) {
+    callback?.({ status: "error", errors: [String(error?.message || error)] });
+  }
+  return true;
+}
+
+globalThis.__boobastudioLocalQuery = localQuery;
+
 function install() {
   if (globalThis.__boobastudioOpenAICompatibleInstalled) return;
   const originalFetch = globalThis.fetch.bind(globalThis);
