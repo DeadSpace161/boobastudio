@@ -28,12 +28,12 @@
     }
   ],
   "esmodules": [
-    "bundle/modules/boobastudio-openai-compatible.js?v=2.2.4",
-    "bundle/modules/boobastudio-migration.js?v=2.2.4",
-    "bundle/modules/init.js?v=2.2.4"
+    "bundle/modules/boobastudio-openai-compatible.js",
+    "bundle/modules/boobastudio-migration.js",
+    "bundle/modules/init.js"
   ],
   "styles": [
-    "styles/css/css.css?v=2.2.4"
+    "styles/css/css.css"
   ],
   "packs": [
     {
