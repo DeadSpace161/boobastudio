@@ -30,6 +30,7 @@ The current checks validate the manifest, referenced files, localization JSON, J
 8. Open the existing prose/text-generation UI, submit a prompt, accept a generated result, and confirm the content is inserted into the existing Journal/editor surface.
 9. Confirm the browser console contains no API key and that a disabled provider setting leaves ordinary requests untouched.
 10. If testing image generation, use a text prompt and confirm the provider receives `POST /images/generations` and returns the existing image preview shape.
+   For Replicate, select **Replicate**, configure the client-scoped token and an `owner/model` value such as `black-forest-labs/flux-schnell`; BoobaStudio creates and polls a Replicate prediction, then normalizes its output to the existing image shape.
 11. In a world containing legacy Cibola settings, confirm the new settings, `/c8` history, and radial macro marker are copied and the old values remain present.
 
 The dependency-free provider smoke test also validates the existing prose query callback contract, including the normalized `{status: "done", result}` response.

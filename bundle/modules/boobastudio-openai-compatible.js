@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", baseUrl: "providerBaseUrl", apiKey: "providerApiKey", model: "providerModel", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", baseUrl: "providerBaseUrl", apiKey: "providerApiKey", model: "providerModel", imageProvider: "imageProvider", replicateToken: "replicateApiToken", replicateModel: "replicateModel", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -39,6 +39,48 @@ async function post(endpoint, body) {
   }
 }
 
+function replicateHeaders() {
+  const token = String(get(S.replicateToken) || "").trim();
+  return { ...(token ? { Authorization: `Bearer ${token}` } : {}), "Content-Type": "application/json" };
+}
+
+function replicateInput(body) {
+  const input = { prompt: String(body.prompt || "") };
+  const size = String(body.size || "").match(/^(\d+)x(\d+)$/);
+  if (size) {
+    input.width = Number(size[1]);
+    input.height = Number(size[2]);
+  }
+  return input;
+}
+
+async function routeReplicateImages(body) {
+  const model = String(get(S.replicateModel) || "black-forest-labs/flux-schnell").trim();
+  const endpoint = `https://api.replicate.com/v1/models/${model}/predictions`;
+  const controller = new AbortController();
+  const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify({ input: replicateInput(body) }), signal: controller.signal });
+    const prediction = await started.json().catch(() => null);
+    if (!started.ok) return new Response(JSON.stringify(prediction || { error: { message: `Replicate request failed (${started.status})` } }), { status: started.status, headers: { "Content-Type": "application/json" } });
+    let current = prediction;
+    const deadline = Date.now() + timeout;
+    while (current?.status && !["succeeded", "failed", "canceled"].includes(current.status) && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const statusUrl = current.urls?.get || `https://api.replicate.com/v1/predictions/${current.id}`;
+      const status = await fetch(statusUrl, { headers: replicateHeaders(), signal: controller.signal });
+      current = await status.json().catch(() => null);
+      if (!status.ok) return new Response(JSON.stringify(current || { error: { message: `Replicate status failed (${status.status})` } }), { status: status.status, headers: { "Content-Type": "application/json" } });
+    }
+    if (current?.status !== "succeeded") return new Response(JSON.stringify({ error: { message: current?.error || `Replicate prediction ended with status ${current?.status || "timeout"}` } }), { status: 502, headers: { "Content-Type": "application/json" } });
+    const output = Array.isArray(current.output) ? current.output : [current.output];
+    return new Response(JSON.stringify({ data: output.filter(Boolean).map((url) => ({ url: String(url) })) }), { status: 200, headers: { "Content-Type": "application/json" } });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function routeResponses(originalFetch, body) {
   const payload = {
     model: String(get(S.model) || body.model || "gpt-5-mini").trim(),
@@ -56,6 +98,7 @@ async function routeResponses(originalFetch, body) {
 }
 
 async function routeImages(body) {
+  if (String(get(S.imageProvider) || "openai") === "replicate") return routeReplicateImages(body);
   return post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.model) || body.model || "gpt-image-1") });
 }
 
@@ -113,6 +156,9 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.baseUrl, { name: "BoobaStudio: Provider base URL", hint: "For example https://api.openai.com/v1, http://localhost:11434/v1, or an OpenRouter-compatible URL.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
   game.settings.register(NAMESPACE, S.apiKey, { name: "BoobaStudio: Provider API key", hint: "Stored in this Foundry client; browser-side keys can be read by other modules.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.model, { name: "BoobaStudio: Provider model", scope: "client", config: true, type: String, default: "gpt-5-mini" });
+  game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Choose OpenAI-compatible Images or Replicate predictions for the existing image workflow.", scope: "client", config: true, type: String, choices: { openai: "OpenAI-compatible", replicate: "Replicate" }, default: "openai" });
+  game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
+  game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
   game.settings.register(NAMESPACE, S.timeout, { name: "BoobaStudio: Provider timeout (ms)", scope: "client", config: true, type: Number, default: 120000, range: { min: 1000, max: 600000, step: 1000 } });
   game.settings.register(NAMESPACE, S.temperature, { name: "BoobaStudio: Provider temperature", scope: "client", config: true, type: Number, default: 0.7, range: { min: 0, max: 2, step: 0.05 } });
   game.settings.register(NAMESPACE, S.maxTokens, { name: "BoobaStudio: Provider maximum tokens", scope: "client", config: true, type: Number, default: 2048, range: { min: 1, max: 32768, step: 1 } });
