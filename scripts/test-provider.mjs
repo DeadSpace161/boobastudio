@@ -27,6 +27,7 @@ values.set("boobastudio.providerApiKey", "test-key");
 values.set("boobastudio.providerModel", "local-model");
 values.set("boobastudio.providerHeaders", JSON.stringify({ "X-Test": "yes" }));
 await hooks.get("ready")();
+assert.equal(globalThis.__boobastudioLocalProviderConfigured(), true);
 
 const textResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ model: "gpt-5", input: [{ role: "user", content: [{ type: "input_text", text: "hello" }] }] }) });
 assert.equal((await textResponse.json()).output[0].content[0].text, "provider response");

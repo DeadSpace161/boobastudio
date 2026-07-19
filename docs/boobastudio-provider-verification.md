@@ -23,6 +23,7 @@ The current checks validate the manifest, referenced files, localization JSON, J
    - Provider API key: a test key stored only in the client settings.
    - Provider model: a model accepted by the endpoint.
    - Timeout, temperature, maximum tokens, and optional JSON headers as needed.
+   The onboarding window's **Configure Provider** button opens Foundry's standard Module Settings screen.
 5. Confirm the module initializes without a Cibola account, Patreon token, or request to `app.cibola.world`.
 6. Use the existing chat control and send a `/c8` prompt.
 7. Confirm the provider receives a `POST /chat/completions` request with the configured model and returns a visible response in Foundry chat.
@@ -30,6 +31,8 @@ The current checks validate the manifest, referenced files, localization JSON, J
 9. Confirm the browser console contains no API key and that a disabled provider setting leaves ordinary requests untouched.
 10. If testing image generation, use a text prompt and confirm the provider receives `POST /images/generations` and returns the existing image preview shape.
 11. In a world containing legacy Cibola settings, confirm the new settings, `/c8` history, and radial macro marker are copied and the old values remain present.
+
+The dependency-free provider smoke test also validates the existing prose query callback contract, including the normalized `{status: "done", result}` response.
 
 ## Known checkpoint limitations
 
