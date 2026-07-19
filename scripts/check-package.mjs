@@ -35,10 +35,11 @@ for (const relativePath of required) {
 }
 
 for (const relativePath of [...(manifest.esmodules ?? []), ...(manifest.styles ?? [])]) {
+  const filePath = relativePath.split("?", 1)[0];
   try {
-    await access(path.join(root, relativePath));
+    await access(path.join(root, filePath));
   } catch {
-    fail(`manifest references missing file: ${relativePath}`);
+    fail(`manifest references missing file: ${filePath}`);
   }
 }
 
@@ -58,12 +59,13 @@ if (manifest.compatibility?.verified !== "14" || manifest.compatibility?.maximum
   fail("baseline Foundry compatibility declaration is not v14");
 }
 
-const jsFiles = ["bundle/modules/init.js", ...manifest.esmodules.filter((file) => file.endsWith(".js"))];
+const jsFiles = ["bundle/modules/init.js", ...manifest.esmodules.filter((file) => file.split("?", 1)[0].endsWith(".js"))];
 for (const relativePath of new Set(jsFiles)) {
+  const filePath = relativePath.split("?", 1)[0];
   await new Promise((resolve) => {
-    const child = spawn(process.execPath, ["--check", path.join(root, relativePath)], { stdio: "inherit" });
+    const child = spawn(process.execPath, ["--check", path.join(root, filePath)], { stdio: "inherit" });
     child.on("close", (code) => {
-      if (code !== 0) fail(`JavaScript syntax check failed: ${relativePath}`);
+      if (code !== 0) fail(`JavaScript syntax check failed: ${filePath}`);
       resolve();
     });
   });
