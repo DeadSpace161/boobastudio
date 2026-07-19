@@ -40,7 +40,9 @@ async function post(endpoint, body) {
 }
 
 function replicateHeaders() {
-  const token = String(get(S.replicateToken) || "").trim();
+  const configured = String(get(S.replicateToken) || "").trim();
+  const shared = String(get(S.apiKey) || "").trim();
+  const token = configured || (shared.startsWith("r8_") ? shared : "");
   return { ...(token ? { Authorization: `Bearer ${token}` } : {}), "Content-Type": "application/json" };
 }
 
@@ -55,7 +57,9 @@ function replicateInput(body) {
 }
 
 async function routeReplicateImages(body) {
-  const model = String(get(S.replicateModel) || "black-forest-labs/flux-schnell").trim();
+  const configured = String(get(S.replicateModel) || "").trim();
+  const shared = String(get(S.model) || "").trim();
+  const model = (configured && configured !== "black-forest-labs/flux-schnell" ? configured : (shared.includes("/") ? shared : configured || "black-forest-labs/flux-schnell")).trim();
   const endpoint = `https://api.replicate.com/v1/models/${model}/predictions`;
   const controller = new AbortController();
   const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);
@@ -98,7 +102,8 @@ async function routeResponses(originalFetch, body) {
 }
 
 async function routeImages(body) {
-  if (String(get(S.imageProvider) || "openai") === "replicate") return routeReplicateImages(body);
+  const sharedKey = String(get(S.apiKey) || "").trim();
+  if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) return routeReplicateImages(body);
   return post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.model) || body.model || "gpt-image-1") });
 }
 
