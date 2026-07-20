@@ -82,6 +82,15 @@ async def main():
                                 return {
                                     opened: true,
                                     textOpened: %s,
+                                    featureWindow: (() => {
+                                        const element = [...document.querySelectorAll('.window, aside')]
+                                            .find(item => (item.innerText || '').includes('AI Text Generation'));
+                                        return element ? {
+                                            text: (element.innerText || '').trim().slice(0, 2000),
+                                            controls: [...element.querySelectorAll('button, input, textarea, [data-action]')]
+                                                .map(control => ({tag: control.tagName, action: control.dataset.action || '', text: (control.innerText || '').trim(), value: control.value || ''}))
+                                        } : null;
+                                    })(),
                                     windows: [...document.querySelectorAll('.window, aside')]
                                         .map(element => (element.innerText || '').trim().slice(0, 300))
                                         .filter(Boolean),
