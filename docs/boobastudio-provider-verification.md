@@ -35,6 +35,10 @@ The current checks validate the manifest, referenced files, localization JSON, J
 
 The dependency-free provider smoke test also validates the existing prose query callback contract, including the normalized `{status: "done", result}` response.
 
+## Text vertical-slice call path
+
+The existing `TextGenerationService.query` first invokes `globalThis.__boobastudioLocalQuery` when the local provider is enabled. The callback result is consumed by the existing prose-generation application, which renders the response in its history and inserts the accepted result into the active ProseMirror editor selection. This preserves the original Cibola UI and persistence behavior while replacing only the request layer.
+
 ## Known checkpoint limitations
 
 - The adapter reuses Cibola's existing client-only chat/image path and now provides a guarded local fallback for the existing prose/document `query` path.
