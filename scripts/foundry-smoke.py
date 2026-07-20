@@ -43,6 +43,8 @@ async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", default=os.getenv("BOOBA_FOUNDRY_URL", "https://vtt.hiddenbunker.org"))
     parser.add_argument("--attempts", type=int, default=3)
+    parser.add_argument("--probe-menu", action="store_true", help="Open the existing BoobaStudio menu and report rendered actions")
+    parser.add_argument("--probe-text", action="store_true", help="Open the existing Text Generation feature")
     args = parser.parse_args()
     admin_password = os.getenv("BOOBA_FOUNDRY_ADMIN_PASSWORD")
     gm_password = os.getenv("BOOBA_FOUNDRY_GM_PASSWORD", admin_password or "")
@@ -63,6 +65,34 @@ async def main():
                         providerSettings: [...game.settings.settings.keys()]
                             .filter(k => k.startsWith('boobastudio.') && /provider|openaiApiKey|image|replicate/.test(k))
                     })""")
+                    if args.probe_menu or args.probe_text:
+                        state["menuProbe"] = await page.evaluate("""async () => {
+                            const module = game.modules.get('boobastudio');
+                            if (!module?.api?.menu) return {opened: false, reason: 'module menu API unavailable'};
+                            try {
+                                module.api.menu();
+                                await new Promise(resolve => setTimeout(resolve, 1200));
+                                if (%s) {
+                                    const textAction = [...document.querySelectorAll('[data-action="openFeature"]')]
+                                        .find(element => (element.innerText || '').trim() === 'Text Generation');
+                                    if (!textAction) return {opened: true, textOpened: false, reason: 'Text Generation action unavailable'};
+                                    textAction.click();
+                                    await new Promise(resolve => setTimeout(resolve, 1500));
+                                }
+                                return {
+                                    opened: true,
+                                    textOpened: %s,
+                                    windows: [...document.querySelectorAll('.window, aside')]
+                                        .map(element => (element.innerText || '').trim().slice(0, 300))
+                                        .filter(Boolean),
+                                    actions: [...document.querySelectorAll('[data-action]')]
+                                        .map(element => ({action: element.dataset.action, text: (element.innerText || '').trim()}))
+                                        .filter(item => item.action || item.text)
+                                };
+                            } catch (error) {
+                                return {opened: false, error: String(error?.stack || error)};
+                            }
+                        }""" % (str(args.probe_text).lower(), str(args.probe_text).lower()))
                     print(json.dumps(state, indent=2))
                     await browser.close()
                     return 0
