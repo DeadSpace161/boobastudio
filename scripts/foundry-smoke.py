@@ -45,6 +45,8 @@ async def main():
     parser.add_argument("--attempts", type=int, default=3)
     parser.add_argument("--probe-menu", action="store_true", help="Open the existing BoobaStudio menu and report rendered actions")
     parser.add_argument("--probe-text", action="store_true", help="Open the existing Text Generation feature")
+    parser.add_argument("--text-access", action="store_true", help="Navigate the Text Generation How to Access section")
+    parser.add_argument("--probe-journal", action="store_true", help="Open an existing journal and inspect its ProseMirror editor")
     args = parser.parse_args()
     admin_password = os.getenv("BOOBA_FOUNDRY_ADMIN_PASSWORD")
     gm_password = os.getenv("BOOBA_FOUNDRY_GM_PASSWORD", admin_password or "")
@@ -65,7 +67,7 @@ async def main():
                         providerSettings: [...game.settings.settings.keys()]
                             .filter(k => k.startsWith('boobastudio.') && /provider|openaiApiKey|image|replicate/.test(k))
                     })""")
-                    if args.probe_menu or args.probe_text:
+                    if args.probe_menu or args.probe_text or args.probe_journal:
                         state["menuProbe"] = await page.evaluate("""async () => {
                             const module = game.modules.get('boobastudio');
                             if (!module?.api?.menu) return {opened: false, reason: 'module menu API unavailable'};
@@ -78,6 +80,58 @@ async def main():
                                     if (!textAction) return {opened: true, textOpened: false, reason: 'Text Generation action unavailable'};
                                     textAction.click();
                                     await new Promise(resolve => setTimeout(resolve, 1500));
+                                    if (%s) {
+                                        const access = [...document.querySelectorAll('[data-action="goToHeading"]')]
+                                            .find(element => (element.innerText || '').includes('How to Access'));
+                                        access?.click();
+                                        await new Promise(resolve => setTimeout(resolve, 500));
+                                    }
+                                }
+                                let journal_probe = null;
+                                if (%s) {
+                                    let journal = game.journal?.contents?.find(entry => entry.pages?.contents?.length)
+                                    if (!journal) journal = game.journal?.contents?.[0]
+                                    let temporaryJournal = false;
+                                    if (!journal && typeof JournalEntry?.create === 'function') {
+                                        journal = await JournalEntry.create({
+                                            name: `BoobaStudio Smoke ${Date.now()}`,
+                                            pages: [{name: 'Smoke Page', type: 'text', text: {format: 1, content: '<p>Smoke test</p>'}}]
+                                        });
+                                        temporaryJournal = true;
+                                    }
+                                    if (journal?.sheet) {
+                                        await journal.sheet.render(true)
+                                        await new Promise(resolve => setTimeout(resolve, 1800))
+                                    }
+                                    const editors = [...document.querySelectorAll('.ProseMirror, [contenteditable="true"]')]
+                                    const menus = [...document.querySelectorAll('.ProseMirror-menubar, .prosemirror-menu, [role="menu"], [data-menu]')]
+                                    let hookProbe = null;
+                                    const descriptor = editors[0]?.pmViewDesc;
+                                    const view = descriptor?.root?.view || descriptor?.view || descriptor?.parent?.root?.view || descriptor?.parent?.view;
+                                    const hookMenu = foundry?.prosemirror?.ProseMirrorMenu;
+                                    if (hookMenu) {
+                                        const config = {};
+                                        try {
+                                            Hooks.call('getProseMirrorMenuDropDowns', {constructor: hookMenu, schema: {nodes: {div: {}, image: {}}}}, config);
+                                            hookProbe = {keys: Object.keys(config), config: JSON.parse(JSON.stringify(config, (key, value) => typeof value === 'function' ? '[function]' : value))};
+                                        } catch (error) {
+                                            hookProbe = {error: String(error?.stack || error), keys: Object.keys(config)};
+                                        }
+                                    }
+                                    journal_probe = {
+                                        collection: {size: game.journal?.size || 0, names: game.journal?.contents?.map(entry => entry.name).slice(0, 20) || []},
+                                        hookListeners: Hooks.events?.getProseMirrorMenuDropDowns?.length || 0,
+                                        hookProbe,
+                                        journal: journal ? {id: journal.id, name: journal.name, pages: journal.pages?.contents?.length || 0} : null,
+                                        editors: editors.map(item => ({className: item.className, text: (item.innerText || '').slice(0, 500), keys: Object.keys(item).slice(0, 20), pmKeys: item.pmViewDesc ? Object.keys(item.pmViewDesc).slice(0, 20) : [], rootKeys: item.pmViewDesc?.root ? Object.keys(item.pmViewDesc.root).slice(0, 20) : [], parentKeys: item.pmViewDesc?.parent ? Object.keys(item.pmViewDesc.parent).slice(0, 20) : []})),
+                                        menus: menus.map(item => ({className: item.className, text: (item.innerText || '').slice(0, 1200), html: item.outerHTML.slice(0, 4000)})),
+                                        buttons: [...document.querySelectorAll('button, a, [data-action], [data-menu]')]
+                                            .map(item => ({action: item.dataset.action || '', menu: item.dataset.menu || '', title: item.title || item.getAttribute('aria-label') || '', text: (item.innerText || '').trim()}))
+                                        .filter(item => /booba|generate|prose|ai|text/i.test(`${item.action} ${item.menu} ${item.title} ${item.text}`)),
+                                        boobastudioMenu: document.querySelector('[data-menu="boobastudio"]')?.outerHTML?.slice(0, 4000) || null,
+                                        generatedAction: document.querySelector('[data-action="boobastudio-generate"]')?.outerHTML || null
+                                    };
+                                    if (temporaryJournal) await journal.delete();
                                 }
                                 return {
                                     opened: true,
@@ -96,12 +150,13 @@ async def main():
                                         .filter(Boolean),
                                     actions: [...document.querySelectorAll('[data-action]')]
                                         .map(element => ({action: element.dataset.action, text: (element.innerText || '').trim()}))
-                                        .filter(item => item.action || item.text)
+                                        .filter(item => item.action || item.text),
+                                    journalProbe: journal_probe
                                 };
                             } catch (error) {
                                 return {opened: false, error: String(error?.stack || error)};
                             }
-                        }""" % (str(args.probe_text).lower(), str(args.probe_text).lower()))
+                        }""" % (str(args.probe_text).lower(), str(args.text_access).lower(), str(args.probe_journal).lower(), str(args.probe_text).lower()))
                     print(json.dumps(state, indent=2))
                     await browser.close()
                     return 0

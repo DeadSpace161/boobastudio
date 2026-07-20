@@ -46,4 +46,5 @@ VTTA-Tokenizer is an optional integration for automatic token framing. The syste
 - Scene background storage changed in v14 and is handled by the shim, but every generated-scene update path needs manual verification.
 - `DocumentSheetConfig` and FilePicker locations differ by version.
 - ProseMirror menu APIs and journal page render hooks are sensitive to Foundry point releases.
+- The inherited ProseMirror generation actions referenced the legacy `schema.nodes.div` node. Foundry v14 journal schemas use paragraph blocks, so BoobaStudio 2.2.12 preserves the old node when available and falls back to `schema.nodes.paragraph`.
 - The manifest's `maximum: 14` should remain until a real v14 test world passes; do not claim v13/v14 support solely from static shims.
