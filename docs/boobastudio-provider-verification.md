@@ -10,6 +10,16 @@ npm run test:provider
 npm run build
 ```
 
+For automated Foundry session checks, provide credentials through the environment and run:
+
+```bash
+export BOOBA_FOUNDRY_ADMIN_PASSWORD='...'
+export BOOBA_FOUNDRY_GM_PASSWORD='...'
+/home/booba/playwright_env/bin/python scripts/foundry-smoke.py
+```
+
+The harness launches the test world when needed, retries the Gamemaster session, and reports the active BoobaStudio version and provider settings without printing credentials.
+
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 
 ## Foundry v14 manual test
