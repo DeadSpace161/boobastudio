@@ -20,7 +20,7 @@ The current checks validate the manifest, referenced files, localization JSON, J
 4. Open module settings and configure:
    - Enable OpenAI-compatible provider: on.
    - Provider base URL: an OpenAI-compatible `/v1` endpoint.
-   - Provider API key: a test key stored only in the client settings.
+   - Provider API key: stored in the existing client-scoped `openaiApiKey` setting. This preserves compatibility with the original Cibola setting and avoids a Foundry v14 `ClientSettings.set` recursion issue observed with a newly registered duplicate key.
    - Provider model: a model accepted by the endpoint.
    - Timeout, temperature, maximum tokens, and optional JSON headers as needed.
    The onboarding window's **Configure Provider** button opens Foundry's standard Module Settings screen.
@@ -30,7 +30,7 @@ The current checks validate the manifest, referenced files, localization JSON, J
 8. Open the existing prose/text-generation UI, submit a prompt, accept a generated result, and confirm the content is inserted into the existing Journal/editor surface.
 9. Confirm the browser console contains no API key and that a disabled provider setting leaves ordinary requests untouched.
 10. If testing image generation, use a text prompt and confirm the provider receives `POST /images/generations` and returns the existing image preview shape.
-   For Replicate, select **Replicate**, configure the client-scoped token and an `owner/model` value such as `black-forest-labs/flux-schnell`; BoobaStudio creates and polls a Replicate prediction, then normalizes its output to the existing image shape.
+   For Replicate, configure the client-scoped key with an `r8_` token and set the provider model to an `owner/model` value such as `black-forest-labs/flux-schnell`; BoobaStudio detects the Replicate token fallback, creates and polls a prediction, then normalizes its output to the existing image shape.
 11. In a world containing legacy Cibola settings, confirm the new settings, `/c8` history, and radial macro marker are copied and the old values remain present.
 
 The dependency-free provider smoke test also validates the existing prose query callback contract, including the normalized `{status: "done", result}` response.
@@ -39,4 +39,5 @@ The dependency-free provider smoke test also validates the existing prose query 
 
 - The adapter reuses Cibola's existing client-only chat/image path and now provides a guarded local fallback for the existing prose/document `query` path.
 - Direct browser requests require provider CORS support. A CORS error is not fixed by changing module settings; use a provider endpoint that permits the Foundry origin or a user-managed compatible proxy.
-- Foundry v14 runtime testing has not been performed in this workspace. The package has passed static and Node-based checks only.
+- Foundry v14 Build 363 runtime deployment has been verified through the public test server: BoobaStudio 2.2.11 loads as an active module in `test_sworn`, and the corrected provider adapter is served successfully. A full browser-driven Replicate generation remains a separate validation checkpoint.
+- The provider adapter uses the stable filename `bundle/modules/boobastudio-provider.js`; this avoids a server/static-path issue that caused the earlier adapter filename to return 404 without a cache query.
