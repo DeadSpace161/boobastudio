@@ -23,7 +23,7 @@ globalThis.fetch = async (input, init) => {
   return new Response(JSON.stringify({ error: { message: "unexpected request" } }), { status: 500 });
 };
 
-await import("../bundle/modules/boobastudio-openai-compatible.js");
+await import("../bundle/modules/boobastudio-provider.js");
 await hooks.get("init")();
 values.set("boobastudio.providerEnabled", true);
 values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
