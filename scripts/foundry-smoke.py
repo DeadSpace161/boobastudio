@@ -121,9 +121,10 @@ async def main():
                                     journal_probe = {
                                         collection: {size: game.journal?.size || 0, names: game.journal?.contents?.map(entry => entry.name).slice(0, 20) || []},
                                         hookListeners: Hooks.events?.getProseMirrorMenuDropDowns?.length || 0,
+                                        itemHookListeners: Hooks.events?.getProseMirrorMenuItems?.length || 0,
                                         hookProbe,
                                         journal: journal ? {id: journal.id, name: journal.name, pages: journal.pages?.contents?.length || 0} : null,
-                                        editors: editors.map(item => ({className: item.className, text: (item.innerText || '').slice(0, 500), keys: Object.keys(item).slice(0, 20), pmKeys: item.pmViewDesc ? Object.keys(item.pmViewDesc).slice(0, 20) : [], rootKeys: item.pmViewDesc?.root ? Object.keys(item.pmViewDesc.root).slice(0, 20) : [], parentKeys: item.pmViewDesc?.parent ? Object.keys(item.pmViewDesc.parent).slice(0, 20) : []})),
+                                        editors: editors.map(item => ({className: item.className, text: (item.innerText || '').slice(0, 500), keys: Object.keys(item).slice(0, 20), pmKeys: item.pmViewDesc ? Object.keys(item.pmViewDesc).slice(0, 20) : [], rootKeys: item.pmViewDesc?.root ? Object.keys(item.pmViewDesc.root).slice(0, 20) : [], parentKeys: item.pmViewDesc?.parent ? Object.keys(item.pmViewDesc.parent).slice(0, 20) : [], proto: item.pmViewDesc ? Object.getOwnPropertyNames(Object.getPrototypeOf(item.pmViewDesc)).slice(0, 30) : [], rootProto: item.pmViewDesc?.root ? Object.getOwnPropertyNames(Object.getPrototypeOf(item.pmViewDesc.root)).slice(0, 30) : []})),
                                         menus: menus.map(item => ({className: item.className, text: (item.innerText || '').slice(0, 1200), html: item.outerHTML.slice(0, 4000)})),
                                         buttons: [...document.querySelectorAll('button, a, [data-action], [data-menu]')]
                                             .map(item => ({action: item.dataset.action || '', menu: item.dataset.menu || '', title: item.title || item.getAttribute('aria-label') || '', text: (item.innerText || '').trim()}))
