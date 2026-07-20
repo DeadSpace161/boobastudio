@@ -52,9 +52,19 @@ assert.equal((await replicateImageResponse.json()).data[0].url, "https://cdn.tes
 assert.equal(requests[2].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions");
 assert.equal(requests[2].init.headers.Authorization, "Bearer replicate-test-token");
 
+values.set("boobastudio.imageProvider", "openai");
+values.set("boobastudio.replicateApiToken", "");
+values.set("boobastudio.openaiApiKey", "r8_fallback-token");
+const fallbackImageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "a fallback tavern" }) });
+assert.equal((await fallbackImageResponse.json()).data[0].url, "https://cdn.test/generated.png");
+assert.equal(requests[4].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions");
+assert.equal(requests[4].init.headers.Authorization, "Bearer r8_fallback-token");
+
+values.set("boobastudio.openaiApiKey", "test-key");
+
 let queryResult;
 await globalThis.__boobastudioLocalQuery("Write a tavern description", "{\"type\":\"object\"}", (result) => { queryResult = result; });
 assert.deepEqual(queryResult, { status: "done", result: "provider response" });
-assert.equal(requests[4].input, "http://provider.test/v1/chat/completions");
+assert.equal(requests[6].input, "http://provider.test/v1/chat/completions");
 
 console.log("BoobaStudio provider smoke test passed");
