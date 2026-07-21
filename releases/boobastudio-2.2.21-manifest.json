@@ -2,8 +2,8 @@
   "id": "boobastudio",
   "title": "BoobaStudio",
   "description": "Personal BoobaStudio fork of the Cibola Foundry module.",
-  "version": "2.2.22",
-  "download": "https://files.catbox.moe/1yswao.zip",
+  "version": "2.2.23",
+  "download": "https://filebin.net/boobastudio-1784602216/boobastudio-2.2.23.zip",
   "compatibility": {
     "minimum": "12",
     "verified": "14",
