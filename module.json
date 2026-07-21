@@ -28,7 +28,7 @@
     }
   ],
   "esmodules": [
-    "bundle/modules/boobastudio-provider.js?v=226",
+    "bundle/modules/boobastudio-provider.js",
     "bundle/modules/boobastudio-migration.js",
     "bundle/modules/boobastudio-entry-v220.js"
   ],
