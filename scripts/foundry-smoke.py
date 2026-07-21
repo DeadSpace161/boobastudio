@@ -99,8 +99,9 @@ async def main():
                                         });
                                         temporaryJournal = true;
                                     }
-                                    if (journal?.sheet) {
-                                        await journal.sheet.render(true)
+                                    const page = journal?.pages?.contents?.find(item => item.type === 'text')
+                                    if (page?.sheet) {
+                                        await page.sheet.render(true)
                                         await new Promise(resolve => setTimeout(resolve, 1800))
                                     }
                                     const editors = [...document.querySelectorAll('.ProseMirror, [contenteditable="true"]')]
@@ -123,7 +124,7 @@ async def main():
                                         hookListeners: Hooks.events?.getProseMirrorMenuDropDowns?.length || 0,
                                         itemHookListeners: Hooks.events?.getProseMirrorMenuItems?.length || 0,
                                         hookProbe,
-                                        journal: journal ? {id: journal.id, name: journal.name, pages: journal.pages?.contents?.length || 0} : null,
+                                        journal: journal ? {id: journal.id, name: journal.name, pages: journal.pages?.contents?.length || 0, pageSheet: !!page?.sheet} : null,
                                         editors: editors.map(item => ({className: item.className, text: (item.innerText || '').slice(0, 500), keys: Object.keys(item).slice(0, 20), pmKeys: item.pmViewDesc ? Object.keys(item.pmViewDesc).slice(0, 20) : [], rootKeys: item.pmViewDesc?.root ? Object.keys(item.pmViewDesc.root).slice(0, 20) : [], parentKeys: item.pmViewDesc?.parent ? Object.keys(item.pmViewDesc.parent).slice(0, 20) : [], proto: item.pmViewDesc ? Object.getOwnPropertyNames(Object.getPrototypeOf(item.pmViewDesc)).slice(0, 30) : [], rootProto: item.pmViewDesc?.root ? Object.getOwnPropertyNames(Object.getPrototypeOf(item.pmViewDesc.root)).slice(0, 30) : []})),
                                         menus: menus.map(item => ({className: item.className, text: (item.innerText || '').slice(0, 1200), html: item.outerHTML.slice(0, 4000)})),
                                         buttons: [...document.querySelectorAll('button, a, [data-action], [data-menu]')]
