@@ -26,7 +26,7 @@ Release 2.2.24 was installed and exercised on Foundry v14 Build 363. The existin
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 
-Release 2.2.25 separates the OpenAI-compatible image model from the shared text model. The image request now uses the client-scoped `BoobaStudio: Image model` setting (default `gpt-image-1`), while Replicate continues to use `BoobaStudio: Replicate image model`.
+Release 2.2.26 separates the OpenAI-compatible image model from the shared text model. The image request now uses the client-scoped `BoobaStudio: Image model` setting (default `gpt-image-1`), while Replicate continues to use `BoobaStudio: Replicate image model`. The provider entry has a versioned query suffix so Foundry clients do not retain an older cached provider script after updating.
 
 ## Foundry v14 manual test
 
