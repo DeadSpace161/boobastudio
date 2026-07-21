@@ -136,8 +136,8 @@ async function routeResponses(originalFetch, body) {
   const response = await post(`${baseUrl()}/chat/completions`, payload, originalFetch);
   if (!response.ok) return response;
   const result = await response.json();
-  const content = result?.choices?.[0]?.message?.content;
-  if (typeof content !== "string") return new Response(JSON.stringify({ error: { message: "Provider response did not contain choices[0].message.content" } }), { status: 502, headers: { "Content-Type": "application/json" } });
+  const content = text(result?.choices?.[0]?.message?.content);
+  if (!content) return new Response(JSON.stringify({ error: { message: "Provider response did not contain choices[0].message.content" } }), { status: 502, headers: { "Content-Type": "application/json" } });
   return new Response(JSON.stringify({ output: [{ role: "assistant", content: [{ type: "output_text", text: content }] }] }), { status: 200, headers: { "Content-Type": "application/json" } });
 }
 
@@ -162,8 +162,8 @@ async function localQuery(prompt, behavior, callback) {
       callback?.({ status: "error", errors: [providerError({ message })] });
       return true;
     }
-    const content = result?.choices?.[0]?.message?.content;
-    callback?.(typeof content === "string" ? { status: "done", result: content } : { status: "error", errors: ["Provider response did not contain choices[0].message.content"] });
+    const content = text(result?.choices?.[0]?.message?.content);
+    callback?.(content ? { status: "done", result: content } : { status: "error", errors: ["Provider response did not contain choices[0].message.content"] });
   } catch (error) {
     callback?.({ status: "error", errors: [providerError(error)] });
   }

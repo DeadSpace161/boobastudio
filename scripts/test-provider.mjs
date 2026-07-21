@@ -19,7 +19,11 @@ globalThis.fetch = async (input, init) => {
     if (init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
     return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: ["https://cdn.test/generated.png"] }), { status: 200 });
   }
-  if (String(input).endsWith("/chat/completions")) return new Response(JSON.stringify({ choices: [{ message: { content: "provider response" } }] }), { status: 200 });
+  if (String(input).endsWith("/chat/completions")) {
+    const requestBody = JSON.parse(init?.body || "{}");
+    const content = requestBody.messages?.[0]?.content === "array-content" ? [{ type: "text", text: "array " }, { type: "text", text: "response" }] : "provider response";
+    return new Response(JSON.stringify({ choices: [{ message: { content } }] }), { status: 200 });
+  }
   if (String(input).endsWith("/images/generations")) return new Response(JSON.stringify({ data: [{ b64_json: "aGVsbG8=" }] }), { status: 200 });
   return new Response(JSON.stringify({ error: { message: "unexpected request" } }), { status: 500 });
 };
@@ -96,6 +100,8 @@ let queryResult;
 await globalThis.__boobastudioLocalQuery("Write a tavern description", "{\"type\":\"object\"}", (result) => { queryResult = result; });
 assert.deepEqual(queryResult, { status: "done", result: "provider response" });
 assert.equal(requests[12].input, "http://provider.test/v1/chat/completions");
+const arrayResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "array-content" }] }] }) });
+assert.equal((await arrayResponse.json()).output[0].content[0].text, "array response");
 
 values.set("boobastudio.providerBaseUrl", "http://network.test/v1");
 const networkResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "network" }] }] }) });
