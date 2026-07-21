@@ -170,7 +170,7 @@ async function localQuery(prompt, behavior, callback) {
 }
 
 globalThis.__boobastudioLocalQuery = localQuery;
-globalThis.__boobastudioLocalProviderConfigured = () => isEnabled() && Boolean(String(get(S.apiKey) || game.settings.get(NAMESPACE, "openaiApiKey") || "").trim());
+globalThis.__boobastudioLocalProviderConfigured = () => isEnabled() && Boolean(baseUrl());
 
 Hooks.once("ready", () => {
   document.addEventListener("click", (event) => {
