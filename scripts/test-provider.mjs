@@ -15,7 +15,7 @@ globalThis.game = {
 globalThis.fetch = async (input, init) => {
   requests.push({ input, init });
   if (String(input).includes("network.test")) throw new TypeError("Failed to fetch");
-  if (String(input).includes("api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions") || String(input).includes("api.replicate.com/v1/predictions/prediction-1")) {
+  if (String(input).includes("api.replicate.com/v1/models/") && String(input).endsWith("/predictions") || String(input).includes("api.replicate.com/v1/predictions/prediction-1")) {
     if (init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
     return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: ["https://cdn.test/generated.png"] }), { status: 200 });
   }
@@ -50,10 +50,12 @@ assert.equal(JSON.parse(requests[1].init.body).model, "local-image-model");
 values.set("boobastudio.imageProvider", "replicate");
 values.set("boobastudio.replicateApiToken", "replicate-test-token");
 values.set("boobastudio.replicateModel", "black-forest-labs/flux-schnell");
-const replicateImageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "a tavern" }) });
+const replicateImageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "black-forest-labs/flux-fill-pro", prompt: "a tavern", image: "data:image/png;base64,abc", mask: "data:image/png;base64,mask" }) });
 assert.equal((await replicateImageResponse.json()).data[0].url, "https://cdn.test/generated.png");
-assert.equal(requests[2].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions");
+assert.equal(requests[2].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-fill-pro/predictions");
 assert.equal(requests[2].init.headers.Authorization, "Bearer replicate-test-token");
+assert.equal(JSON.parse(requests[2].init.body).input.image, "data:image/png;base64,abc");
+assert.equal(JSON.parse(requests[2].init.body).input.mask, "data:image/png;base64,mask");
 
 values.set("boobastudio.imageProvider", "openai");
 values.set("boobastudio.replicateApiToken", "");

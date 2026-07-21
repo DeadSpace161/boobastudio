@@ -53,6 +53,9 @@ function replicateInput(body) {
     input.width = Number(size[1]);
     input.height = Number(size[2]);
   }
+  for (const key of ["image", "mask", "negative_prompt", "strength", "image_prompt_strength", "guidance", "steps", "seed", "width", "height", "aspect_ratio", "output_format"]) {
+    if (body[key] !== undefined && body[key] !== null && body[key] !== "") input[key] = body[key];
+  }
   return input;
 }
 
@@ -70,7 +73,8 @@ function providerFailure(error, status = 502) {
 async function routeReplicateImages(body) {
   const configured = String(get(S.replicateModel) || "").trim();
   const shared = String(get(S.model) || "").trim();
-  const model = (configured && configured !== "black-forest-labs/flux-schnell" ? configured : (shared.includes("/") ? shared : configured || "black-forest-labs/flux-schnell")).trim();
+  const requested = String(body.model || "").trim();
+  const model = (configured && configured !== "black-forest-labs/flux-schnell" ? configured : (requested.includes("/") ? requested : (shared.includes("/") ? shared : configured || "black-forest-labs/flux-schnell"))).trim();
   const endpoint = `https://api.replicate.com/v1/models/${model}/predictions`;
   const controller = new AbortController();
   const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);

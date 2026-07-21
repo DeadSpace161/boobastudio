@@ -30,7 +30,9 @@ Release 2.2.26 separates the OpenAI-compatible image model from the shared text 
 
 The live Foundry v14 test now loads the fresh `boobastudio-provider-v226.js` entrypoint. An automated same-origin mock request returned the existing image response shape and confirmed that setting `imageModel` to `test-image-model` sent that model in the outgoing image-generation payload.
 
-Release 2.2.27 adds actionable local provider errors for timeout, network/CORS, and upstream provider failures. The smoke test covers OpenRouter, Ollama, and LM Studio-compatible base URLs. A single real Replicate `flux-schnell` prediction was accepted and polled; Replicate ended it with upstream error `E9828`, so no successful real image was produced. The existing recovered image UI currently exposes generation only; no variation, inpainting, outpainting, upscale, or background-removal request path exists to adapt without inventing a parallel workflow.
+Release 2.2.27 adds actionable local provider errors for timeout, network/CORS, and upstream provider failures. The smoke test covers OpenRouter, Ollama, and LM Studio-compatible base URLs. A single real Replicate `flux-schnell` prediction was accepted and polled; Replicate ended it with upstream error `E9828`, so no successful real image was produced.
+
+Release 2.2.28 adapts the recovered advanced image façade. Existing Cibola `genImage` calls now forward their `moreFields` operation data, including image and mask payloads, to the configured local provider. Replicate model selection honors the model selected by the existing Cibola editor, including inpaint, erase, outpaint, style, relight, and upscale model IDs. The original UI, history, callbacks, and document application path remain unchanged.
 
 ## Foundry v14 manual test
 
