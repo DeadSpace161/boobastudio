@@ -3,7 +3,7 @@
   "title": "BoobaStudio",
   "description": "Personal BoobaStudio fork of the Cibola Foundry module.",
   "version": "2.2.26",
-  "download": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.26.zip?cache=226",
+  "download": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.26.zip?cache=226b",
   "compatibility": {
     "minimum": "12",
     "verified": "14",
