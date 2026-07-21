@@ -34,6 +34,8 @@ Release 2.2.27 adds actionable local provider errors for timeout, network/CORS, 
 
 Release 2.2.28 adapts the recovered advanced image façade. Existing Cibola `genImage` calls now forward their `moreFields` operation data, including image and mask payloads, to the configured local provider. Replicate model selection honors the model selected by the existing Cibola editor, including inpaint, erase, outpaint, style, relight, and upscale model IDs. The original UI, history, callbacks, and document application path remain unchanged.
 
+Live Foundry v14 validation confirmed an intercepted inpaint-shaped request reaches `https://api.replicate.com/v1/models/black-forest-labs/flux-fill-pro/predictions` with `prompt`, `image`, `mask`, and `strength`, and the response is normalized to the existing `{data:[{url}]}` image shape. Direct Replicate use remains subject to Replicate/browser CORS support.
+
 ## Foundry v14 manual test
 
 1. Copy `dist/boobastudio` into the Foundry `Data/modules/` directory, preserving the folder name `boobastudio`.
