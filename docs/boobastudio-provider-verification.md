@@ -36,6 +36,10 @@ Release 2.2.28 adapts the recovered advanced image façade. Existing Cibola `gen
 
 Live Foundry v14 validation confirmed an intercepted inpaint-shaped request reaches `https://api.replicate.com/v1/models/black-forest-labs/flux-fill-pro/predictions` with `prompt`, `image`, `mask`, and `strength`, and the response is normalized to the existing `{data:[{url}]}` image shape. Direct Replicate use remains subject to Replicate/browser CORS support.
 
+Release 2.2.29 adds provider-specific Replicate input shaping while preserving the same image-generation façade. Flux Fill receives image/mask edit fields; Bria Eraser receives `image`, `mask`, and `preserve_alpha`; Bria Expand receives image and canvas/aspect fields; and background-removal models such as `cjwbw/rembg` receive only their supported image input. The Replicate API base URL is now client-configurable for a CORS-enabled compatible endpoint. These mappings follow the public model schemas for [Flux Fill Pro](https://replicate.com/black-forest-labs/flux-fill-pro/api/schema), [Bria Eraser](https://replicate.com/bria/eraser), [Bria Expand](https://replicate.com/bria/expand-image), and [rembg](https://replicate.com/cjwbw/rembg/api/schema).
+
+Live Foundry v14 validation confirmed release 2.2.29 loads as an active module, registers both `imageModel` and `replicateBaseUrl`, and routes an intercepted Flux Fill request to the expected model prediction endpoint with prompt, image, mask, and strength fields. No paid Replicate request was made during this validation.
+
 ## Foundry v14 manual test
 
 1. Copy `dist/boobastudio` into the Foundry `Data/modules/` directory, preserving the folder name `boobastudio`.
@@ -67,7 +71,7 @@ The existing `TextGenerationService.query` first invokes `globalThis.__boobastud
 
 - The adapter reuses Cibola's existing client-only chat/image path and now provides a guarded local fallback for the existing prose/document `query` path.
 - Direct browser requests require provider CORS support. A CORS error is not fixed by changing module settings; use a provider endpoint that permits the Foundry origin or a user-managed compatible proxy.
-- Foundry v14 Build 363 runtime deployment has been verified through the public test server: BoobaStudio 2.2.24 loads as an active module in `test_sworn`, and the corrected provider adapter is served successfully. A full browser-driven Replicate generation remains a separate validation checkpoint.
+- Foundry v14 Build 363 runtime deployment has been verified through the public test server: BoobaStudio 2.2.29 loads as an active module in `test_sworn`, and the corrected provider adapter is served successfully. A paid browser-driven Replicate generation remains intentionally separate from automated routing validation.
 - Foundry v14 ProseMirror validation identified and corrected a legacy-schema issue: the existing Cibola text actions targeted `schema.nodes.div`, which v14 filters from journal menus. The fork now falls back to `schema.nodes.paragraph` for those existing actions. Release 2.2.21 packages the image-provider compatibility fix and this ProseMirror fix.
 - The test server is running BoobaStudio 2.2.24 with the stable entrypoint filename. The fresh-journal page-sheet probe confirms the existing BoobaStudio dropdown and image action render in Foundry v14.
 - The provider adapter uses the stable filename `bundle/modules/boobastudio-provider.js`; this avoids a server/static-path issue that caused the earlier adapter filename to return 404 without a cache query.
