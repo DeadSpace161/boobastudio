@@ -29,11 +29,11 @@ function messages(input) {
   })).filter((message) => message.content);
 }
 
-async function post(endpoint, body) {
+async function post(endpoint, body, fetcher = fetch) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), Math.max(1000, Number(get(S.timeout)) || 120000));
   try {
-    return await fetch(endpoint, { method: "POST", headers: headers(), body: JSON.stringify(body), signal: controller.signal });
+    return await fetcher(endpoint, { method: "POST", headers: headers(), body: JSON.stringify(body), signal: controller.signal });
   } finally {
     clearTimeout(timer);
   }
@@ -93,7 +93,7 @@ async function routeResponses(originalFetch, body) {
     max_tokens: Math.max(1, Number(get(S.maxTokens)) || 2048),
   };
   if (!Number.isFinite(payload.temperature)) delete payload.temperature;
-  const response = await post(`${baseUrl()}/chat/completions`, payload);
+  const response = await post(`${baseUrl()}/chat/completions`, payload, originalFetch);
   if (!response.ok) return response;
   const result = await response.json();
   const content = result?.choices?.[0]?.message?.content;
@@ -101,10 +101,10 @@ async function routeResponses(originalFetch, body) {
   return new Response(JSON.stringify({ output: [{ role: "assistant", content: [{ type: "output_text", text: content }] }] }), { status: 200, headers: { "Content-Type": "application/json" } });
 }
 
-async function routeImages(body) {
+async function routeImages(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
   const sharedKey = String(get(S.apiKey) || "").trim();
   if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) return routeReplicateImages(body);
-  return post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.model) || body.model || "gpt-image-1") });
+  return post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.model) || body.model || "gpt-image-1") }, originalFetch);
 }
 
 async function localQuery(prompt, behavior, callback) {
@@ -143,6 +143,7 @@ Hooks.once("ready", () => {
 function install() {
   if (globalThis.__boobastudioOpenAICompatibleInstalled) return;
   const originalFetch = globalThis.fetch.bind(globalThis);
+  globalThis.__boobastudioOriginalFetch = originalFetch;
   const responsesUrl = "https://api.openai.com/v1/responses";
   const imagesUrl = "https://api.openai.com/v1/images/generations";
   globalThis.fetch = async (input, init = {}) => {
@@ -151,7 +152,7 @@ function install() {
     if (url !== responsesUrl && url !== imagesUrl) return originalFetch(input, init);
     let body;
     try { body = JSON.parse(init.body); } catch { return originalFetch(input, init); }
-    return url === responsesUrl ? routeResponses(originalFetch, body) : routeImages(body);
+    return url === responsesUrl ? routeResponses(originalFetch, body) : routeImages(body, originalFetch);
   };
   globalThis.__boobastudioOpenAICompatibleInstalled = true;
 }
