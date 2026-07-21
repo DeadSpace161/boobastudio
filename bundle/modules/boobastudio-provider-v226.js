@@ -56,6 +56,17 @@ function replicateInput(body) {
   return input;
 }
 
+function providerError(error) {
+  const message = String(error?.message || error || "Unknown provider error");
+  if (error?.name === "AbortError" || /abort|timeout/i.test(message)) return `Timeout: provider request exceeded the configured timeout (${Number(get(S.timeout)) || 120000} ms)`;
+  if (/failed to fetch|network|cors|cross-origin|dns|connection refused/i.test(message)) return `Network/CORS error: ${message}. Confirm the endpoint is reachable from the Foundry browser and permits this origin.`;
+  return `Provider error: ${message}`;
+}
+
+function providerFailure(error, status = 502) {
+  return new Response(JSON.stringify({ error: { message: providerError(error) } }), { status, headers: { "Content-Type": "application/json" } });
+}
+
 async function routeReplicateImages(body) {
   const configured = String(get(S.replicateModel) || "").trim();
   const shared = String(get(S.model) || "").trim();
@@ -152,7 +163,11 @@ function install() {
     if (url !== responsesUrl && url !== imagesUrl) return originalFetch(input, init);
     let body;
     try { body = JSON.parse(init.body); } catch { return originalFetch(input, init); }
-    return url === responsesUrl ? routeResponses(originalFetch, body) : routeImages(body, originalFetch);
+    try {
+      return url === responsesUrl ? await routeResponses(originalFetch, body) : await routeImages(body, originalFetch);
+    } catch (error) {
+      return providerFailure(error);
+    }
   };
   globalThis.__boobastudioOpenAICompatibleInstalled = true;
 }

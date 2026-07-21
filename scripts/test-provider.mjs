@@ -14,6 +14,7 @@ globalThis.game = {
 };
 globalThis.fetch = async (input, init) => {
   requests.push({ input, init });
+  if (String(input).includes("network.test")) throw new TypeError("Failed to fetch");
   if (String(input).includes("api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions") || String(input).includes("api.replicate.com/v1/predictions/prediction-1")) {
     if (init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
     return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: ["https://cdn.test/generated.png"] }), { status: 200 });
@@ -68,5 +69,20 @@ let queryResult;
 await globalThis.__boobastudioLocalQuery("Write a tavern description", "{\"type\":\"object\"}", (result) => { queryResult = result; });
 assert.deepEqual(queryResult, { status: "done", result: "provider response" });
 assert.equal(requests[6].input, "http://provider.test/v1/chat/completions");
+
+values.set("boobastudio.providerBaseUrl", "http://network.test/v1");
+const networkResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "network" }] }] }) });
+const networkError = await networkResponse.json();
+assert.equal(networkResponse.status, 502);
+assert.match(networkError.error.message, /^Network\/CORS error:/);
+
+for (const base of ["https://openrouter.ai/api/v1", "http://localhost:11434/v1", "http://127.0.0.1:1234/v1"]) {
+  values.set("boobastudio.providerBaseUrl", base);
+  values.set("boobastudio.providerModel", "compatibility-model");
+  let compatibilityResult;
+  await globalThis.__boobastudioLocalQuery("compatibility probe", "", (result) => { compatibilityResult = result; });
+  assert.deepEqual(compatibilityResult, { status: "done", result: "provider response" });
+  assert.equal(requests.at(-1).input, `${base}/chat/completions`);
+}
 
 console.log("BoobaStudio provider smoke test passed");
