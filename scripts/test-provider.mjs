@@ -102,6 +102,10 @@ const networkResponse = await fetch("https://api.openai.com/v1/responses", { met
 const networkError = await networkResponse.json();
 assert.equal(networkResponse.status, 502);
 assert.match(networkError.error.message, /^Network\/CORS error:/);
+let localNetworkResult;
+await globalThis.__boobastudioLocalQuery("network", "", (result) => { localNetworkResult = result; });
+assert.equal(localNetworkResult.status, "error");
+assert.match(localNetworkResult.errors[0], /^Network\/CORS error:/);
 
 for (const base of ["https://openrouter.ai/api/v1", "http://localhost:11434/v1", "http://127.0.0.1:1234/v1"]) {
   values.set("boobastudio.providerBaseUrl", base);

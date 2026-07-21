@@ -158,13 +158,14 @@ async function localQuery(prompt, behavior, callback) {
     });
     const result = await response.json().catch(() => null);
     if (!response.ok) {
-      callback?.({ status: "error", errors: [result?.error?.message || `Provider request failed (${response.status})`] });
+      const message = result?.error?.message || `Provider request failed (${response.status})`;
+      callback?.({ status: "error", errors: [providerError({ message })] });
       return true;
     }
     const content = result?.choices?.[0]?.message?.content;
     callback?.(typeof content === "string" ? { status: "done", result: content } : { status: "error", errors: ["Provider response did not contain choices[0].message.content"] });
   } catch (error) {
-    callback?.({ status: "error", errors: [String(error?.message || error)] });
+    callback?.({ status: "error", errors: [providerError(error)] });
   }
   return true;
 }
