@@ -28,6 +28,8 @@ The current checks validate the manifest, referenced files, localization JSON, J
 
 Release 2.2.26 separates the OpenAI-compatible image model from the shared text model. The image request now uses the client-scoped `BoobaStudio: Image model` setting (default `gpt-image-1`), while Replicate continues to use `BoobaStudio: Replicate image model`. The uniquely named 2.2.26 package and manifest provide update cache invalidation without adding query strings to manifest file paths, which Foundry treats as literal filenames.
 
+The live Foundry v14 test now loads the fresh `boobastudio-provider-v226.js` entrypoint. An automated same-origin mock request returned the existing image response shape and confirmed that setting `imageModel` to `test-image-model` sent that model in the outgoing image-generation payload.
+
 ## Foundry v14 manual test
 
 1. Copy `dist/boobastudio` into the Foundry `Data/modules/` directory, preserving the folder name `boobastudio`.
