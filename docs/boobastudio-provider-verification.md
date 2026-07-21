@@ -30,6 +30,8 @@ Release 2.2.26 separates the OpenAI-compatible image model from the shared text 
 
 The live Foundry v14 test now loads the fresh `boobastudio-provider-v226.js` entrypoint. An automated same-origin mock request returned the existing image response shape and confirmed that setting `imageModel` to `test-image-model` sent that model in the outgoing image-generation payload.
 
+Release 2.2.27 adds actionable local provider errors for timeout, network/CORS, and upstream provider failures. The smoke test covers OpenRouter, Ollama, and LM Studio-compatible base URLs. A single real Replicate `flux-schnell` prediction was accepted and polled; Replicate ended it with upstream error `E9828`, so no successful real image was produced. The existing recovered image UI currently exposes generation only; no variation, inpainting, outpainting, upscale, or background-removal request path exists to adapt without inventing a parallel workflow.
+
 ## Foundry v14 manual test
 
 1. Copy `dist/boobastudio` into the Foundry `Data/modules/` directory, preserving the folder name `boobastudio`.
