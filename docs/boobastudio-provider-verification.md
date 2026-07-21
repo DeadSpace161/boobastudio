@@ -40,6 +40,8 @@ Release 2.2.29 adds provider-specific Replicate input shaping while preserving t
 
 Live Foundry v14 validation confirmed release 2.2.29 loads as an active module, registers both `imageModel` and `replicateBaseUrl`, and routes an intercepted Flux Fill request to the expected model prediction endpoint with prompt, image, mask, and strength fields. No paid Replicate request was made during this validation.
 
+Live Foundry v14 journal validation completed against the existing JournalEntryPage ProseMirror workflow. The automated test opened the existing BoobaStudio menu, selected `Generate description with AI`, submitted through an intercepted OpenAI-compatible `/chat/completions` response, accepted the generated result, and saved the page. The resulting JournalEntryPage content contained the generated paragraph. The temporary test JournalEntry was deleted after verification.
+
 ## Foundry v14 manual test
 
 1. Copy `dist/boobastudio` into the Foundry `Data/modules/` directory, preserving the folder name `boobastudio`.
