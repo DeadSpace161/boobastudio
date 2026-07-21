@@ -29,6 +29,7 @@ values.set("boobastudio.providerEnabled", true);
 values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
 values.set("boobastudio.openaiApiKey", "test-key");
 values.set("boobastudio.providerModel", "local-model");
+values.set("boobastudio.imageModel", "local-image-model");
 values.set("boobastudio.providerHeaders", JSON.stringify({ "X-Test": "yes" }));
 await hooks.get("ready")();
 assert.equal(globalThis.__boobastudioLocalProviderConfigured(), true);
@@ -43,6 +44,7 @@ assert.equal(requests[0].init.headers["X-Test"], "yes");
 const imageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "gpt-image-1", prompt: "a castle" }) });
 assert.equal((await imageResponse.json()).data[0].b64_json, "aGVsbG8=");
 assert.equal(requests[1].input, "http://provider.test/v1/images/generations");
+assert.equal(JSON.parse(requests[1].init.body).model, "local-image-model");
 
 values.set("boobastudio.imageProvider", "replicate");
 values.set("boobastudio.replicateApiToken", "replicate-test-token");
