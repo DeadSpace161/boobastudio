@@ -15,6 +15,7 @@ LOCK
 dist/
 release/
 *.zip
+releases/*.zip
 
 # Dependency/build caches
 node_modules/
