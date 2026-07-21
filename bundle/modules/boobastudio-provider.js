@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", imageModel: "imageModel", imageProvider: "imageProvider", replicateToken: "replicateApiToken", replicateModel: "replicateModel", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", imageModel: "imageModel", imageProvider: "imageProvider", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -46,12 +46,40 @@ function replicateHeaders() {
   return { ...(token ? { Authorization: `Bearer ${token}` } : {}), "Content-Type": "application/json" };
 }
 
-function replicateInput(body) {
-  const input = { prompt: String(body.prompt || "") };
+function replicateBaseUrl() {
+  return String(get(S.replicateBaseUrl) || "https://api.replicate.com/v1").trim().replace(/\/+$/, "");
+}
+
+function replicateModel(body) {
+  const configured = String(get(S.replicateModel) || "").trim();
+  const shared = String(get(S.model) || "").trim();
+  const requested = String(body.model || "").trim();
+  return (configured && configured !== "black-forest-labs/flux-schnell" ? configured : (requested.includes("/") ? requested : (shared.includes("/") ? shared : configured || "black-forest-labs/flux-schnell"))).trim();
+}
+
+function replicateInput(body, model = replicateModel(body)) {
+  const input = {};
   const size = String(body.size || "").match(/^(\d+)x(\d+)$/);
   if (size) {
     input.width = Number(size[1]);
     input.height = Number(size[2]);
+  }
+  const lower = model.toLowerCase();
+  const isErase = /(^|\/)(eraser|rembg|removebackground|birefnet)$/.test(lower);
+  const isExpand = lower === "bria/expand-image" || lower.endsWith("/flux-fill-pro-outpaint");
+  if (isErase) {
+    if (body.image !== undefined) input.image = body.image;
+    if (lower === "bria/eraser" && body.mask !== undefined) input.mask = body.mask;
+    if (lower === "bria/eraser") input.preserve_alpha = body.preserve_alpha ?? true;
+    return input;
+  }
+  input.prompt = String(body.prompt || "");
+  if (isExpand) {
+    if (body.image !== undefined) input.image = body.image;
+    for (const key of ["aspect_ratio", "canvas_size", "original_image_size", "original_image_location", "preserve_alpha", "seed", "negative_prompt", "outpaint"]) {
+      if (body[key] !== undefined && body[key] !== null && body[key] !== "") input[key] = body[key];
+    }
+    return input;
   }
   for (const key of ["image", "mask", "negative_prompt", "strength", "image_prompt_strength", "guidance", "steps", "seed", "width", "height", "aspect_ratio", "output_format"]) {
     if (body[key] !== undefined && body[key] !== null && body[key] !== "") input[key] = body[key];
@@ -71,23 +99,20 @@ function providerFailure(error, status = 502) {
 }
 
 async function routeReplicateImages(body) {
-  const configured = String(get(S.replicateModel) || "").trim();
-  const shared = String(get(S.model) || "").trim();
-  const requested = String(body.model || "").trim();
-  const model = (configured && configured !== "black-forest-labs/flux-schnell" ? configured : (requested.includes("/") ? requested : (shared.includes("/") ? shared : configured || "black-forest-labs/flux-schnell"))).trim();
-  const endpoint = `https://api.replicate.com/v1/models/${model}/predictions`;
+  const model = replicateModel(body);
+  const endpoint = `${replicateBaseUrl()}/models/${model}/predictions`;
   const controller = new AbortController();
   const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);
   const timer = setTimeout(() => controller.abort(), timeout);
   try {
-    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify({ input: replicateInput(body) }), signal: controller.signal });
+    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify({ input: replicateInput(body, model) }), signal: controller.signal });
     const prediction = await started.json().catch(() => null);
     if (!started.ok) return new Response(JSON.stringify(prediction || { error: { message: `Replicate request failed (${started.status})` } }), { status: started.status, headers: { "Content-Type": "application/json" } });
     let current = prediction;
     const deadline = Date.now() + timeout;
     while (current?.status && !["succeeded", "failed", "canceled"].includes(current.status) && Date.now() < deadline) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const statusUrl = current.urls?.get || `https://api.replicate.com/v1/predictions/${current.id}`;
+      const statusUrl = current.urls?.get || `${replicateBaseUrl()}/predictions/${current.id}`;
       const status = await fetch(statusUrl, { headers: replicateHeaders(), signal: controller.signal });
       current = await status.json().catch(() => null);
       if (!status.ok) return new Response(JSON.stringify(current || { error: { message: `Replicate status failed (${status.status})` } }), { status: status.status, headers: { "Content-Type": "application/json" } });
@@ -184,6 +209,7 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images or replicate for Replicate predictions.", scope: "client", config: true, type: String, default: "openai" });
   game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
+  game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
   game.settings.register(NAMESPACE, S.timeout, { name: "BoobaStudio: Provider timeout (ms)", scope: "client", config: true, type: Number, default: 120000, range: { min: 1000, max: 600000, step: 1000 } });
   game.settings.register(NAMESPACE, S.temperature, { name: "BoobaStudio: Provider temperature", scope: "client", config: true, type: Number, default: 0.7, range: { min: 0, max: 2, step: 0.05 } });
   game.settings.register(NAMESPACE, S.maxTokens, { name: "BoobaStudio: Provider maximum tokens", scope: "client", config: true, type: Number, default: 2048, range: { min: 1, max: 32768, step: 1 } });
@@ -195,6 +221,7 @@ Hooks.once("ready", async () => {
     game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images or replicate for Replicate predictions.", scope: "client", config: true, type: String, default: "openai" });
     game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
+    game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
   }
   if (isEnabled() && String(get(S.apiKey) || "").trim()) {
     await game.settings.set(NAMESPACE, "clientOnlyMode", true);

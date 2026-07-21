@@ -15,7 +15,7 @@ globalThis.game = {
 globalThis.fetch = async (input, init) => {
   requests.push({ input, init });
   if (String(input).includes("network.test")) throw new TypeError("Failed to fetch");
-  if (String(input).includes("api.replicate.com/v1/models/") && String(input).endsWith("/predictions") || String(input).includes("api.replicate.com/v1/predictions/prediction-1")) {
+  if (String(input).includes("/models/") && String(input).endsWith("/predictions") || String(input).endsWith("/predictions/prediction-1")) {
     if (init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
     return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: ["https://cdn.test/generated.png"] }), { status: 200 });
   }
@@ -57,20 +57,45 @@ assert.equal(requests[2].init.headers.Authorization, "Bearer replicate-test-toke
 assert.equal(JSON.parse(requests[2].init.body).input.image, "data:image/png;base64,abc");
 assert.equal(JSON.parse(requests[2].init.body).input.mask, "data:image/png;base64,mask");
 
+values.set("boobastudio.replicateBaseUrl", "https://replicate-proxy.test/v1");
+values.set("boobastudio.replicateModel", "bria/eraser");
+const eraseResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "ignored", image: "data:image/png;base64,abc", mask: "data:image/png;base64,mask" }) });
+assert.equal((await eraseResponse.json()).data[0].url, "https://cdn.test/generated.png");
+assert.equal(requests[4].input, "https://replicate-proxy.test/v1/models/bria/eraser/predictions");
+const eraseInput = JSON.parse(requests[4].init.body).input;
+assert.equal(eraseInput.image, "data:image/png;base64,abc");
+assert.equal(eraseInput.mask, "data:image/png;base64,mask");
+assert.equal(eraseInput.preserve_alpha, true);
+assert.equal(Object.hasOwn(eraseInput, "prompt"), false);
+
+values.set("boobastudio.replicateModel", "cjwbw/rembg");
+await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "ignored", image: "data:image/png;base64,abc", mask: "data:image/png;base64,mask" }) });
+const rembgInput = JSON.parse(requests[6].init.body).input;
+assert.deepEqual(rembgInput, { image: "data:image/png;base64,abc" });
+
+values.set("boobastudio.replicateModel", "bria/expand-image");
+await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "expand", image: "data:image/png;base64,abc", aspect_ratio: "16:9", canvas_size: 1024 }) });
+const expandInput = JSON.parse(requests[8].init.body).input;
+assert.equal(expandInput.image, "data:image/png;base64,abc");
+assert.equal(expandInput.aspect_ratio, "16:9");
+assert.equal(expandInput.canvas_size, 1024);
+
 values.set("boobastudio.imageProvider", "openai");
 values.set("boobastudio.replicateApiToken", "");
+values.set("boobastudio.replicateBaseUrl", "https://api.replicate.com/v1");
+values.set("boobastudio.replicateModel", "black-forest-labs/flux-schnell");
 values.set("boobastudio.openaiApiKey", "r8_fallback-token");
 const fallbackImageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "a fallback tavern" }) });
 assert.equal((await fallbackImageResponse.json()).data[0].url, "https://cdn.test/generated.png");
-assert.equal(requests[4].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions");
-assert.equal(requests[4].init.headers.Authorization, "Bearer r8_fallback-token");
+assert.equal(requests[10].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions");
+assert.equal(requests[10].init.headers.Authorization, "Bearer r8_fallback-token");
 
 values.set("boobastudio.openaiApiKey", "test-key");
 
 let queryResult;
 await globalThis.__boobastudioLocalQuery("Write a tavern description", "{\"type\":\"object\"}", (result) => { queryResult = result; });
 assert.deepEqual(queryResult, { status: "done", result: "provider response" });
-assert.equal(requests[6].input, "http://provider.test/v1/chat/completions");
+assert.equal(requests[12].input, "http://provider.test/v1/chat/completions");
 
 values.set("boobastudio.providerBaseUrl", "http://network.test/v1");
 const networkResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "network" }] }] }) });
