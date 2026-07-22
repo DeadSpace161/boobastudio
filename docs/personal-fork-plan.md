@@ -50,7 +50,7 @@ Adapters should normalize text to the existing `result`/`message` shapes, images
 
 1. Direct OpenAI Images through existing image UI, preview/gallery/file upload, actor portrait, token, tile, and scene application.
 2. Image editor tools: variations, background removal, inpainting/outpainting, and upscale according to provider capabilities.
-3. Local/provider text features: translation, names, scene descriptions, document generation, threads, and prompt templates.
+3. Local/provider text features: names, scene descriptions, document generation, threads, and prompt templates. AI document translation is explicitly deferred; Foundry UI localization remains in scope.
 4. OpenAI TTS, then ElevenLabs direct adapter if CORS/API behavior is acceptable.
 5. Map generation and existing local wall detection/scene creation verification.
 6. Optional local gallery/history and local thread/vector design only if existing hosted contracts cannot be adapted without duplicating architecture.
