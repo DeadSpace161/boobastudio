@@ -39,6 +39,24 @@ async def try_join(page, base_url, gm_password):
     return page.url.endswith("/game") and await page.evaluate("() => typeof game !== 'undefined' && game.ready")
 
 
+async def dismiss_onboarding(page):
+    """Close the first-run window so feature controls are interactable."""
+    onboarding = page.locator('.boobastudio-onboarding')
+    if not await onboarding.count():
+        return False
+    for selector in (
+        '[data-action="close"]',
+        '[data-action="exit"]',
+        '[data-action="getStarted"]',
+    ):
+        button = onboarding.locator(selector)
+        if await button.count():
+            await button.first.click(force=True)
+            await page.wait_for_timeout(400)
+            return True
+    return False
+
+
 async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", default=os.getenv("BOOBA_FOUNDRY_URL", "https://vtt.hiddenbunker.org"))
@@ -60,6 +78,7 @@ async def main():
             try:
                 await launch_world(page, args.url.rstrip("/"), admin_password)
                 if await try_join(page, args.url.rstrip("/"), gm_password):
+                    await dismiss_onboarding(page)
                     state = await page.evaluate("""() => ({
                         url: location.href,
                         module: game.modules.contents.filter(m => m.id === 'boobastudio')
