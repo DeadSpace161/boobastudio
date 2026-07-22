@@ -224,7 +224,7 @@ Hooks.once("ready", async () => {
     game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
     game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
   }
-  if (isEnabled() && String(get(S.apiKey) || "").trim()) {
+  if (isEnabled() && baseUrl()) {
     await game.settings.set(NAMESPACE, "clientOnlyMode", true);
   }
   install();
