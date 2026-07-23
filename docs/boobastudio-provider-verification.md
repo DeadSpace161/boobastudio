@@ -31,10 +31,14 @@ The existing adapter supports these providers without a separate integration or 
 | OpenRouter | `https://openrouter.ai/api/v1` | Required | Provider model, for example `openai/gpt-4o-mini` |
 | Ollama | `http://localhost:11434/v1` | Usually blank | Provider model installed in Ollama |
 | LM Studio | `http://127.0.0.1:1234/v1` | Usually blank | Loaded LM Studio model |
+| Anthropic | `https://api.anthropic.com/v1` | Required | Anthropic model ID |
+| Google Gemini | `https://generativelanguage.googleapis.com/v1beta` | Required | Gemini model ID, for example `gemini-2.5-flash` |
 
 OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied through the existing custom-headers JSON setting. Local endpoints must be reachable from the browser running Foundry and must allow the Foundry origin through CORS.
 
-Release 2.2.44 is the current package. The live Foundry v14 Build 363 server has exercised the existing Journal ProseMirror image action through a mocked OpenAI-compatible provider, produced a non-placeholder preview, retained one history entry, and persisted the generated image into the JournalEntryPage content by document UUID. No Replicate request was made.
+For Anthropic and Gemini, set **Text provider protocol** to the matching native protocol. BoobaStudio sends Anthropic `x-api-key` and `anthropic-version` headers, or Gemini `x-goog-api-key` headers, and normalizes both response formats into the existing Cibola text response contract.
+
+Release 2.2.46 is the current package. The live Foundry v14 Build 363 server has exercised the existing Journal ProseMirror image action through a mocked OpenAI-compatible provider, produced a non-placeholder preview, retained one history entry, and persisted the generated image into the JournalEntryPage content by document UUID. No Replicate request was made.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 
@@ -85,7 +89,7 @@ The existing `TextGenerationService.query` first invokes `globalThis.__boobastud
 
 - The adapter reuses Cibola's existing client-only chat/image path and now provides a guarded local fallback for the existing prose/document `query` path.
 - Direct browser requests require provider CORS support. A CORS error is not fixed by changing module settings; use a provider endpoint that permits the Foundry origin or a user-managed compatible proxy.
-- Foundry v14 Build 363 runtime deployment has been verified through the public test server, which currently runs 2.2.44. A paid browser-driven Replicate generation remains intentionally separate from automated routing validation.
+- Foundry v14 Build 363 runtime deployment has been verified through the public test server, which currently runs 2.2.46. A paid browser-driven Replicate generation remains intentionally separate from automated routing validation.
 - Foundry v14 ProseMirror validation identified and corrected a legacy-schema issue: the existing Cibola text actions targeted `schema.nodes.div`, which v14 filters from journal menus. The fork now falls back to `schema.nodes.paragraph` for those existing actions. Release 2.2.21 packages the image-provider compatibility fix and this ProseMirror fix.
 - The test server has been validated with the stable entrypoint filename. The fresh-journal page-sheet probe confirms the existing BoobaStudio dropdown and image action render in Foundry v14, and the configured local provider path now opens the image prompt and persists its result.
 - The provider adapter uses the stable filename `bundle/modules/boobastudio-provider.js`; this avoids a server/static-path issue that caused the earlier adapter filename to return 404 without a cache query.
