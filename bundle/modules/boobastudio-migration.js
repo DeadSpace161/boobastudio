@@ -58,8 +58,8 @@ async function migrateMacros() {
 }
 
 Hooks.once("init", () => game.settings.register(NAMESPACE, MIGRATION_SETTING, { scope: "world", config: false, type: Boolean, default: false }));
-Hooks.once("setup", () => migrateSettings().catch((error) => console.error(`${NAMESPACE} | Settings migration failed`, error)));
 Hooks.once("ready", () => {
+  migrateSettings().catch((error) => console.error(`${NAMESPACE} | Settings migration failed`, error));
   migrateBrowserHistory();
   migrateMacros().catch((error) => console.error(`${NAMESPACE} | Macro migration failed`, error));
 });
