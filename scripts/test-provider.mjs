@@ -24,6 +24,8 @@ globalThis.fetch = async (input, init) => {
     const content = requestBody.messages?.[0]?.content === "array-content" ? [{ type: "text", text: "array " }, { type: "text", text: "response" }] : "provider response";
     return new Response(JSON.stringify({ choices: [{ message: { content } }] }), { status: 200 });
   }
+  if (String(input).endsWith("/messages")) return new Response(JSON.stringify({ content: [{ type: "text", text: "anthropic response" }] }), { status: 200 });
+  if (String(input).includes(":generateContent")) return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: "gemini response" }] } }] }), { status: 200 });
   if (String(input).endsWith("/images/generations")) return new Response(JSON.stringify({ data: [{ b64_json: "aGVsbG8=" }] }), { status: 200 });
   return new Response(JSON.stringify({ error: { message: "unexpected request" } }), { status: 500 });
 };
@@ -103,7 +105,26 @@ assert.equal(requests[12].input, "http://provider.test/v1/chat/completions");
 const arrayResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "array-content" }] }] }) });
 assert.equal((await arrayResponse.json()).output[0].content[0].text, "array response");
 
+values.set("boobastudio.providerProtocol", "anthropic");
+values.set("boobastudio.providerBaseUrl", "https://api.anthropic.test/v1");
+values.set("boobastudio.openaiApiKey", "anthropic-key");
+const anthropicResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "system", content: [{ type: "input_text", text: "system rule" }] }, { role: "user", content: [{ type: "input_text", text: "hello" }] }] }) });
+assert.equal((await anthropicResponse.json()).output[0].content[0].text, "anthropic response");
+assert.equal(requests.at(-1).input, "https://api.anthropic.test/v1/messages");
+assert.equal(requests.at(-1).init.headers["x-api-key"], "anthropic-key");
+assert.equal(JSON.parse(requests.at(-1).init.body).system, "system rule");
+
+values.set("boobastudio.providerProtocol", "gemini");
+values.set("boobastudio.providerBaseUrl", "https://generativelanguage.googleapis.com/v1beta");
+values.set("boobastudio.providerModel", "gemini-2.5-flash");
+values.set("boobastudio.openaiApiKey", "gemini-key");
+const geminiResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "hello" }] }] }) });
+assert.equal((await geminiResponse.json()).output[0].content[0].text, "gemini response");
+assert.equal(requests.at(-1).input, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent");
+assert.equal(requests.at(-1).init.headers["x-goog-api-key"], "gemini-key");
+
 values.set("boobastudio.providerBaseUrl", "http://network.test/v1");
+values.set("boobastudio.providerProtocol", "openai");
 const networkResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "network" }] }] }) });
 const networkError = await networkResponse.json();
 assert.equal(networkResponse.status, 502);
