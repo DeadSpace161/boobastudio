@@ -18,6 +18,8 @@ globalThis.fetch = async (input, init) => {
   if (String(input).endsWith("/prompt")) return new Response(JSON.stringify({ prompt_id: "comfy-prompt-1" }), { status: 200 });
   if (String(input).endsWith("/history/comfy-prompt-1")) return new Response(JSON.stringify({ "comfy-prompt-1": { outputs: { "9": { images: [{ filename: "generated.png", subfolder: "", type: "output" }] } } } }), { status: 200 });
   if (String(input).endsWith("/generate/core")) return new Response(JSON.stringify({ image: "c3RhYmlsaXR5" }), { status: 200, headers: { "Content-Type": "application/json" } });
+  if (String(input).endsWith("/audio/speech")) return new Response(new Uint8Array([1, 2, 3]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
+  if (String(input).includes("/text-to-speech/voice-1")) return new Response(new Uint8Array([4, 5, 6]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
   if (String(input).includes("/models/") && String(input).endsWith("/predictions") || String(input).endsWith("/predictions/prediction-1")) {
     if (init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
     return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: ["https://cdn.test/generated.png"] }), { status: 200 });
@@ -116,6 +118,26 @@ const stabilityResponse = await fetch("https://api.openai.com/v1/images/generati
 assert.equal((await stabilityResponse.json()).data[0].b64_json, "c3RhYmlsaXR5");
 assert.equal(requests.at(-1).input, "https://stability.test/v2beta/stable-image/generate/core");
 assert.equal(requests.at(-1).init.headers.Authorization, "Bearer stability-key");
+
+values.set("boobastudio.ttsProvider", "openai");
+values.set("boobastudio.ttsBaseUrl", "https://tts.test/v1");
+values.set("boobastudio.ttsApiKey", "tts-key");
+const openaiTTS = await fetch("https://app.cibola.world/api/v1/tts", { method: "POST", body: JSON.stringify({ prompt: JSON.stringify({ speechcontent: "Read this aloud", voice: "nova", speed: "1.1" }) }) });
+const openaiTTSBody = await openaiTTS.json();
+assert.equal(openaiTTSBody.success, true);
+assert.equal(openaiTTSBody.result, "data:audio/mpeg;base64,AQID");
+assert.equal(requests.at(-1).input, "https://tts.test/v1/audio/speech");
+assert.equal(requests.at(-1).init.headers.Authorization, "Bearer tts-key");
+
+values.set("boobastudio.ttsProvider", "elevenlabs");
+values.set("boobastudio.elevenlabsBaseUrl", "https://eleven.test/v1");
+values.set("boobastudio.elevenlabsApiKey", "eleven-key");
+const elevenTTS = await fetch("https://app.cibola.world/api/v1/tts", { method: "POST", body: JSON.stringify({ prompt: JSON.stringify({ speechcontent: "Read this with ElevenLabs", voice_id: "voice-1", model: "eleven_turbo_v2_5" }) }) });
+const elevenTTSBody = await elevenTTS.json();
+assert.equal(elevenTTSBody.success, true);
+assert.equal(elevenTTSBody.result, "data:audio/mpeg;base64,BAUG");
+assert.equal(requests.at(-1).input, "https://eleven.test/v1/text-to-speech/voice-1");
+assert.equal(requests.at(-1).init.headers["xi-api-key"], "eleven-key");
 
 values.set("boobastudio.openaiApiKey", "test-key");
 
