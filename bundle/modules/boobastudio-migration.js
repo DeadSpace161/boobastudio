@@ -63,11 +63,20 @@ Hooks.once("ready", () => {
   // write guard are both settled. Wait for the actual ready state before the
   // migration persists anything.
   const waitForReady = async () => {
-    for (let attempt = 0; attempt < 80 && !game.ready; attempt += 1) {
+    for (let attempt = 0; attempt < 120; attempt += 1) {
+      if (game.ready) {
+        try {
+          await migrateSettings();
+          return;
+        } catch (error) {
+          // The ready flag can lead Foundry's setting write guard by a tick.
+          // Retry the whole migration while that guard is settling.
+          if (!String(error?.message || error).includes("World-level Setting")) throw error;
+        }
+      }
       await new Promise((resolve) => setTimeout(resolve, 250));
     }
-    if (!game.ready) throw new Error("Foundry did not reach game.ready before settings migration");
-    await migrateSettings();
+    throw new Error("Foundry did not permit world settings before migration timeout");
   };
   waitForReady().catch((error) => console.error(`${NAMESPACE} | Settings migration failed`, error));
   migrateBrowserHistory();
