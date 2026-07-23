@@ -59,7 +59,11 @@ async function migrateMacros() {
 
 Hooks.once("init", () => game.settings.register(NAMESPACE, MIGRATION_SETTING, { scope: "world", config: false, type: Boolean, default: false }));
 Hooks.once("ready", () => {
-  migrateSettings().catch((error) => console.error(`${NAMESPACE} | Settings migration failed`, error));
+  // Foundry v14 emits the ready hook just before its world-setting write guard
+  // is released. Defer one task so the migration can safely persist settings.
+  setTimeout(() => {
+    migrateSettings().catch((error) => console.error(`${NAMESPACE} | Settings migration failed`, error));
+  }, 0);
   migrateBrowserHistory();
   migrateMacros().catch((error) => console.error(`${NAMESPACE} | Macro migration failed`, error));
 });
