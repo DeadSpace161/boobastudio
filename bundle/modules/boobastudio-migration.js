@@ -59,11 +59,17 @@ async function migrateMacros() {
 
 Hooks.once("init", () => game.settings.register(NAMESPACE, MIGRATION_SETTING, { scope: "world", config: false, type: Boolean, default: false }));
 Hooks.once("ready", () => {
-  // Foundry v14 emits the ready hook just before its world-setting write guard
-  // is released. Defer one task so the migration can safely persist settings.
-  setTimeout(() => {
-    migrateSettings().catch((error) => console.error(`${NAMESPACE} | Settings migration failed`, error));
-  }, 0);
+  // Foundry v14 can emit the ready hook before game.ready and the world-setting
+  // write guard are both settled. Wait for the actual ready state before the
+  // migration persists anything.
+  const waitForReady = async () => {
+    for (let attempt = 0; attempt < 80 && !game.ready; attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+    if (!game.ready) throw new Error("Foundry did not reach game.ready before settings migration");
+    await migrateSettings();
+  };
+  waitForReady().catch((error) => console.error(`${NAMESPACE} | Settings migration failed`, error));
   migrateBrowserHistory();
   migrateMacros().catch((error) => console.error(`${NAMESPACE} | Macro migration failed`, error));
 });
