@@ -22,7 +22,7 @@ The harness launches the test world when needed, retries the Gamemaster session,
 
 The image vertical slice now preserves the existing Image Tools application, accepts standard image URLs as well as OpenAI base64 output, and forces locally configured client image models through the local provider adapter.
 
-Release 2.2.43 is the current package. The live Foundry v14 Build 363 server has exercised the existing Journal ProseMirror image action through a mocked OpenAI-compatible provider, produced a non-placeholder preview, retained one history entry, and persisted the generated image into the JournalEntryPage content. No Replicate request was made.
+Release 2.2.44 is the current package. The live Foundry v14 Build 363 server has exercised the existing Journal ProseMirror image action through a mocked OpenAI-compatible provider, produced a non-placeholder preview, retained one history entry, and persisted the generated image into the JournalEntryPage content by document UUID. No Replicate request was made.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 
@@ -73,7 +73,7 @@ The existing `TextGenerationService.query` first invokes `globalThis.__boobastud
 
 - The adapter reuses Cibola's existing client-only chat/image path and now provides a guarded local fallback for the existing prose/document `query` path.
 - Direct browser requests require provider CORS support. A CORS error is not fixed by changing module settings; use a provider endpoint that permits the Foundry origin or a user-managed compatible proxy.
-- Foundry v14 Build 363 runtime deployment has been verified through the public test server. The active server currently runs 2.2.42; release 2.2.43 is published and awaits installation after the active world is stopped. A paid browser-driven Replicate generation remains intentionally separate from automated routing validation.
+- Foundry v14 Build 363 runtime deployment has been verified through the public test server, which currently runs 2.2.44. A paid browser-driven Replicate generation remains intentionally separate from automated routing validation.
 - Foundry v14 ProseMirror validation identified and corrected a legacy-schema issue: the existing Cibola text actions targeted `schema.nodes.div`, which v14 filters from journal menus. The fork now falls back to `schema.nodes.paragraph` for those existing actions. Release 2.2.21 packages the image-provider compatibility fix and this ProseMirror fix.
 - The test server has been validated with the stable entrypoint filename. The fresh-journal page-sheet probe confirms the existing BoobaStudio dropdown and image action render in Foundry v14, and the configured local provider path now opens the image prompt and persists its result.
 - The provider adapter uses the stable filename `bundle/modules/boobastudio-provider.js`; this avoids a server/static-path issue that caused the earlier adapter filename to return 404 without a cache query.
