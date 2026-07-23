@@ -17,6 +17,7 @@ globalThis.fetch = async (input, init) => {
   if (String(input).includes("network.test")) throw new TypeError("Failed to fetch");
   if (String(input).endsWith("/prompt")) return new Response(JSON.stringify({ prompt_id: "comfy-prompt-1" }), { status: 200 });
   if (String(input).endsWith("/history/comfy-prompt-1")) return new Response(JSON.stringify({ "comfy-prompt-1": { outputs: { "9": { images: [{ filename: "generated.png", subfolder: "", type: "output" }] } } } }), { status: 200 });
+  if (String(input).endsWith("/generate/core")) return new Response(JSON.stringify({ image: "c3RhYmlsaXR5" }), { status: 200, headers: { "Content-Type": "application/json" } });
   if (String(input).includes("/models/") && String(input).endsWith("/predictions") || String(input).endsWith("/predictions/prediction-1")) {
     if (init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
     return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: ["https://cdn.test/generated.png"] }), { status: 200 });
@@ -37,6 +38,7 @@ await hooks.get("init")();
 values.set("boobastudio.providerEnabled", true);
 values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
 values.set("boobastudio.openaiApiKey", "test-key");
+values.set("boobastudio.imageProvider", "openai");
 values.set("boobastudio.providerModel", "local-model");
 values.set("boobastudio.imageModel", "local-image-model");
 values.set("boobastudio.providerHeaders", JSON.stringify({ "X-Test": "yes" }));
@@ -106,12 +108,21 @@ assert.equal((await comfyResponse.json()).data[0].url, "http://comfyui.test/view
 assert.equal(requests[12].input, "http://comfyui.test/prompt");
 assert.equal(JSON.parse(requests[12].init.body).prompt["6"].inputs.text, "a forest shrine");
 
+values.set("boobastudio.imageProvider", "stability");
+values.set("boobastudio.stabilityBaseUrl", "https://stability.test/v2beta/stable-image/generate");
+values.set("boobastudio.stabilityModel", "core");
+values.set("boobastudio.stabilityApiKey", "stability-key");
+const stabilityResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "a moonlit ruin", size: "1024x1024" }) });
+assert.equal((await stabilityResponse.json()).data[0].b64_json, "c3RhYmlsaXR5");
+assert.equal(requests.at(-1).input, "https://stability.test/v2beta/stable-image/generate/core");
+assert.equal(requests.at(-1).init.headers.Authorization, "Bearer stability-key");
+
 values.set("boobastudio.openaiApiKey", "test-key");
 
 let queryResult;
 await globalThis.__boobastudioLocalQuery("Write a tavern description", "{\"type\":\"object\"}", (result) => { queryResult = result; });
 assert.deepEqual(queryResult, { status: "done", result: "provider response" });
-assert.equal(requests[14].input, "http://provider.test/v1/chat/completions");
+assert.equal(requests.at(-1).input, "http://provider.test/v1/chat/completions");
 const arrayResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "array-content" }] }] }) });
 assert.equal((await arrayResponse.json()).output[0].content[0].text, "array response");
 
