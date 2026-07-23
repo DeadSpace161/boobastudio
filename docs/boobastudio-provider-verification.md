@@ -22,6 +22,18 @@ The harness launches the test world when needed, retries the Gamemaster session,
 
 The image vertical slice now preserves the existing Image Tools application, accepts standard image URLs as well as OpenAI base64 output, and forces locally configured client image models through the local provider adapter.
 
+## Compatible text-provider configurations
+
+The existing adapter supports these providers without a separate integration or UI:
+
+| Provider | Base URL | API key | Model setting |
+| --- | --- | --- | --- |
+| OpenRouter | `https://openrouter.ai/api/v1` | Required | Provider model, for example `openai/gpt-4o-mini` |
+| Ollama | `http://localhost:11434/v1` | Usually blank | Provider model installed in Ollama |
+| LM Studio | `http://127.0.0.1:1234/v1` | Usually blank | Loaded LM Studio model |
+
+OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied through the existing custom-headers JSON setting. Local endpoints must be reachable from the browser running Foundry and must allow the Foundry origin through CORS.
+
 Release 2.2.44 is the current package. The live Foundry v14 Build 363 server has exercised the existing Journal ProseMirror image action through a mocked OpenAI-compatible provider, produced a non-placeholder preview, retained one history entry, and persisted the generated image into the JournalEntryPage content by document UUID. No Replicate request was made.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
