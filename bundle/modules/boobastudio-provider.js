@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", imageModel: "imageModel", imageProvider: "imageProvider", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", imageModel: "imageModel", imageProvider: "imageProvider", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -58,6 +58,43 @@ function replicateModel(body) {
   const shared = String(get(S.model) || "").trim();
   const requested = String(body.model || "").trim();
   return (configured && configured !== "black-forest-labs/flux-schnell" ? configured : (requested.includes("/") ? requested : (shared.includes("/") ? shared : configured || "black-forest-labs/flux-schnell"))).trim();
+}
+
+function comfyuiBaseUrl() {
+  return String(get(S.comfyuiBaseUrl) || "http://127.0.0.1:8188").trim().replace(/\/+$/, "");
+}
+
+function replacePrompt(value, prompt) {
+  if (typeof value === "string") return value.replaceAll("{{prompt}}", String(prompt || ""));
+  if (Array.isArray(value)) return value.map((item) => replacePrompt(item, prompt));
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replacePrompt(item, prompt)]));
+  return value;
+}
+
+async function routeComfyUIImages(body) {
+  let workflow;
+  try { workflow = JSON.parse(String(get(S.comfyuiWorkflow) || "{}")); } catch { return new Response(JSON.stringify({ error: { message: "ComfyUI workflow is not valid JSON" } }), { status: 400, headers: { "Content-Type": "application/json" } }); }
+  const controller = new AbortController();
+  const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const started = await fetch(`${comfyuiBaseUrl()}/prompt`, { method: "POST", headers: headers("openai"), body: JSON.stringify({ prompt: replacePrompt(workflow, body.prompt) }), signal: controller.signal });
+    const accepted = await started.json().catch(() => null);
+    if (!started.ok || !accepted?.prompt_id) return new Response(JSON.stringify(accepted || { error: { message: `ComfyUI request failed (${started.status})` } }), { status: started.ok ? 502 : started.status, headers: { "Content-Type": "application/json" } });
+    const deadline = Date.now() + timeout;
+    let history = null;
+    while (Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const response = await fetch(`${comfyuiBaseUrl()}/history/${encodeURIComponent(accepted.prompt_id)}`, { headers: headers("openai"), signal: controller.signal });
+      history = await response.json().catch(() => null);
+      if (!response.ok) return new Response(JSON.stringify(history || { error: { message: `ComfyUI history request failed (${response.status})` } }), { status: response.status, headers: { "Content-Type": "application/json" } });
+      if (history?.[accepted.prompt_id]?.outputs) break;
+    }
+    const outputs = history?.[accepted.prompt_id]?.outputs || {};
+    const images = Object.values(outputs).flatMap((node) => node?.images || []).filter((image) => image?.filename).map((image) => `${comfyuiBaseUrl()}/view?filename=${encodeURIComponent(image.filename)}&subfolder=${encodeURIComponent(image.subfolder || "")}&type=${encodeURIComponent(image.type || "output")}`);
+    if (!images.length) return new Response(JSON.stringify({ error: { message: "ComfyUI timed out or returned no images" } }), { status: 502, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ data: images.map((url) => ({ url })) }), { status: 200, headers: { "Content-Type": "application/json" } });
+  } finally { clearTimeout(timer); }
 }
 
 function replicateInput(body, model = replicateModel(body)) {
@@ -159,6 +196,7 @@ async function routeResponses(originalFetch, body) {
 
 async function routeImages(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
   const sharedKey = String(get(S.apiKey) || "").trim();
+  if (String(get(S.imageProvider) || "openai") === "comfyui") return routeComfyUIImages(body);
   if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) return routeReplicateImages(body);
   return post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.imageModel) || body.model || "gpt-image-1").trim() }, originalFetch);
 }
@@ -219,10 +257,12 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.baseUrl, { name: "BoobaStudio: Provider base URL", hint: "For example https://api.openai.com/v1, http://localhost:11434/v1, or an OpenRouter-compatible URL.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
   game.settings.register(NAMESPACE, S.model, { name: "BoobaStudio: Provider model", scope: "client", config: true, type: String, default: "gpt-5-mini" });
   game.settings.register(NAMESPACE, S.imageModel, { name: "BoobaStudio: Image model", hint: "Model used by OpenAI-compatible image endpoints. Replicate uses its separate image model setting.", scope: "client", config: true, type: String, default: "gpt-image-1" });
-  game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images or replicate for Replicate predictions.", scope: "client", config: true, type: String, default: "openai" });
+  game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, replicate for Replicate predictions, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", replicate: "Replicate", comfyui: "ComfyUI" } });
   game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
   game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
+  game.settings.register(NAMESPACE, S.comfyuiBaseUrl, { name: "BoobaStudio: ComfyUI base URL", hint: "For example http://127.0.0.1:8188. The Foundry browser must be able to reach this endpoint and CORS must permit the Foundry origin.", scope: "client", config: true, type: String, default: "http://127.0.0.1:8188" });
+  game.settings.register(NAMESPACE, S.comfyuiWorkflow, { name: "BoobaStudio: ComfyUI workflow JSON", hint: "Paste an API-format workflow JSON. Use {{prompt}} in a text field where the image prompt should be inserted.", scope: "client", config: true, type: String, default: "{}" });
   game.settings.register(NAMESPACE, S.timeout, { name: "BoobaStudio: Provider timeout (ms)", scope: "client", config: true, type: Number, default: 120000, range: { min: 1000, max: 600000, step: 1000 } });
   game.settings.register(NAMESPACE, S.temperature, { name: "BoobaStudio: Provider temperature", scope: "client", config: true, type: Number, default: 0.7, range: { min: 0, max: 2, step: 0.05 } });
   game.settings.register(NAMESPACE, S.maxTokens, { name: "BoobaStudio: Provider maximum tokens", scope: "client", config: true, type: Number, default: 2048, range: { min: 1, max: 32768, step: 1 } });
@@ -232,10 +272,12 @@ Hooks.once("init", () => {
 Hooks.once("ready", async () => {
   if (!game.settings.settings?.has?.(`${NAMESPACE}.${S.protocol}`)) game.settings.register(NAMESPACE, S.protocol, { name: "BoobaStudio: Text provider protocol", hint: "Use OpenAI-compatible for OpenAI, OpenRouter, Ollama, and LM Studio; select Anthropic or Gemini for their native APIs.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", anthropic: "Anthropic", gemini: "Google Gemini" } });
   if (!game.settings.settings?.has?.(`${NAMESPACE}.${S.imageProvider}`)) {
-    game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images or replicate for Replicate predictions.", scope: "client", config: true, type: String, default: "openai" });
+    game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, replicate for Replicate predictions, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", replicate: "Replicate", comfyui: "ComfyUI" } });
     game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
     game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
+    game.settings.register(NAMESPACE, S.comfyuiBaseUrl, { name: "BoobaStudio: ComfyUI base URL", hint: "For example http://127.0.0.1:8188. The Foundry browser must be able to reach this endpoint and CORS must permit the Foundry origin.", scope: "client", config: true, type: String, default: "http://127.0.0.1:8188" });
+    game.settings.register(NAMESPACE, S.comfyuiWorkflow, { name: "BoobaStudio: ComfyUI workflow JSON", hint: "Paste an API-format workflow JSON. Use {{prompt}} in a text field where the image prompt should be inserted.", scope: "client", config: true, type: String, default: "{}" });
   }
   if (isEnabled() && baseUrl()) {
     await game.settings.set(NAMESPACE, "clientOnlyMode", true);
