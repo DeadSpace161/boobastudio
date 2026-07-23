@@ -23,5 +23,45 @@ function addBoobaStudioActorControl(app) {
   header.insertBefore(button, close || null);
 }
 
+function openExistingSceneImageTools() {
+  const scene = globalThis.canvas?.scene;
+  if (!scene?.sheet) {
+    globalThis.ui?.notifications?.warn?.("BoobaStudio requires an active Scene for image tools.");
+    return;
+  }
+  scene.sheet.render(true);
+  setTimeout(() => globalThis.document?.querySelector?.(".boobastudio-inject-btn")?.click(), 350);
+}
+
+function installRadialFallback() {
+  const module = globalThis.game?.modules?.get("boobastudio");
+  const api = module?.api;
+  if (!api || typeof api.menu !== "function" || typeof api.RadialWidget !== "function" || api.__boobaRadialFallback) return;
+  api.__boobaRadialFallback = true;
+  const originalMenu = api.menu;
+  api.menu = async (...args) => {
+    const result = await originalMenu(...args);
+    setTimeout(() => {
+      const radial = globalThis.document?.querySelector?.(".radial-menu-container");
+      if (!radial || radial.querySelector(".radial-button:not(.center-button)")) return;
+      radial.closest(".radial-modal")?.remove?.();
+      const buttons = [
+        { content: "boobastudio.AiImageGen.title", icon: "fa-image", callback: openExistingSceneImageTools },
+        { content: "boobastudio.AiChat.newChat", icon: "fa-comment", callback: () => {
+          const chat = globalThis.document?.querySelector?.("#chat-message");
+          if (chat && api.DirectChat) {
+            api.DirectChat.setChatInputValue(chat, "/c8 ");
+            api.DirectChat.focusChatInput(chat);
+          }
+        } },
+        { content: "boobastudio.configuration", icon: "fa-cogs", callback: () => globalThis.game?.settings?.sheet?.render?.(true) },
+      ];
+      new api.RadialWidget(buttons, { content: "BoobaStudio", icon: "fa-wand-magic-sparkles" }).render();
+    }, 50);
+    return result;
+  };
+}
+
 Hooks.on("renderApplication", (app) => addBoobaStudioActorControl(app));
 Hooks.on("renderApplicationV2", (app) => addBoobaStudioActorControl(app));
+Hooks.once("ready", installRadialFallback);
