@@ -266,8 +266,16 @@ async function localGalleryDelete(id, callback) {
   return true;
 }
 
+async function localGallerySharingUnavailable(callback) {
+  if (!isEnabled()) return false;
+  callback?.({ status: "error", errors: ["Public gallery sharing is unavailable in local mode."] });
+  return true;
+}
+
 globalThis.__boobastudioLocalGalleryPage = localGalleryPage;
 globalThis.__boobastudioLocalGalleryDelete = localGalleryDelete;
+globalThis.__boobastudioLocalGalleryShare = localGallerySharingUnavailable;
+globalThis.__boobastudioLocalGalleryTogglePublic = localGallerySharingUnavailable;
 
 // Keep the existing vector-store UI usable without Cibola's hosted index.
 // This is deliberately a browser-local document library, not a new database

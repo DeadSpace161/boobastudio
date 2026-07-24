@@ -81,6 +81,10 @@ const vectorId = vectorPage.included.find((item) => item.type === "vector_store_
 let vectorDelete;
 await globalThis.__boobastudioLocalVectorDelete(vectorId, (result) => { vectorDelete = result; });
 assert.equal(vectorDelete.status, "done");
+let galleryShare;
+await globalThis.__boobastudioLocalGalleryShare((result) => { galleryShare = result; });
+assert.equal(galleryShare.status, "error");
+assert.match(galleryShare.errors[0], /unavailable in local mode/i);
 
 values.set("boobastudio.imageProvider", "replicate");
 values.set("boobastudio.replicateApiToken", "replicate-test-token");
