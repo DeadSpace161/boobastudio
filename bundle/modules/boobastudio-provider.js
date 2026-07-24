@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", replicateInput: "replicateImageInput", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", localTtsVoices: "localTtsVoices", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", replicateInput: "replicateImageInput", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -210,7 +210,11 @@ const LOCAL_OPENAI_VOICES = [
 ].map(([voice_id, name]) => ({ voice_id, name, description: "OpenAI text-to-speech voice", preview_url: "", labels: {} }));
 
 function localVoiceCatalog() {
-  return String(get(S.ttsProvider) || "openai").toLowerCase() === "openai" ? LOCAL_OPENAI_VOICES : [];
+  if (String(get(S.ttsProvider) || "openai").toLowerCase() === "openai") return LOCAL_OPENAI_VOICES;
+  try {
+    const configured = JSON.parse(String(get(S.localTtsVoices) || "[]"));
+    return Array.isArray(configured) ? configured.filter((voice) => voice && voice.voice_id).map((voice) => ({ description: "Locally configured voice", preview_url: "", labels: {}, ...voice })) : [];
+  } catch { return []; }
 }
 
 globalThis.__boobastudioLocalVoices = async () => isEnabled() ? { voices: localVoiceCatalog(), has_more: false } : false;
@@ -765,6 +769,7 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
   game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });
+  game.settings.register(NAMESPACE, S.localTtsVoices, { name: "BoobaStudio: Local TTS voice catalog JSON", hint: "Optional JSON array of locally configured ElevenLabs voices. Each entry needs voice_id and name; no voice-search request is made.", scope: "client", config: true, type: String, default: "[]" });
   game.settings.register(NAMESPACE, S.musicModel, { name: "BoobaStudio: Replicate music model", hint: "Replicate owner/model identifier for the existing song generator. Leave blank to keep hosted song generation disabled in local mode.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.musicBaseUrl, { name: "BoobaStudio: Music provider base URL", hint: "Default: https://api.replicate.com/v1. Use a CORS-enabled compatible endpoint if necessary.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
   game.settings.register(NAMESPACE, S.musicInput, { name: "BoobaStudio: Music model input JSON", hint: "Optional JSON object merged into Replicate input. Use {{prompt}}, {{lyrics}}, {{title}}, and {{style}} placeholders.", scope: "client", config: true, type: String, default: "{}" });
@@ -795,6 +800,7 @@ Hooks.once("ready", async () => {
     game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
     game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });
+    game.settings.register(NAMESPACE, S.localTtsVoices, { name: "BoobaStudio: Local TTS voice catalog JSON", hint: "Optional JSON array of locally configured ElevenLabs voices. Each entry needs voice_id and name; no voice-search request is made.", scope: "client", config: true, type: String, default: "[]" });
     game.settings.register(NAMESPACE, S.musicModel, { name: "BoobaStudio: Replicate music model", hint: "Replicate owner/model identifier for the existing song generator. Leave blank to keep hosted song generation disabled in local mode.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.musicBaseUrl, { name: "BoobaStudio: Music provider base URL", hint: "Default: https://api.replicate.com/v1. Use a CORS-enabled compatible endpoint if necessary.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
     game.settings.register(NAMESPACE, S.musicInput, { name: "BoobaStudio: Music model input JSON", hint: "Optional JSON object merged into Replicate input. Use {{prompt}}, {{lyrics}}, {{title}}, and {{style}} placeholders.", scope: "client", config: true, type: String, default: "{}" });

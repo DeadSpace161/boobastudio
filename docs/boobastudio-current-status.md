@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.87**. The public server remains on 2.2.75 until repository write access is restored.
+This status reflects the locally built package prepared as version **2.2.88**. The public server remains on 2.2.75 until repository write access is restored.
 
 ## Verified
 
@@ -27,6 +27,7 @@ This status reflects the locally built package prepared as version **2.2.87**. T
 - Existing narration/TTS generation now routes through the configured OpenAI or ElevenLabs adapter and preserves the existing audio preview, Foundry upload, and playlist flow.
 - Local TTS voice-catalog requests no longer contact Cibola; hosted voice search remains unchanged when local mode is disabled.
 - Local OpenAI TTS voice-catalog requests now return an offline catalog with search and pagination; ElevenLabs remains empty locally unless a compatible voice catalog is added without contacting a hosted service.
+- ElevenLabs users can now provide a client-scoped local voice catalog JSON array, preserving voice selection and search without contacting ElevenLabs voice-list endpoints.
 - Existing song generation now supports a client-configured Replicate music model, with configurable model-input JSON and placeholder substitution, while preserving the existing song preview, download, and playlist flow.
 - Local song results are indexed in the same browser-local gallery store and returned through the existing `filter:"song"` browser contract.
 - Local song cards now play and copy the provider-returned `audio_url`; hosted Suno CDN URLs remain the compatibility fallback for older records.

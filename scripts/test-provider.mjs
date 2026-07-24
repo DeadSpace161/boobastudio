@@ -164,6 +164,8 @@ assert.equal(requests.at(-1).input, "https://tts.test/v1/audio/speech");
 assert.equal(requests.at(-1).init.headers.Authorization, "Bearer tts-key");
 
 values.set("boobastudio.ttsProvider", "elevenlabs");
+values.set("boobastudio.localTtsVoices", JSON.stringify([{ voice_id: "local-voice", name: "Local Voice" }]));
+assert.equal((await globalThis.__boobastudioLocalVoices(false)).voices[0].voice_id, "local-voice");
 values.set("boobastudio.elevenlabsBaseUrl", "https://eleven.test/v1");
 values.set("boobastudio.elevenlabsApiKey", "eleven-key");
 const elevenTTS = await fetch("https://app.cibola.world/api/v1/tts", { method: "POST", body: JSON.stringify({ prompt: JSON.stringify({ speechcontent: "Read this with ElevenLabs", voice_id: "voice-1", model: "eleven_turbo_v2_5" }) }) });
@@ -274,7 +276,7 @@ assert.deepEqual(localTTSResult, { status: "done", result: "data:audio/mpeg;base
 assert.equal((await globalThis.__boobastudioLocalVoices(false)).voices.length, 11);
 assert.equal((await globalThis.__boobastudioLocalVoicePage({ search: "nova" }, false)).voices[0].voice_id, "nova");
 values.set("boobastudio.ttsProvider", "elevenlabs");
-assert.deepEqual(await globalThis.__boobastudioLocalVoices(false), { voices: [], has_more: false });
+assert.equal((await globalThis.__boobastudioLocalVoices(false)).voices[0].voice_id, "local-voice");
 
 values.set("boobastudio.musicModel", "test/music-model");
 values.set("boobastudio.musicBaseUrl", "https://music.test/v1");
