@@ -1,0 +1,24 @@
+# BoobaStudio current implementation status
+
+This status reflects the validated public package released as version **2.2.67**.
+
+## Verified
+
+- Foundry v14 Build 363 loads the module from the normal module installer.
+- The existing Cibola application structure, templates, settings, document hooks, image editor, history, gallery, and file handling remain in use.
+- Client-scoped provider settings support OpenAI-compatible endpoints, OpenRouter, Ollama, LM Studio, Anthropic, Gemini, ComfyUI, Stability AI, Replicate, OpenAI TTS, and ElevenLabs.
+- Existing prose generation can submit a prompt, render a result, insert it into a Journal editor, and persist the JournalEntryPage update.
+- Existing scene image generation can preview a result and expose Save, Save As, Apply as Tile, and Download actions.
+- Actor sheet integration opens the existing image application with the selected Actor as its source document.
+- Generated Actor images can be saved through Foundry file handling and update the Actor image field; no arbitrary server path is written by browser code.
+- Provider requests and responses are normalized in the existing Cibola-compatible façade. Errors distinguish network/CORS, timeout, invalid key, access denied, rate limit, and generic provider failures.
+- The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry smoke validation.
+
+## Intentionally not hosted by this fork
+
+The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs, hosted vector stores, and the legacy hosted thread/translation queues remain unavailable unless a compatible replacement is configured or implemented.
+
+## Next parity targets
+
+The existing image editor already exposes advanced operations. The next useful validation work is provider-capability gating and live mocked checks for inpainting, outpainting, background removal, upscale, and scene wall detection, followed by local persistence for threads/gallery metadata where the existing hosted contract cannot be reused.
