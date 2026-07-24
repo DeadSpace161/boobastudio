@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.85**. The public server remains on 2.2.75 until repository write access is restored.
+This status reflects the locally built package prepared as version **2.2.86**. The public server remains on 2.2.75 until repository write access is restored.
 
 ## Verified
 
@@ -9,6 +9,7 @@ This status reflects the locally built package prepared as version **2.2.85**. T
 - Client-scoped provider settings support OpenAI-compatible endpoints, OpenRouter, Ollama, LM Studio, Anthropic, Gemini, ComfyUI, Stability AI, Replicate, OpenAI TTS, and ElevenLabs.
 - Existing prose generation can submit a prompt, render a result, insert it into a Journal editor, and persist the JournalEntryPage update.
 - The existing direct `/c8` chat path bypasses the hosted account-connectivity check when a local provider is configured; its local response is normalized to the existing chat message object and browser-local history contract.
+- The direct chat service’s legacy GPT-only model restriction now applies only to unconfigured client-only mode; configured local providers can use OpenRouter, Ollama, LM Studio, or other compatible model names through the existing chat path.
 - Direct `/c8` chat no longer requires the legacy client-only-mode toggle or hosted confirmation gate when a local provider is explicitly configured; the legacy gates remain active for unconfigured sessions.
 - Existing AI Thread JournalEntryPage sheets now recognize an explicitly configured local provider for account visibility, messaging controls, and local vector-file upload access; thread messages continue to persist in the existing JournalEntryPage `system.messages` field.
 - Local vector files with extractable text can now provide ranked token-overlap context to local text requests through a client setting; this is a lightweight local retrieval fallback, not a hosted embedding index.

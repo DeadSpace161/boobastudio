@@ -34,12 +34,16 @@ if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio ent
 const hostedAppOpen = 'window.open("https://app.cibola.world","_blank")';
 const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")');
 if (brandedEntry.includes(hostedAppOpen)) throw new Error("Hosted onboarding app link was not rebranded");
+const clientChatModelGate = 'if(!this.isAllowedChatModel(i))return{status:"error",errors:[(game.i18n?.localize?.("boobastudio.clientOnly.modelNotAllowed")??"Client-only OpenAI mode only supports ChatGPT 5 or higher.")+` (model: ${i||"unset"})`]};';
+const localChatModelGate = 'if(!(typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured())&&!this.isAllowedChatModel(i))return{status:"error",errors:[(game.i18n?.localize?.("boobastudio.clientOnly.modelNotAllowed")??"Client-only OpenAI mode only supports ChatGPT 5 or higher.")+` (model: ${i||"unset"})`]};';
+if (!brandedEntry.includes(clientChatModelGate)) throw new Error("Expected direct-chat model gate was not found");
+const modelPatchedEntry = brandedEntry.replace(clientChatModelGate, localChatModelGate);
 const localChatString = "return r?{status:\"done\",message:r}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
 const localChatObject = "return r?{status:\"done\",message:{role:\"assistant\",content:r}}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
 if (!brandedEntry.includes(localChatString)) throw new Error("Expected local chat response signature was not found");
 const localChatGate = "if(await s.isConnected(!1,!1)){let{TextGenerationService:S}";
 const localChatGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&await s.isConnected(!1,!1)){let{TextGenerationService:S}";
-const localChatEntry = brandedEntry.replace(localChatString, localChatObject);
+const localChatEntry = modelPatchedEntry.replace(localChatString, localChatObject);
 if (!localChatEntry.includes(localChatGate)) throw new Error("Expected local chat connection gate was not found");
 const directChatGate = "async chat(t){let e=await C.isConnected(!1,!1);";
 const directChatGateReplacement = "async chat(t){let e=typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()?false:await C.isConnected(!1,!1);";
