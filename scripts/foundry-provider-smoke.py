@@ -48,6 +48,10 @@ async def main():
             elif request.url.endswith("/audio/speech"):
                 await route.fulfill(status=200, content_type="audio/mpeg", body="mock-audio")
                 return
+            elif request.url.endswith("/messages"):
+                payload = {"content": [{"type": "text", "text": "Mock Anthropic response"}]}
+            elif ":generateContent" in request.url:
+                payload = {"candidates": [{"content": {"parts": [{"text": "Mock Gemini response"}]}}]}
             else:
                 payload = {"choices": [{"message": {"role": "assistant", "content": "Mock BoobaStudio response"}}]}
             await route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
@@ -77,6 +81,18 @@ async def main():
                         resolve,
                         {jsonMode: false}
                     ));
+                    const nativeProviders = {};
+                    for (const [name, expected] of [['anthropic', 'Mock Anthropic response'], ['gemini', 'Mock Gemini response']]) {
+                        await game.settings.set('boobastudio', 'providerProtocol', name);
+                        const native = await new Promise(resolve => globalThis.__boobastudioLocalQuery(
+                            `live ${name} provider probe`,
+                            'Return the provider smoke response.',
+                            resolve,
+                            {jsonMode: false}
+                        ));
+                        nativeProviders[name] = {status: native?.status || null, result: native?.result || null, expectedMatch: native?.result === expected};
+                    }
+                    await game.settings.set('boobastudio', 'providerProtocol', 'openai');
                     const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
@@ -96,6 +112,7 @@ async def main():
                         textStatus: response.status,
                         text,
                         query,
+                        nativeProviders,
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
