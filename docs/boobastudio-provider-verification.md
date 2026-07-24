@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.88**. The live Foundry probe described below predates the latest unpublished release because repository write access is still unavailable.
+The current locally packaged release is **2.2.89**. The live Foundry probe described below predates the latest release because the test world is still running 2.2.75.
 
 ## Build checks
 
@@ -46,7 +46,7 @@ OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied
 
 For Anthropic and Gemini, set **Text provider protocol** to the matching native protocol. BoobaStudio sends Anthropic `x-api-key` and `anthropic-version` headers, or Gemini `x-goog-api-key` headers, and normalizes both response formats into the existing Cibola text response contract.
 
-Release 2.2.77 is the locally built package. The live Foundry v14 Build 363 server has exercised the existing Journal ProseMirror image action and the existing Scene Image Tools workflow through a mocked OpenAI-compatible provider on 2.2.75. The scene test opened the existing prompt, completed the client-only confirmation, routed `POST /images/generations` to the configured endpoint, produced a data-URL preview, and left the existing Save, Save As, Apply as Tile, and Download actions enabled. The same live browser session confirmed the local gallery page/delete façade with a persisted data-URL record and no Cibola-hosted request. Release 2.2.77 additionally routes the existing image-description action to an OpenAI-compatible multimodal `/chat/completions` request and preserves its result callback, routes the existing image prompt-builder action through the local text provider with JSON-array validation, bypasses the hosted client-only confirmation for explicitly configured local image providers, routes the existing narration/TTS method through the configured OpenAI or ElevenLabs adapter with the original result callback, and routes the existing song method through a configurable Replicate music model with the original song-history JSON shape. The new local vector upload/list/delete path, local retrieval context, local chat/thread gates, thread-sheet access changes, non-`chat` workflow modes, local enhancement route, local gallery sharing guard, local pack-action guard, and local startup config-fetch guard are covered by the dependency-free provider/build checks but await live deployment.
+Release 2.2.89 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, pack-action guard, and local startup config guard. It additionally clears local thread JournalEntryPage messages directly when the existing thread-delete action is used, avoiding the hosted `thread/{id}` delete endpoint in local-provider mode. The test server is still running 2.2.75, so the latest release requires a module update before these newest changes can receive browser-level validation.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 

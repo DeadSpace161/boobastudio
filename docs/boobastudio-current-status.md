@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.88**. The public server remains on 2.2.75 until repository write access is restored.
+This status reflects the locally built package prepared as version **2.2.89**. The public test server remains on 2.2.75 until the module is updated there.
 
 ## Verified
 
