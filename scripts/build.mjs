@@ -35,7 +35,11 @@ const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibo
 const localChatString = "return r?{status:\"done\",message:r}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
 const localChatObject = "return r?{status:\"done\",message:{role:\"assistant\",content:r}}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
 if (!brandedEntry.includes(localChatString)) throw new Error("Expected local chat response signature was not found");
-await writeFile(entryPath, brandedEntry.replace(localChatString, localChatObject));
+const localChatGate = "if(await s.isConnected(!1,!1)){let{TextGenerationService:S}";
+const localChatGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&await s.isConnected(!1,!1)){let{TextGenerationService:S}";
+const localChatEntry = brandedEntry.replace(localChatString, localChatObject);
+if (!localChatEntry.includes(localChatGate)) throw new Error("Expected local chat connection gate was not found");
+await writeFile(entryPath, localChatEntry.replace(localChatGate, localChatGateReplacement));
 
 const manifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
