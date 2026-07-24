@@ -51,4 +51,4 @@ The personal fork does not require Cibola accounts, subscriptions, credits, tele
 
 ## Next parity targets
 
-The existing image editor already exposes advanced operations. The next useful validation work is provider-capability gating and live mocked checks for Replicate inpainting, outpainting, background removal, and upscale, followed by local persistence for threads/gallery metadata where the existing hosted contract cannot be reused.
+The highest-value remaining work is provider-specific live validation in Foundry, deeper gallery/thread metadata parity where hosted contracts cannot be reused, and clearer capability/error presentation for user-supplied image models. Community packs/public gallery actions and AI document translation remain intentionally out of the local-only slice.
