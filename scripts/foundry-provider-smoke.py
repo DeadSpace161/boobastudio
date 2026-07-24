@@ -45,6 +45,8 @@ async def main():
             MockHandler.requests.append({"path": request.url, "body": body})
             if request.url.endswith("/images/generations"):
                 payload = {"data": [{"b64_json": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="}]}
+            elif request.url.endswith("/images/edits"):
+                payload = {"data": [{"b64_json": "bW9ja19pbWFnZV9lZGl0"}]}
             elif request.url.endswith("/audio/speech") or "/text-to-speech/" in request.url:
                 await route.fulfill(status=200, content_type="audio/mpeg", body="mock-audio")
                 return
@@ -115,6 +117,18 @@ async def main():
                         imageProviders[name] = {status: imageProbe.status, hasImage: !!imagePayload?.data?.[0]?.b64_json || typeof imagePayload?.data?.[0]?.url === 'string', url: imagePayload?.data?.[0]?.url || null};
                     }
                     await game.settings.set('boobastudio', 'imageProvider', 'openai');
+                    const advancedImage = {variant: null, editRequest: false, editStatus: null};
+                    await game.settings.set('boobastudio', 'imageModel', 'mock-image');
+                    await game.settings.set('boobastudio', 'openaiApiKey', 'mock-image-key');
+                    let variantResult;
+                    await globalThis.__boobastudioLocalGenerateVariant(
+                        'live inpaint/variation probe',
+                        JSON.stringify({image: 'data:image/png;base64,aW5wdXQ=', mask: 'data:image/png;base64,bWFzaw==', moreFields: {strength: 0.7}}),
+                        'mock-image',
+                        result => { variantResult = result; }
+                    );
+                    advancedImage.variant = {success: variantResult?.success === true, resultIsDataUrl: String(variantResult?.result || '').startsWith('data:image/png;base64,')};
+                    advancedImage.editStatus = variantResult?.success ? 'done' : 'error';
                     let actorIntegration = {created: false, sheetRendered: false, controlVisible: false, deleted: false};
                     let smokeActor;
                     let imageAppInstance;
@@ -467,6 +481,7 @@ async def main():
                         nativeProviders,
                         tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}},
                         imageProviders,
+                        advancedImage,
                         actorIntegration,
                         itemIntegration,
                         documentIntegrations,
@@ -482,6 +497,7 @@ async def main():
                 }""",
                 {"base": mock_base},
             )
+        result.get("advancedImage", {})["editRequest"] = any(request["path"].endswith("/images/edits") for request in MockHandler.requests)
         print(json.dumps({"mockBase": mock_base, "foundry": result, "requests": MockHandler.requests}, indent=2))
         await browser_context.close()
         await browser.close()
