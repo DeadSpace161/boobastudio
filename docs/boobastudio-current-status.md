@@ -32,6 +32,7 @@ This status reflects the locally built package prepared as version **2.2.78**. T
 - Local gallery share and public-toggle actions now return an explicit local-mode limitation instead of reaching Cibola-hosted endpoints.
 - Existing gallery pack actions are explicitly disabled in local mode, preventing accidental requests to the hosted community-pack APIs.
 - The existing vector-store upload, list, and delete callbacks now have a browser-local persistence path using the same Cibola-compatible response shape. Text-file content is retained locally when it fits the browser storage limit; no external vector index is required for library management.
+- Existing scene wall detection remains fully local through the bundled OpenCV.js worker and Foundry wall-document update path; it does not require a provider or Cibola service.
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry smoke validation.
 
@@ -41,4 +42,4 @@ The personal fork does not require Cibola accounts, subscriptions, credits, tele
 
 ## Next parity targets
 
-The existing image editor already exposes advanced operations. The next useful validation work is provider-capability gating and live mocked checks for Replicate inpainting, outpainting, background removal, upscale, and scene wall detection, followed by local persistence for threads/gallery metadata where the existing hosted contract cannot be reused.
+The existing image editor already exposes advanced operations. The next useful validation work is provider-capability gating and live mocked checks for Replicate inpainting, outpainting, background removal, and upscale, followed by local persistence for threads/gallery metadata where the existing hosted contract cannot be reused.
