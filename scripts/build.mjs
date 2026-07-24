@@ -39,7 +39,11 @@ const localChatGate = "if(await s.isConnected(!1,!1)){let{TextGenerationService:
 const localChatGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&await s.isConnected(!1,!1)){let{TextGenerationService:S}";
 const localChatEntry = brandedEntry.replace(localChatString, localChatObject);
 if (!localChatEntry.includes(localChatGate)) throw new Error("Expected local chat connection gate was not found");
-await writeFile(entryPath, localChatEntry.replace(localChatGate, localChatGateReplacement));
+const directChatGate = "async chat(t){let e=await C.isConnected(!1,!1);";
+const directChatGateReplacement = "async chat(t){let e=typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()?false:await C.isConnected(!1,!1);";
+const patchedChatEntry = localChatEntry.replace(localChatGate, localChatGateReplacement);
+if (!patchedChatEntry.includes(directChatGate)) throw new Error("Expected direct chat connection gate was not found");
+await writeFile(entryPath, patchedChatEntry.replace(directChatGate, directChatGateReplacement));
 
 const manifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
