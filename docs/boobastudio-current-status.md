@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.95**. The public test server is running the prior 2.2.89 build until its setup administrator authentication is available for an automated install/update.
+This status reflects the locally built package prepared as version **2.2.95**. The public test server is now running 2.2.95 after an automated Foundry setup installation from the public GitHub manifest.
 
 ## Verified
 
@@ -48,7 +48,7 @@ This status reflects the locally built package prepared as version **2.2.95**. T
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
-- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.95 build preserves compatible local gallery metadata, safe local thread persistence, complete personal pack operations, configurable local image model selection, and local token framing fallback.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.95 build preserves compatible local gallery metadata, safe local thread persistence, complete personal pack operations, configurable local image model selection, and local token framing fallback. The live server reports 2.2.95 active and the provider harness confirms normalized text, query, and image paths.
 
 ## Intentionally not hosted by this fork
 
