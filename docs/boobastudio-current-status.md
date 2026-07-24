@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.104**. The public test server remains on the last published 2.2.97 package while the 2.2.104 release awaits repository write access.
+This status reflects the locally built package prepared as version **2.2.105**. The public test server remains on the last published 2.2.97 package while the 2.2.105 release awaits repository write access.
 
 ## Verified
 
@@ -59,6 +59,7 @@ This status reflects the locally built package prepared as version **2.2.104**. 
 - The 2.2.102 build also adds the configured local image model to the existing Scene model selector, preserving the same provider/model choice across Actor/Image Tools and Scene generation when the hosted model catalog is unavailable.
 - The 2.2.103 build keeps local model IDs in the existing image-model preparation path and supplies safe descriptors to advanced image-edit readers, so local generation, editing, inpainting, and variation forms are not filtered out or passed undefined model metadata.
 - The 2.2.104 build hardens persistent AI Threads for arbitrary configured local text models: custom model IDs remain in the existing thread selector and receive a local fallback descriptor for rendering, message dispatch, menu conditions, and model switching.
+- The 2.2.105 build also hardens the existing thread model filter when a custom local model is present alongside persisted messages, preventing the final bundled-catalog tag lookup from dereferencing an absent record.
 
 ## Intentionally not hosted by this fork
 
