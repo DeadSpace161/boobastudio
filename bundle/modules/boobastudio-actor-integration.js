@@ -15,7 +15,7 @@ function addBoobaStudioActorControl(app) {
   button.dataset.tooltip = "BoobaStudio";
   button.setAttribute("aria-label", "BoobaStudio");
   button.addEventListener("click", () => {
-    installRadialFallback();
+    installRadialFallback(actorDocument);
     const menu = globalThis.game?.modules?.get("boobastudio")?.api?.menu;
     if (typeof menu === "function") menu();
     else globalThis.ui?.notifications?.warn?.("BoobaStudio menu is not available yet.");
@@ -34,7 +34,7 @@ function openExistingSceneImageTools() {
   setTimeout(() => globalThis.document?.querySelector?.(".boobastudio-inject-btn")?.click(), 350);
 }
 
-function installRadialFallback() {
+function installRadialFallback(actorDocument = null) {
   const module = globalThis.game?.modules?.get("boobastudio");
   const api = module?.api;
   if (!api || typeof api.menu !== "function" || typeof api.RadialWidget !== "function" || api.__boobaRadialFallback) return;
@@ -47,7 +47,11 @@ function installRadialFallback() {
       if (!radial || radial.querySelector(".radial-button:not(.center-button)")) return;
       radial.closest(".radial-modal")?.remove?.();
       const buttons = [
-        { content: "boobastudio.AiImageGen.title", icon: "fa-image", callback: openExistingSceneImageTools },
+        { content: "boobastudio.AiImageGen.title", icon: "fa-image", callback: () => {
+          if (actorDocument && typeof api.ImageGenerator === "function") {
+            new api.ImageGenerator(actorDocument, actorDocument.sheet).render(true);
+          } else openExistingSceneImageTools();
+        } },
         { content: "boobastudio.AiChat.newChat", icon: "fa-comment", callback: () => {
           const chat = globalThis.document?.querySelector?.("#chat-message");
           if (chat && api.DirectChat) {
