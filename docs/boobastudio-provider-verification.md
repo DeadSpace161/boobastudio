@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.89**. The live Foundry probe described below predates the latest release because the test world is still running 2.2.75.
+The current locally packaged release is **2.2.89**. Automated Foundry v14 smoke validation now confirms the test world is running 2.2.89 from the public GitHub manifest.
 
 ## Build checks
 
@@ -46,7 +46,7 @@ OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied
 
 For Anthropic and Gemini, set **Text provider protocol** to the matching native protocol. BoobaStudio sends Anthropic `x-api-key` and `anthropic-version` headers, or Gemini `x-goog-api-key` headers, and normalizes both response formats into the existing Cibola text response contract.
 
-Release 2.2.89 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, pack-action guard, and local startup config guard. It additionally clears local thread JournalEntryPage messages directly when the existing thread-delete action is used, avoiding the hosted `thread/{id}` delete endpoint in local-provider mode. The test server is still running 2.2.75, so the latest release requires a module update before these newest changes can receive browser-level validation.
+Release 2.2.89 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, pack-action guard, and local startup config guard. It additionally clears local thread JournalEntryPage messages directly when the existing thread-delete action is used, avoiding the hosted `thread/{id}` delete endpoint in local-provider mode. The automated v14 harness now confirms the updated package is active on the test server; provider-backed feature actions still require configured endpoint credentials for deeper end-to-end exercise.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 

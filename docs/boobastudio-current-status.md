@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.89**. The public test server remains on 2.2.75 until the module is updated there.
+This status reflects the locally built package prepared as version **2.2.89**. The public test server is now running 2.2.89 after an automated Foundry setup update.
 
 ## Verified
 
@@ -43,11 +43,11 @@ This status reflects the locally built package prepared as version **2.2.89**. T
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
-- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry smoke validation.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The live server reports BoobaStudio 2.2.89 active.
 
 ## Intentionally not hosted by this fork
 
-The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs and the legacy hosted translation queue remain unavailable unless a compatible replacement is configured or implemented. Local generated-image gallery records, local vector-library management, and configurable local music generation are available; semantic vector retrieval, the full existing gallery browser, and hosted community views still need deeper parity work.
+The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs and the legacy hosted translation queue remain unavailable unless a compatible replacement is configured or implemented. Local generated-image gallery records, local vector-library management, and configurable local music generation are available; semantic vector retrieval, public community views, and deeper gallery metadata parity still need further work.
 
 ## Next parity targets
 
