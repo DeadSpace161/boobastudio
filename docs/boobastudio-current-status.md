@@ -44,7 +44,7 @@ This status reflects the locally built package prepared as version **2.2.91**. T
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
-- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.90 build also preserves compatible local gallery metadata for image/song history, including type, provider, job identity, private state, and audio URL fields.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.91 build preserves compatible local gallery metadata for image/song history and safe local thread persistence without requiring hosted thread IDs.
 
 ## Intentionally not hosted by this fork
 
