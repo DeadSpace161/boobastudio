@@ -103,6 +103,24 @@ async def main():
                         imageProviders[name] = {status: imageProbe.status, hasImage: !!imagePayload?.data?.[0]?.b64_json || typeof imagePayload?.data?.[0]?.url === 'string', url: imagePayload?.data?.[0]?.url || null};
                     }
                     await game.settings.set('boobastudio', 'imageProvider', 'openai');
+                    let actorIntegration = {created: false, sheetRendered: false, controlVisible: false, deleted: false};
+                    let smokeActor;
+                    try {
+                        smokeActor = await Actor.create({name: `BoobaStudio Live Smoke ${Date.now()}`, type: 'character'});
+                        actorIntegration.created = !!smokeActor;
+                        if (smokeActor?.sheet?.render) {
+                            await smokeActor.sheet.render(true);
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            actorIntegration.sheetRendered = !!smokeActor.sheet.rendered;
+                            actorIntegration.controlVisible = !!document.querySelector('.boobastudio-actor-control');
+                            smokeActor.sheet.close?.();
+                        }
+                    } finally {
+                        if (smokeActor) {
+                            await smokeActor.delete();
+                            actorIntegration.deleted = !game.actors.has(smokeActor.id);
+                        }
+                    }
                     await game.settings.set('boobastudio', 'providerBaseUrl', base);
                     await game.settings.set('boobastudio', 'providerModel', 'mock-model');
                     await game.settings.set('boobastudio', 'providerJsonMode', false);
@@ -154,6 +172,7 @@ async def main():
                         nativeProviders,
                         tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}},
                         imageProviders,
+                        actorIntegration,
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
