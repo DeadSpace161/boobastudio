@@ -256,4 +256,11 @@ let promptBuilderResult;
 await globalThis.__boobastudioLocalBuildPrompts({ command: "fantasy tavern", amount: 2 }, (result) => { promptBuilderResult = result; });
 assert.deepEqual(promptBuilderResult, { status: "done", result: '["prompt one","prompt two"]' });
 
+values.set("boobastudio.ttsProvider", "openai");
+values.set("boobastudio.ttsBaseUrl", "http://tts.test/v1");
+values.set("boobastudio.ttsApiKey", "tts-key");
+let localTTSResult;
+await globalThis.__boobastudioLocalGenerateTTS("Narrate the tavern", JSON.stringify({ type: "tts", voice: "nova" }), "tts-1", (result) => { localTTSResult = result; });
+assert.deepEqual(localTTSResult, { status: "done", result: "data:audio/mpeg;base64,AQID" });
+
 console.log("BoobaStudio provider smoke test passed");

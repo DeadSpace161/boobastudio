@@ -144,6 +144,26 @@ async function routeTTS(body) {
   return new Response(JSON.stringify({ success: true, result: `data:audio/mpeg;base64,${encoded.replace(/^data:audio\/\w+;base64,/, "")}` }), { status: 200, headers: { "Content-Type": "application/json" } });
 }
 
+async function localGenerateTTS(textInput, behavior, model, callback) {
+  if (!isEnabled()) return false;
+  try {
+    let fields = {};
+    try { fields = typeof behavior === "string" ? JSON.parse(behavior) : behavior || {}; } catch { fields = {}; }
+    const response = await routeTTS({ prompt: JSON.stringify({ ...fields, model: fields.model || model, speechcontent: String(textInput || "") }) });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || result?.success === false || !result?.result) {
+      callback?.({ status: "error", errors: [providerError({ message: result?.error?.message || `TTS request failed (${response.status})` })] });
+      return true;
+    }
+    callback?.({ status: "done", result: String(result.result) });
+  } catch (error) {
+    callback?.({ status: "error", errors: [providerError(error)] });
+  }
+  return true;
+}
+
+globalThis.__boobastudioLocalGenerateTTS = localGenerateTTS;
+
 async function arrayBufferToBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";
