@@ -112,7 +112,22 @@ async def main():
                             await smokeActor.sheet.render(true);
                             await new Promise(resolve => setTimeout(resolve, 1000));
                             actorIntegration.sheetRendered = !!smokeActor.sheet.rendered;
-                            actorIntegration.controlVisible = !!document.querySelector('.boobastudio-actor-control');
+                            const actorControl = document.querySelector('.boobastudio-actor-control');
+                            actorIntegration.controlVisible = !!actorControl;
+                            if (actorControl) {
+                                actorControl.click();
+                                await new Promise(resolve => setTimeout(resolve, 700));
+                                actorIntegration.radialVisible = !!document.querySelector('.radial-menu-container');
+                                const radialButton = [...document.querySelectorAll('.radial-menu-container button, .radial-menu-container .radial-button')]
+                                    .find(button => /image|ai/i.test(`${button.innerText || ''} ${button.dataset?.tooltip || ''} ${button.getAttribute('aria-label') || ''}`));
+                                if (radialButton) {
+                                    radialButton.click();
+                                    await new Promise(resolve => setTimeout(resolve, 900));
+                                }
+                                actorIntegration.imageWindowVisible = [...document.querySelectorAll('.window, aside')]
+                                    .some(element => /image generation|image tools|generate image/i.test((element.innerText || '').slice(0, 500)));
+                                document.querySelectorAll('.radial-modal, .radial-menu-container').forEach(element => element.closest('.window')?.remove?.());
+                            }
                             smokeActor.sheet.close?.();
                         }
                     } finally {
