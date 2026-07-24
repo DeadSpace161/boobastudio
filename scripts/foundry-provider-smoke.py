@@ -65,7 +65,9 @@ async def main():
             elif ":generateContent" in request.url:
                 payload = {"candidates": [{"content": {"parts": [{"text": "Mock Gemini response"}]}}]}
             else:
-                payload = {"choices": [{"message": {"role": "assistant", "content": "Mock BoobaStudio response"}}]}
+                request_text = json.dumps(body)
+                content = '["Mock generated prompt"]' if "valid JSON array of strings" in request_text else "Mock BoobaStudio response"
+                payload = {"choices": [{"message": {"role": "assistant", "content": content}}]}
             await route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
         await page.route("https://mock.boobastudio.test/v1/**", mock_route)
@@ -384,6 +386,16 @@ async def main():
                         threadIntegration.localProvider = localThreadProviderResult?.status === 'done' && /Mock BoobaStudio response/i.test(localThreadProviderResult?.message?.content || '');
                         threadIntegration.providerResult = localThreadProviderResult || null;
                     }
+                    const localAuxiliary = {};
+                    let describeResult;
+                    await globalThis.__boobastudioLocalDescribe({image: 'data:image/png;base64,aW1hZ2U='}, result => { describeResult = result; });
+                    localAuxiliary.describe = {status: describeResult?.status || null, hasResult: typeof describeResult?.result === 'string' && describeResult.result.length > 0};
+                    let promptBuilderResult;
+                    await globalThis.__boobastudioLocalBuildPrompts({command: 'tavern map', amount: 1}, result => { promptBuilderResult = result; });
+                    localAuxiliary.promptBuilder = {status: promptBuilderResult?.status || null, validJson: (() => { try { return Array.isArray(JSON.parse(promptBuilderResult?.result || '')); } catch { return false; } })()};
+                    let enhanceResult;
+                    await globalThis.__boobastudioLocalEnhance('enhance this local prompt', 'Return one sentence.', result => { enhanceResult = result; });
+                    localAuxiliary.enhance = {status: enhanceResult?.status || null, hasResult: typeof enhanceResult?.result === 'string' && enhanceResult.result.length > 0};
                     let smokeThreadJournal;
                     try {
                         smokeThreadJournal = await JournalEntry.create({name: `BoobaStudio Live Smoke Thread ${Date.now()}`, content: '', pages: [{name: 'Local Thread', type: 'boobastudio.threadgpt'}]});
@@ -500,6 +512,7 @@ async def main():
                         documentIntegrations,
                         sceneIntegration,
                         threadIntegration,
+                        localAuxiliary,
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
