@@ -49,7 +49,7 @@ This status reflects the locally built package prepared as version **2.2.97**. T
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
-- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.97 build preserves compatible local gallery metadata, safe local thread persistence, complete local pack operations, configurable local image model selection, and local token framing fallback. The live server reports 2.2.97 active; the live provider harness confirms normalized OpenAI-compatible, native Anthropic, and native Gemini text/query paths, image routing, local pack lifecycle, and the token fallback factory. All live provider calls use Playwright-intercepted mock requests.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.97 build preserves compatible local gallery metadata, safe local thread persistence, complete local pack operations, configurable local image model selection, and local token framing fallback. The live server reports 2.2.97 active; the live provider harness confirms normalized OpenAI-compatible, native Anthropic, and native Gemini text/query paths, OpenAI and ElevenLabs TTS audio responses, image routing, local pack lifecycle, and the token fallback factory. All live provider calls use Playwright-intercepted mock requests.
 
 ## Intentionally not hosted by this fork
 
@@ -57,4 +57,4 @@ The personal fork does not require Cibola accounts, subscriptions, credits, tele
 
 ## Next parity targets
 
-The highest-value remaining work is live validation of the optional image/audio backends and clearer capability/error presentation for user-supplied image models. Public community gallery actions and AI document translation remain intentionally out of the local-only slice.
+The highest-value remaining work is live validation of the optional image backends and clearer capability/error presentation for user-supplied image models. Public community gallery actions and AI document translation remain intentionally out of the local-only slice.

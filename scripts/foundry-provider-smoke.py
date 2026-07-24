@@ -45,7 +45,7 @@ async def main():
             MockHandler.requests.append({"path": request.url, "body": body})
             if request.url.endswith("/images/generations"):
                 payload = {"data": [{"b64_json": "bW9ja19pbWFnZQ=="}]}
-            elif request.url.endswith("/audio/speech"):
+            elif request.url.endswith("/audio/speech") or "/text-to-speech/" in request.url:
                 await route.fulfill(status=200, content_type="audio/mpeg", body="mock-audio")
                 return
             elif request.url.endswith("/messages"):
@@ -64,6 +64,16 @@ async def main():
                     if (!module?.active) throw new Error('BoobaStudio is not active');
                     await game.settings.set('boobastudio', 'providerEnabled', true);
                     await game.settings.set('boobastudio', 'providerProtocol', 'openai');
+                    await game.settings.set('boobastudio', 'ttsBaseUrl', base);
+                    await game.settings.set('boobastudio', 'ttsApiKey', 'mock-tts-key');
+                    let openaiTts;
+                    await globalThis.__boobastudioLocalGenerateTTS('live OpenAI TTS probe', JSON.stringify({voice: 'nova'}), 'tts-1', result => { openaiTts = result; });
+                    await game.settings.set('boobastudio', 'ttsProvider', 'elevenlabs');
+                    await game.settings.set('boobastudio', 'elevenlabsBaseUrl', base);
+                    await game.settings.set('boobastudio', 'elevenlabsApiKey', 'mock-eleven-key');
+                    let elevenTts;
+                    await globalThis.__boobastudioLocalGenerateTTS('live ElevenLabs TTS probe', JSON.stringify({voice_id: 'voice-1'}), 'eleven_turbo_v2_5', result => { elevenTts = result; });
+                    await game.settings.set('boobastudio', 'ttsProvider', 'openai');
                     await game.settings.set('boobastudio', 'providerBaseUrl', base);
                     await game.settings.set('boobastudio', 'providerModel', 'mock-model');
                     await game.settings.set('boobastudio', 'providerJsonMode', false);
@@ -113,6 +123,7 @@ async def main():
                         text,
                         query,
                         nativeProviders,
+                        tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}},
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
