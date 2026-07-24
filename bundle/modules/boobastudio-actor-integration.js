@@ -64,4 +64,8 @@ function installRadialFallback() {
 
 Hooks.on("renderApplication", (app) => addBoobaStudioActorControl(app));
 Hooks.on("renderApplicationV2", (app) => addBoobaStudioActorControl(app));
-Hooks.once("ready", installRadialFallback);
+Hooks.once("ready", () => {
+  // The main bundle publishes module.api during its own ready sequence on
+  // Foundry v14. Retry briefly so load order cannot leave the fallback inert.
+  for (const delay of [0, 250, 1000, 2500]) setTimeout(installRadialFallback, delay);
+});
