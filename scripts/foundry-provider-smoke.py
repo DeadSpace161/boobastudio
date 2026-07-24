@@ -413,13 +413,13 @@ async def main():
                             threadIntegration.pageType = smokeThreadPage.type;
                             threadIntegration.system = smokeThreadPage.system?.toObject?.() || smokeThreadPage.system || null;
                         }
-                        if (smokeThreadPage?.sheet?.render) {
-                            await smokeThreadPage.sheet.render(true);
-                            await new Promise(resolve => setTimeout(resolve, 900));
-                            await smokeThreadPage.sheet.close?.();
-                            await smokeThreadPage.sheet.render({force: true, mode: 'view'});
-                            await new Promise(resolve => setTimeout(resolve, 700));
-                            const threadRoot = smokeThreadPage.sheet.element;
+                        if (smokeThreadJournal?.sheet?.render && smokeThreadPage) {
+                            await smokeThreadJournal.sheet.render(true, {pageId: smokeThreadPage.id});
+                            await new Promise(resolve => setTimeout(resolve, 1200));
+                            const threadRoot = [...document.querySelectorAll('.boobastudio-thread')]
+                                .find(element => element.querySelector('[data-action="sendMessage"]'))
+                                || [...document.querySelectorAll('article, .journal-page-content')]
+                                    .find(element => /Thread \(GPT Chat\)|send message/i.test((element.innerText || '').slice(0, 1200)));
                             const threadPrompt = threadRoot?.querySelector?.('textarea[name="prompt"], textarea[name="system.prompt"], textarea, [contenteditable="true"], [data-edit="system.prompt"]');
                             const threadSend = threadRoot?.querySelector?.('[data-action="sendMessage"], button[type="submit"]');
                             threadIntegration.controls = [...(threadRoot?.querySelectorAll?.('textarea, input, button, [contenteditable="true"], [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', text: (control.innerText || '').trim(), value: control.value || '', contenteditable: control.getAttribute('contenteditable') || ''})).slice(0, 60);
@@ -433,8 +433,24 @@ async def main():
                                 threadIntegration.replyVisible = /Mock BoobaStudio response|provider response/i.test((threadRoot.innerText || '').slice(-1200));
                                 threadIntegration.messageCount = smokeThreadPage?.system?.messages?.length || 0;
                                 threadIntegration.persisted = threadIntegration.messageCount >= 2;
+                            } else if (typeof smokeThreadPage.sheet?._sendMessage === 'function') {
+                                const controllerProbe = document.createElement('article');
+                                controllerProbe.innerHTML = '<textarea name="prompt"></textarea><button data-action="sendMessage" type="button"></button><div class="mainContentScroller"></div>';
+                                document.body.appendChild(controllerProbe);
+                                const controllerPrompt = controllerProbe.querySelector('[name="prompt"]');
+                                const controllerSend = controllerProbe.querySelector('[data-action="sendMessage"]');
+                                controllerPrompt.value = 'live custom local thread probe';
+                                await smokeThreadPage.sheet._sendMessage(controllerProbe, controllerSend);
+                                await new Promise(resolve => setTimeout(resolve, 1800));
+                                threadIntegration.controllerProbe = true;
+                                threadIntegration.submitted = true;
+                                threadIntegration.messageCount = smokeThreadPage?.system?.messages?.length || 0;
+                                threadIntegration.persisted = threadIntegration.messageCount >= 2;
+                                threadIntegration.messageUsers = smokeThreadPage?.system?.messages?.map(message => message.user) || [];
+                                threadIntegration.replyVisible = /Mock BoobaStudio response|provider response/i.test((smokeThreadPage?.system?.messages || []).map(message => message.message || '').join(' '));
+                                controllerProbe.remove();
                             }
-                            smokeThreadPage.sheet.close?.();
+                            smokeThreadJournal.sheet.close?.();
                         }
                     } catch (error) {
                         threadIntegration.error = String(error?.message || error);

@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.113**. The public test server is being live-verified against the published 2.2.113 package.
+This status reflects the locally built package prepared as version **2.2.114**. The public test server has been live-verified against the published 2.2.114 package.
 
 ## Verified
 
@@ -51,7 +51,7 @@ This status reflects the locally built package prepared as version **2.2.113**. 
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
-- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The published 2.2.113 build is active on the live test server. The live provider harness confirms normalized OpenAI-compatible, native Anthropic, and native Gemini text/query paths, OpenAI and ElevenLabs TTS audio responses, OpenAI-compatible, Replicate, Stability, and ComfyUI image responses, Actor-sheet and Scene-sheet control injection, radial-menu opening, image-generator window opening, temporary Item document lifecycle, local pack lifecycle, and the token fallback factory. All live provider calls use Playwright-intercepted mock requests.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The published 2.2.114 build is active on the live test server. The live provider harness confirms normalized OpenAI-compatible, native Anthropic, and native Gemini text/query paths, OpenAI and ElevenLabs TTS audio responses, OpenAI-compatible, Replicate, Stability, and ComfyUI image responses, Actor-sheet and Scene-sheet control injection, radial-menu opening, image-generator window opening, temporary Item document lifecycle, local pack lifecycle, and the token fallback factory. All live provider calls use Playwright-intercepted mock requests.
 - The 2.2.98 build supplies a safe local model configuration when the hosted image catalog is unavailable, preventing the existing Image Tools prompt workflow from dereferencing a missing model config in local mode.
 - The 2.2.99 build extends the same local-catalog safety to the existing TTS window, preventing an unavailable hosted TTS model record from dereferencing `.fields` before the configured local audio provider is called.
 - The 2.2.100 build aligns local circular-token uploads with the existing Foundry v14 FilePicker contract and accepts both string and object upload results; the public 2.2.97 probe exposed the previous mismatch, so live token upload verification awaits publication.
@@ -68,8 +68,8 @@ This status reflects the locally built package prepared as version **2.2.113**. 
 - The 2.2.111 release preserves configured local text model IDs in the existing AI Thread data-model choices, allowing custom models to survive Foundry document updates; it also preserves the legacy Actor control class in the generalized v14 bridge.
 - The 2.2.112 release removes the static Thread choice validator only in configured local mode, allowing arbitrary local model IDs while retaining the bundled hosted-model choices otherwise; the Actor bridge receives a fresh cache-busted asset filename.
 - The 2.2.113 release removes the Thread schema choice validator entirely while preserving the existing model-selector template, eliminating initialization-order dependence for local model IDs.
-- The published 2.2.113 package has now passed live Foundry v14 verification: Actor, JournalEntry, RollTable, Item, Tile, and Scene controls render; Item and Scene images upload and apply through the existing workflows; and custom local Thread model IDs persist through document updates.
-- Release 2.2.114 routes existing AI Thread sends through the configured local provider when local mode is enabled, including custom local model IDs, while preserving the existing `system.messages` document update and reply-rendering path. The provider smoke suite covers the thread callback shape and selected model propagation.
+- The published 2.2.114 package has now passed live Foundry v14 verification: Actor, JournalEntry, RollTable, Item, Tile, and Scene controls render; Item and Scene images upload and apply through the existing workflows; custom local Thread model IDs persist through document updates; and the local Thread controller produces and persists a mocked assistant reply.
+- Release 2.2.114 routes existing AI Thread sends through the configured local provider when local mode is enabled, including custom local model IDs, while preserving the existing `system.messages` document update and reply-rendering path. The provider smoke suite and live harness cover the thread callback shape and selected model propagation.
 
 ## Intentionally not hosted by this fork
 
