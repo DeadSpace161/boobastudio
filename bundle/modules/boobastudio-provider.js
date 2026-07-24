@@ -660,8 +660,8 @@ async function localTokenize(imageSource, targetFolder = "", outputName = "token
     const picker = globalThis.foundry?.applications?.apps?.FilePicker?.implementation || globalThis.FilePicker;
     if (typeof picker?.upload !== "function") return false;
     const file = new File([blob], String(outputName || "token.webp").replace(/[\\/]/g, "_"), { type: "image/webp" });
-    const result = await picker.upload("data", String(targetFolder || ""), file, {}, { notify: false });
-    return result?.path || result?.target || false;
+    const result = await picker.upload("data", String(targetFolder || ""), file, {});
+    return typeof result === "string" ? result : result?.path || result?.target || false;
   } catch (error) {
     console.warn(`${NAMESPACE} | local token framing failed`, error);
     return false;
