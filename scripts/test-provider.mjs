@@ -270,6 +270,8 @@ values.set("boobastudio.ttsApiKey", "tts-key");
 let localTTSResult;
 await globalThis.__boobastudioLocalGenerateTTS("Narrate the tavern", JSON.stringify({ type: "tts", voice: "nova" }), "tts-1", (result) => { localTTSResult = result; });
 assert.deepEqual(localTTSResult, { status: "done", result: "data:audio/mpeg;base64,AQID" });
+assert.deepEqual(await globalThis.__boobastudioLocalVoices(false), { voices: [], has_more: false });
+assert.deepEqual(await globalThis.__boobastudioLocalVoicePage({}, false), { voices: [], has_more: false });
 
 values.set("boobastudio.musicModel", "test/music-model");
 values.set("boobastudio.musicBaseUrl", "https://music.test/v1");

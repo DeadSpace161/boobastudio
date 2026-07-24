@@ -20,6 +20,7 @@ This status reflects the locally built package prepared as version **2.2.77**. T
 - Existing image-tools description action now routes image data URLs through the configured OpenAI-compatible vision model and returns the original `{status:"done",result}` callback shape; the UI and editor insertion path are unchanged.
 - Existing image prompt-builder action now routes `{command, amount}` through the local text provider, validates the returned JSON array, and preserves the original prompt-tab population flow.
 - Existing narration/TTS generation now routes through the configured OpenAI or ElevenLabs adapter and preserves the existing audio preview, Foundry upload, and playlist flow.
+- Local TTS voice-catalog requests return an empty local catalog instead of contacting Cibola; hosted voice search remains unchanged when local mode is disabled.
 - Existing song generation now supports a client-configured Replicate music model, with configurable model-input JSON and placeholder substitution, while preserving the existing song preview, download, and playlist flow.
 - Local song results are indexed in the same browser-local gallery store and returned through the existing `filter:"song"` browser contract.
 - Actor sheet integration opens the existing image application with the selected Actor as its source document.

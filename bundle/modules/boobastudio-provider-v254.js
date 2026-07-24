@@ -163,6 +163,8 @@ async function localGenerateTTS(textInput, behavior, model, callback) {
 }
 
 globalThis.__boobastudioLocalGenerateTTS = localGenerateTTS;
+globalThis.__boobastudioLocalVoices = async () => isEnabled() ? { voices: [], has_more: false } : false;
+globalThis.__boobastudioLocalVoicePage = async () => isEnabled() ? { voices: [], has_more: false } : false;
 
 async function localGenerateSong(input, behavior, callback, options = {}) {
   if (!isEnabled()) return false;
