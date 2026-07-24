@@ -84,6 +84,7 @@ async def main():
                     });
                     const image = await imageResponse.json();
                     const localPackFactory = typeof globalThis.__boobastudioLocalPackCreate;
+                    const localTokenFactory = typeof globalThis.__boobastudioLocalTokenize;
                     const localPack = await globalThis.__boobastudioLocalPackCreate?.({name: 'Live Smoke Pack'});
                     const localPackId = localPack?.data?.id;
                     const localPacks = await globalThis.__boobastudioLocalPackMyPacks?.();
@@ -97,7 +98,8 @@ async def main():
                         query,
                         imageStatus: imageResponse.status,
                         image,
-                        localPack: {factory: localPackFactory, raw: localPack || null, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
+                        localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
+                        localTokenFallback: localTokenFactory === 'function',
                         providerSettings: [...game.settings.settings.keys()].filter(key => key.startsWith('boobastudio.'))
                     };
                 }""",
