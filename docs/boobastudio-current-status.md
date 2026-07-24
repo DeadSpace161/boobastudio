@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.94**. The public test server is running the prior 2.2.89 build until its setup administrator authentication is available for an automated install/update.
+This status reflects the locally built package prepared as version **2.2.95**. The public test server is running the prior 2.2.89 build until its setup administrator authentication is available for an automated install/update.
 
 ## Verified
 
@@ -15,6 +15,7 @@ This status reflects the locally built package prepared as version **2.2.94**. T
 - Local AI Thread replies now preserve `system.thread_id` when the local provider returns no hosted thread ID; hosted thread responses retain the original thread-ID update behavior.
 - Personal image packs now use a browser-local pack façade over local gallery IDs, preserving the existing pack create/list/detail/image/update/delete contracts without duplicating image payloads or contacting Cibola.
 - Local personal pack detail, image paging, cover-image updates, and generic pack-detail navigation now remain local through the existing pack API methods.
+- Token Horde now exposes a local circular-token fallback using browser canvas and Foundry `FilePicker` when VTTA-Tokenizer is not installed; VTTA-Tokenizer remains preferred when available.
 - The existing image selector now exposes a configured local image model, including arbitrary Replicate model IDs, while the hosted model catalog remains unchanged.
 - Local vector files with extractable text can now provide ranked token-overlap context to local text requests through a client setting; this is a lightweight local retrieval fallback, not a hosted embedding index.
 - Local provider chat fallback accepts the existing workflow modes used by threads, name generation, and other Cibola chat callers instead of restricting local use to the literal `chat` mode.
@@ -47,7 +48,7 @@ This status reflects the locally built package prepared as version **2.2.94**. T
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
-- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.94 build preserves compatible local gallery metadata, safe local thread persistence, complete personal pack operations, and configurable local image model selection.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.95 build preserves compatible local gallery metadata, safe local thread persistence, complete personal pack operations, configurable local image model selection, and local token framing fallback.
 
 ## Intentionally not hosted by this fork
 

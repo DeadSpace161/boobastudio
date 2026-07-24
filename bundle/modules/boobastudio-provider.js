@@ -631,6 +631,45 @@ globalThis.__boobastudioLocalPackRemoveImage = localPackRemoveImage;
 globalThis.__boobastudioLocalPackUpdateImage = localPackUpdateImage;
 globalThis.__boobastudioLocalPackUnavailable = localPackUnavailable;
 
+async function localTokenize(imageSource, targetFolder = "", outputName = "token.webp") {
+  if (!isEnabled() || !imageSource) return false;
+  try {
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.src = String(imageSource);
+    if (image.decode) await image.decode();
+    else await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
+    const size = Math.max(1, Math.min(2048, Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height)));
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const context = canvas.getContext("2d");
+    if (!context) return false;
+    const sourceWidth = image.naturalWidth || image.width;
+    const sourceHeight = image.naturalHeight || image.height;
+    const scale = Math.max(size / sourceWidth, size / sourceHeight);
+    const width = sourceWidth * scale;
+    const height = sourceHeight * scale;
+    context.drawImage(image, (size - width) / 2, (size - height) / 2, width, height);
+    context.globalCompositeOperation = "destination-in";
+    context.beginPath();
+    context.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+    context.fill();
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.92));
+    if (!blob) return false;
+    const picker = globalThis.foundry?.applications?.apps?.FilePicker?.implementation || globalThis.FilePicker;
+    if (typeof picker?.upload !== "function") return false;
+    const file = new File([blob], String(outputName || "token.webp").replace(/[\\/]/g, "_"), { type: "image/webp" });
+    const result = await picker.upload("data", String(targetFolder || ""), file, {}, { notify: false });
+    return result?.path || result?.target || false;
+  } catch (error) {
+    console.warn(`${NAMESPACE} | local token framing failed`, error);
+    return false;
+  }
+}
+
+globalThis.__boobastudioLocalTokenize = localTokenize;
+
 // Keep the existing vector-store UI usable without Cibola's hosted index.
 // This is deliberately a browser-local document library, not a new database
 // or service. The stored text is available for future local retrieval work;
