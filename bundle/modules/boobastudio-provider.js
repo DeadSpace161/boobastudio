@@ -222,7 +222,10 @@ async function routeReplicateImages(body) {
   try {
     const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify({ input: replicateInput(body, model) }), signal: controller.signal });
     const prediction = await started.json().catch(() => null);
-    if (!started.ok) return new Response(JSON.stringify(prediction || { error: { message: `Replicate request failed (${started.status})` } }), { status: started.status, headers: { "Content-Type": "application/json" } });
+    if (!started.ok) {
+      const detail = String(prediction?.error?.message || prediction?.error || prediction?.detail || "").trim();
+      return new Response(JSON.stringify({ error: { message: providerStatusMessage(started.status, detail) } }), { status: started.status, headers: { "Content-Type": "application/json" } });
+    }
     let current = prediction;
     const deadline = Date.now() + timeout;
     while (current?.status && !["succeeded", "failed", "canceled"].includes(current.status) && Date.now() < deadline) {
