@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.100**. The public test world remains on the published 2.2.97 package; the 2.2.100 manifest and ZIP are independently verified locally and await repository publication.
+The current locally packaged release is **2.2.101**. The public test world remains on the published 2.2.97 package; the 2.2.101 manifest and ZIP are independently verified locally and await repository publication.
 
 ## Build checks
 
@@ -33,6 +33,8 @@ Release 2.2.98 fixes a local-mode Image Tools crash found during end-to-end prob
 Release 2.2.99 applies the same narrowly scoped fallback to the existing TTS workflow: if a configured local audio model is not present in the hosted catalog, the UI uses an empty field list and continues into the local provider adapter. The package check, provider smoke test, build, archive integrity check, and manifest validation pass locally; live Foundry validation remains pending repository publication.
 
 Release 2.2.100 fixes the local token framing upload contract found during live probing: it now uses the same four-argument Foundry FilePicker upload call as the existing module asset helper and normalizes string or object upload results. The published 2.2.97 probe confirmed the fallback factory but reproduced the pre-fix no-path result; the 2.2.100 package contains the fix and awaits publication.
+
+Release 2.2.101 extends the local model-catalog safety patch to the shared image-field collector, Scene prompt/upscale model reads, and TTS model-selection change handler. This protects the actual submitted local image/scene forms and model-switch UI from the same missing hosted-config condition. Package validation, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
 
 The live Foundry v14 harness also exercised the existing Actor and Scene image application paths on the published test package: a temporary Actor received an uploaded image through the module's Save action, its `img` field changed to the Foundry-returned storage path, and a temporary Scene's `background.src` changed through the Scene Image Tools Save action. Both temporary documents were deleted afterward. The same probe still records the pre-2.2.98 Image Tools prompt crash on the public 2.2.97 package; 2.2.99 must be republished before the fixed prompt workflow can be live-verified.
 

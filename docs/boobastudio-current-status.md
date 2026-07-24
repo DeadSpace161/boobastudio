@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.100**. The public test server remains on the last published 2.2.97 package while the 2.2.100 release awaits repository write access.
+This status reflects the locally built package prepared as version **2.2.101**. The public test server remains on the last published 2.2.97 package while the 2.2.101 release awaits repository write access.
 
 ## Verified
 
@@ -55,6 +55,7 @@ This status reflects the locally built package prepared as version **2.2.100**. 
 - The 2.2.98 build supplies a safe local model configuration when the hosted image catalog is unavailable, preventing the existing Image Tools prompt workflow from dereferencing a missing model config in local mode.
 - The 2.2.99 build extends the same local-catalog safety to the existing TTS window, preventing an unavailable hosted TTS model record from dereferencing `.fields` before the configured local audio provider is called.
 - The 2.2.100 build aligns local circular-token uploads with the existing Foundry v14 FilePicker contract and accepts both string and object upload results; the public 2.2.97 probe exposed the previous mismatch, so live token upload verification awaits publication.
+- The 2.2.101 build supplies safe empty local model configurations to the existing shared image-field collector, Scene prompt/upscale handlers, and TTS model-change handler. This closes the next local-catalog dereferences beyond the initial Image Tools window-opening fix.
 
 ## Intentionally not hosted by this fork
 

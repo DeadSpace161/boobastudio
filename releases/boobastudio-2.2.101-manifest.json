@@ -1,0 +1,92 @@
+{
+  "title": "BoobaStudio",
+  "description": "BoobaStudio is a personal Foundry VTT module fork that brings AI-assisted text, image, audio, scene, token, and document tools directly into your world. Configure a provider you control, keep keys client-scoped, and use the existing Foundry-native workflows to create content for your tabletop adventures.",
+  "version": "2.2.101",
+  "url": "https://github.com/DeadSpace161/boobastudio",
+  "manifest": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/refs/heads/main/releases/boobastudio-2.2.101-manifest.json",
+  "download": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/refs/heads/main/releases/boobastudio-2.2.101.zip?cache=301",
+  "languages": [
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    },
+    {
+      "lang": "es",
+      "name": "Español",
+      "path": "lang/es.json"
+    }
+  ],
+  "esmodules": [
+    "bundle/modules/boobastudio-provider-v254-301.js",
+    "bundle/modules/boobastudio-actor-integration-v262.js",
+    "bundle/modules/boobastudio-migration-v256.js",
+    "bundle/modules/boobastudio-entry-v250-301.js"
+  ],
+  "styles": [
+    "styles/css/css.css"
+  ],
+  "packs": [
+    {
+      "name": "documentation",
+      "label": "BoobaStudio Documentation",
+      "path": "packs/documentation",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
+  "socket": true,
+  "id": "boobastudio",
+  "authors": [
+    {
+      "name": "BoobaStudio"
+    }
+  ],
+  "persistentStorage": true,
+  "compatibility": {
+    "minimum": "12",
+    "verified": "14",
+    "maximum": "14"
+  },
+  "documentTypes": {
+    "JournalEntryPage": {
+      "threadgpt": {}
+    }
+  },
+  "media": [
+    {
+      "type": "setup",
+      "url": "modules/boobastudio/templates/assets/setup.webp",
+      "thumbnail": "modules/boobastudio/templates/assets/setup-thumb.webp"
+    }
+  ],
+  "flags": {
+    "hotReload": {
+      "extensions": [
+        "css",
+        "html",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "templates",
+        "styles/css",
+        "lang"
+      ]
+    }
+  }
+}
