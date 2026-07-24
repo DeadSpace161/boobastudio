@@ -26,12 +26,16 @@ for (const entry of entries) {
 // Expose the existing generic image application to compatibility bridges.
 // The original bundle keeps this class private, although actor and item
 // workflows already use its implementation internally.
-const entryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v246.js");
+const entryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v247.js");
 const entrySource = await readFile(entryPath, "utf8");
 const privateApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us}";
 const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke}";
 if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio entry API signature was not found");
-await writeFile(entryPath, entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio"));
+const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio");
+const localChatString = "return r?{status:\"done\",message:r}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
+const localChatObject = "return r?{status:\"done\",message:{role:\"assistant\",content:r}}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
+if (!brandedEntry.includes(localChatString)) throw new Error("Expected local chat response signature was not found");
+await writeFile(entryPath, brandedEntry.replace(localChatString, localChatObject));
 
 const manifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
