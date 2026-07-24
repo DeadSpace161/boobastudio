@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.105**. The public test world remains on the published 2.2.97 package; the 2.2.105 manifest and ZIP are independently verified locally and await repository publication.
+The current locally packaged release is **2.2.106**. The public test world remains on the published 2.2.97 package; the 2.2.106 manifest and ZIP are independently verified locally and await repository publication.
 
 ## Build checks
 
@@ -43,6 +43,8 @@ Release 2.2.103 completes the adjacent local image model boundary: configured lo
 Release 2.2.104 extends local model compatibility to persistent AI Threads. Arbitrary configured text model IDs are preserved in the existing selector and use a zero-cost fallback descriptor for thread rendering and dispatch when Cibola’s bundled chat catalog has no matching record. Package checks, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
 
 Release 2.2.105 closes the remaining custom-thread-model filter dereference for persisted conversations. Package checks, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
+
+Release 2.2.106 prevents the original thread data-model migration from overwriting arbitrary local provider model IDs. The local provider retains ownership of custom model validation while hosted-mode migration behavior remains unchanged. Package checks, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
 
 The live Foundry v14 harness also exercised the existing Actor and Scene image application paths on the published test package: a temporary Actor received an uploaded image through the module's Save action, its `img` field changed to the Foundry-returned storage path, and a temporary Scene's `background.src` changed through the Scene Image Tools Save action. Both temporary documents were deleted afterward. The same probe still records the pre-2.2.98 Image Tools prompt crash on the public 2.2.97 package; 2.2.99 must be republished before the fixed prompt workflow can be live-verified.
 

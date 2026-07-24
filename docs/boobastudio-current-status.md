@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.105**. The public test server remains on the last published 2.2.97 package while the 2.2.105 release awaits repository write access.
+This status reflects the locally built package prepared as version **2.2.106**. The public test server remains on the last published 2.2.97 package while the 2.2.106 release awaits repository write access.
 
 ## Verified
 
@@ -60,6 +60,7 @@ This status reflects the locally built package prepared as version **2.2.105**. 
 - The 2.2.103 build keeps local model IDs in the existing image-model preparation path and supplies safe descriptors to advanced image-edit readers, so local generation, editing, inpainting, and variation forms are not filtered out or passed undefined model metadata.
 - The 2.2.104 build hardens persistent AI Threads for arbitrary configured local text models: custom model IDs remain in the existing thread selector and receive a local fallback descriptor for rendering, message dispatch, menu conditions, and model switching.
 - The 2.2.105 build also hardens the existing thread model filter when a custom local model is present alongside persisted messages, preventing the final bundled-catalog tag lookup from dereferencing an absent record.
+- The 2.2.106 build preserves arbitrary local thread model IDs through the recovered JournalEntryPage data-model migration instead of resetting them to the bundled Cibola default.
 
 ## Intentionally not hosted by this fork
 

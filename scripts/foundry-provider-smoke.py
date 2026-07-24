@@ -84,6 +84,8 @@ async def main():
                     await game.settings.set('boobastudio', 'providerEnabled', true);
                     await game.settings.set('boobastudio', 'providerProtocol', 'openai');
                     await game.settings.set('boobastudio', 'clientOnlyMode', true);
+                    await game.settings.set('boobastudio', 'providerBaseUrl', base);
+                    await game.settings.set('boobastudio', 'providerModel', 'mock-local-thread-model');
                     await game.settings.set('boobastudio', 'ttsBaseUrl', base);
                     await game.settings.set('boobastudio', 'ttsApiKey', 'mock-tts-key');
                     let openaiTts;
@@ -289,6 +291,46 @@ async def main():
                             sceneIntegration.deleted = !game.scenes.has(smokeScene.id);
                         }
                     }
+                    const threadIntegration = {created: false, rendered: false, customModel: false, submitted: false, replyVisible: false, persisted: false, deleted: false};
+                    let smokeThreadJournal;
+                    try {
+                        smokeThreadJournal = await JournalEntry.create({name: `BoobaStudio Live Smoke Thread ${Date.now()}`, content: '', pages: [{name: 'Local Thread', type: 'boobastudio.threadgpt'}]});
+                        threadIntegration.created = !!smokeThreadJournal;
+                        const smokeThreadPage = smokeThreadJournal?.pages?.contents?.[0];
+                        if (smokeThreadPage) {
+                            await smokeThreadPage.update({system: {...(smokeThreadPage.system?.toObject?.() || {}), model: 'mock-local-thread-model'}});
+                            threadIntegration.customModel = smokeThreadPage.system?.model === 'mock-local-thread-model';
+                            threadIntegration.pageType = smokeThreadPage.type;
+                            threadIntegration.system = smokeThreadPage.system?.toObject?.() || smokeThreadPage.system || null;
+                        }
+                        if (smokeThreadPage?.sheet?.render) {
+                            await smokeThreadPage.sheet.render(true);
+                            await new Promise(resolve => setTimeout(resolve, 900));
+                            const threadRoot = smokeThreadPage.sheet.element;
+                            const threadPrompt = threadRoot?.querySelector?.('textarea[name="prompt"], textarea[name="system.prompt"], textarea');
+                            const threadSend = threadRoot?.querySelector?.('[data-action="sendMessage"], button[type="submit"]');
+                            threadIntegration.controls = [...(threadRoot?.querySelectorAll?.('textarea, input, button, [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', text: (control.innerText || '').trim(), value: control.value || ''})).slice(0, 40);
+                            threadIntegration.rendered = !!threadRoot && /thread|mock-local-thread-model|send/i.test((threadRoot.innerText || '').slice(0, 1200));
+                            if (threadPrompt && threadSend) {
+                                threadPrompt.value = 'live custom local thread probe';
+                                threadPrompt.dispatchEvent(new Event('input', {bubbles: true}));
+                                threadSend.click();
+                                await new Promise(resolve => setTimeout(resolve, 1800));
+                                threadIntegration.submitted = true;
+                                threadIntegration.replyVisible = /Mock BoobaStudio response|provider response/i.test((threadRoot.innerText || '').slice(-1200));
+                                threadIntegration.messageCount = smokeThreadPage?.system?.messages?.length || 0;
+                                threadIntegration.persisted = threadIntegration.messageCount >= 2;
+                            }
+                            smokeThreadPage.sheet.close?.();
+                        }
+                    } catch (error) {
+                        threadIntegration.error = String(error?.message || error);
+                    } finally {
+                        if (smokeThreadJournal) {
+                            await smokeThreadJournal.delete();
+                            threadIntegration.deleted = !game.journal.has(smokeThreadJournal.id);
+                        }
+                    }
                     await game.settings.set('boobastudio', 'providerBaseUrl', base);
                     await game.settings.set('boobastudio', 'providerModel', 'mock-model');
                     await game.settings.set('boobastudio', 'providerJsonMode', false);
@@ -354,6 +396,7 @@ async def main():
                         actorIntegration,
                         itemIntegration,
                         sceneIntegration,
+                        threadIntegration,
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
