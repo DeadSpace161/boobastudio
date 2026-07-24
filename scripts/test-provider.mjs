@@ -239,8 +239,10 @@ await globalThis.__boobastudioLocalGalleryPage(1, (page) => { emptyLocalGallery 
 assert.equal(emptyLocalGallery.data.length, 0);
 
 let enhanced;
-await globalThis.__boobastudioLocalEnhance("a rough prompt", JSON.stringify({ type: "improvisePrompt" }), (result) => { enhanced = result; });
+await globalThis.__boobastudioLocalVectorize({ get() { return { name: "campaign.txt", size: 32, text: async () => "tavern lore local context" }; } }, () => {}, () => {});
+await globalThis.__boobastudioLocalEnhance("tavern lore prompt", JSON.stringify({ type: "improvisePrompt" }), (result) => { enhanced = result; });
 assert.equal(enhanced.status, "done");
 assert.equal(enhanced.result, "provider response");
+assert.match(String(requests.at(-1).init.body), /tavern lore local context/);
 
 console.log("BoobaStudio provider smoke test passed");

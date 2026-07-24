@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -343,6 +343,26 @@ globalThis.__boobastudioLocalVectorize = localVectorize;
 globalThis.__boobastudioLocalVectorList = localVectorList;
 globalThis.__boobastudioLocalVectorDelete = localVectorDelete;
 
+function withLocalVectorContext(input) {
+  if (!isEnabled() || get(S.localVectorContext) === false || !Array.isArray(input)) return input;
+  const userIndex = input.map((message, index) => ({ message, index })).reverse().find(({ message }) => message.role === "user" && message.content)?.index;
+  if (userIndex == null) return input;
+  const query = String(input[userIndex].content).toLowerCase();
+  const terms = new Set(query.match(/[a-z0-9]{4,}/g) || []);
+  if (!terms.size) return input;
+  const matches = readLocalVectors().map((entry) => {
+    const content = String(entry.text || "");
+    const entryTerms = new Set(content.toLowerCase().match(/[a-z0-9]{4,}/g) || []);
+    const score = [...terms].reduce((total, term) => total + (entryTerms.has(term) ? 1 : 0), 0);
+    return { entry, score };
+  }).filter((item) => item.score > 0 && item.entry.text).sort((left, right) => right.score - left.score).slice(0, 3);
+  if (!matches.length) return input;
+  const context = matches.map(({ entry }) => `### ${entry.name}\n${String(entry.text).slice(0, 2400)}`).join("\n\n");
+  return input.map((message, index) => index === userIndex ? { ...message, content: `${message.content}\n\nRelevant local library context (use only when helpful):\n${context}` } : message);
+}
+
+globalThis.__boobastudioLocalVectorContext = withLocalVectorContext;
+
 async function routeReplicateImages(body) {
   const model = replicateModel(body);
   const endpoint = `${replicateBaseUrl()}/models/${model}/predictions`;
@@ -376,7 +396,7 @@ async function routeReplicateImages(body) {
 async function routeResponses(originalFetch, body) {
   const kind = protocol();
   const model = String(get(S.model) || body.model || "gpt-5-mini").trim();
-  const input = messages(body.input);
+  const input = withLocalVectorContext(messages(body.input));
   const temperature = Number(get(S.temperature));
   const maxTokens = Math.max(1, Number(get(S.maxTokens)) || 2048);
   let endpoint = `${baseUrl()}/chat/completions`;
@@ -470,6 +490,7 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.baseUrl, { name: "BoobaStudio: Provider base URL", hint: "For example https://api.openai.com/v1, http://localhost:11434/v1, or an OpenRouter-compatible URL.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
   game.settings.register(NAMESPACE, S.model, { name: "BoobaStudio: Provider model", scope: "client", config: true, type: String, default: "gpt-5-mini" });
   game.settings.register(NAMESPACE, S.jsonMode, { name: "BoobaStudio: JSON response mode", hint: "Request JSON object responses from OpenAI-compatible text providers when supported.", scope: "client", config: true, type: Boolean, default: false });
+  game.settings.register(NAMESPACE, S.localVectorContext, { name: "BoobaStudio: Include local library context", hint: "Add relevant text from browser-local vector files to local provider prompts.", scope: "client", config: true, type: Boolean, default: true });
   game.settings.register(NAMESPACE, S.imageModel, { name: "BoobaStudio: Image model", hint: "Model used by OpenAI-compatible image endpoints. Replicate uses its separate image model setting.", scope: "client", config: true, type: String, default: "gpt-image-1" });
   game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, replicate for Replicate predictions, stability for Stability AI, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", replicate: "Replicate", stability: "Stability AI", comfyui: "ComfyUI" } });
   game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", elevenlabs: "ElevenLabs" } });
