@@ -43,7 +43,11 @@ const directChatGate = "async chat(t){let e=await C.isConnected(!1,!1);";
 const directChatGateReplacement = "async chat(t){let e=typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()?false:await C.isConnected(!1,!1);";
 const patchedChatEntry = localChatEntry.replace(localChatGate, localChatGateReplacement);
 if (!patchedChatEntry.includes(directChatGate)) throw new Error("Expected direct chat connection gate was not found");
-await writeFile(entryPath, patchedChatEntry.replace(directChatGate, directChatGateReplacement));
+const noPromptGate = "if(!await r.ensureEnabledForSession()){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
+const noPromptGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&!await r.ensureEnabledForSession()){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
+const directPatchedEntry = patchedChatEntry.replace(directChatGate, directChatGateReplacement);
+if (!directPatchedEntry.includes(noPromptGate)) throw new Error("Expected local chat confirmation gate was not found");
+await writeFile(entryPath, directPatchedEntry.replace(noPromptGate, noPromptGateReplacement));
 
 const manifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);

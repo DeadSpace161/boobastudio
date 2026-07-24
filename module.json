@@ -1,10 +1,10 @@
 {
   "title": "BoobaStudio",
   "description": "BoobaStudio is a personal Foundry VTT module fork that brings AI-assisted text, image, audio, scene, token, and document tools directly into your world. Configure a provider you control, keep keys client-scoped, and use the existing Foundry-native workflows to create content for your tabletop adventures.",
-  "version": "2.2.72",
+  "version": "2.2.73",
   "url": "https://github.com/DeadSpace161/boobastudio",
-  "manifest": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/refs/heads/main/releases/boobastudio-2.2.72-manifest.json",
-  "download": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/refs/heads/main/releases/boobastudio-2.2.72.zip?cache=272",
+  "manifest": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/refs/heads/main/releases/boobastudio-2.2.73-manifest.json",
+  "download": "https://raw.githubusercontent.com/DeadSpace161/boobastudio/refs/heads/main/releases/boobastudio-2.2.73.zip?cache=273",
   "languages": [
     {
       "lang": "de",
