@@ -10,6 +10,7 @@ This status reflects the locally built package prepared as version **2.2.76**. T
 - Existing prose generation can submit a prompt, render a result, insert it into a Journal editor, and persist the JournalEntryPage update.
 - The existing direct `/c8` chat path bypasses the hosted account-connectivity check when a local provider is configured; its local response is normalized to the existing chat message object and browser-local history contract.
 - Direct `/c8` chat no longer requires the legacy client-only-mode toggle or hosted confirmation gate when a local provider is explicitly configured; the legacy gates remain active for unconfigured sessions.
+- Existing AI Thread JournalEntryPage sheets now recognize an explicitly configured local provider for account visibility, messaging controls, and local vector-file upload access; thread messages continue to persist in the existing JournalEntryPage `system.messages` field.
 - Existing scene image generation can preview a result and expose Save, Save As, Apply as Tile, and Download actions.
 - Actor sheet integration opens the existing image application with the selected Actor as its source document.
 - Generated Actor images can be saved through Foundry file handling and update the Actor image field; no arbitrary server path is written by browser code.
