@@ -3,6 +3,11 @@ import assert from "node:assert/strict";
 const hooks = new Map();
 const values = new Map();
 const requests = [];
+const localValues = new Map();
+globalThis.localStorage = {
+  getItem(key) { return localValues.get(key) ?? null; },
+  setItem(key, value) { localValues.set(key, String(value)); },
+};
 
 globalThis.Hooks = { once(name, callback) { hooks.set(name, callback); } };
 globalThis.game = {
@@ -62,6 +67,20 @@ const imageResponse = await fetch("https://api.openai.com/v1/images/generations"
 assert.equal((await imageResponse.json()).data[0].b64_json, "aGVsbG8=");
 assert.equal(requests[1].input, "http://provider.test/v1/images/generations");
 assert.equal(JSON.parse(requests[1].init.body).model, "local-image-model");
+
+let vectorCallback;
+let vectorProgress;
+const vectorHandled = await globalThis.__boobastudioLocalVectorize({ get() { return { name: "lore.txt", size: 9, text: async () => "local lore" }; } }, (result) => { vectorCallback = result; }, (progress) => { vectorProgress = progress; });
+assert.equal(vectorHandled, true);
+assert.equal(vectorProgress, 100);
+assert.equal(vectorCallback.status, "done");
+let vectorPage;
+await globalThis.__boobastudioLocalVectorList((result) => { vectorPage = result; });
+assert.equal(vectorPage.included.find((item) => item.type === "vector_store_file").attributes.uploaded_file_name, "lore.txt");
+const vectorId = vectorPage.included.find((item) => item.type === "vector_store_file").id;
+let vectorDelete;
+await globalThis.__boobastudioLocalVectorDelete(vectorId, (result) => { vectorDelete = result; });
+assert.equal(vectorDelete.status, "done");
 
 values.set("boobastudio.imageProvider", "replicate");
 values.set("boobastudio.replicateApiToken", "replicate-test-token");

@@ -269,6 +269,72 @@ async function localGalleryDelete(id, callback) {
 globalThis.__boobastudioLocalGalleryPage = localGalleryPage;
 globalThis.__boobastudioLocalGalleryDelete = localGalleryDelete;
 
+// Keep the existing vector-store UI usable without Cibola's hosted index.
+// This is deliberately a browser-local document library, not a new database
+// or service. The stored text is available for future local retrieval work;
+// binary documents retain metadata only when browser storage would be too large.
+function localVectorStorageKey() {
+  return `${NAMESPACE}-local-vectors-${globalThis.game?.world?.id || "world"}`;
+}
+
+function readLocalVectors() {
+  try {
+    const value = globalThis.localStorage?.getItem(localVectorStorageKey());
+    const parsed = value ? JSON.parse(value) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+function writeLocalVectors(entries) {
+  try { globalThis.localStorage?.setItem(localVectorStorageKey(), JSON.stringify(entries.slice(0, 100))); } catch { /* quota or unavailable storage */ }
+}
+
+function localVectorPayload() {
+  const gameId = String(globalThis.game?.system?.id || "world");
+  const gameTitle = String(globalThis.game?.system?.title || gameId);
+  const files = readLocalVectors();
+  return {
+    data: [{ id: `local-store-${gameId}`, relationships: { gamesystem: { data: { id: gameId } }, vector_store_files: { data: files.map((file) => ({ id: file.id })) } } }],
+    included: [
+      { type: "gamesystem", id: gameId, attributes: { title: gameTitle } },
+      ...files.map((file) => ({ type: "vector_store_file", id: file.id, attributes: { uploaded_file_name: file.name, status: file.status, usage_bytes: file.size, local: true } })),
+    ],
+  };
+}
+
+async function localVectorize(formData, callback, progress) {
+  if (!isEnabled()) return false;
+  const file = formData?.get?.("file_upload");
+  if (!file?.name) { callback?.(false); return true; }
+  const entry = { id: `local-vector-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, name: String(file.name), size: Number(file.size) || 0, status: "completed", created_at: new Date().toISOString() };
+  if (typeof file.text === "function" && entry.size <= 1024 * 1024) {
+    try { entry.text = await file.text(); } catch { /* retain metadata when text extraction is unavailable */ }
+  }
+  const entries = readLocalVectors().filter((item) => item.name !== entry.name);
+  entries.unshift(entry);
+  writeLocalVectors(entries);
+  progress?.(100);
+  callback?.({ status: "done", data: { id: entry.id } });
+  return true;
+}
+
+async function localVectorList(callback) {
+  if (!isEnabled()) return false;
+  callback?.(localVectorPayload());
+  return true;
+}
+
+async function localVectorDelete(id, callback) {
+  if (!isEnabled()) return false;
+  writeLocalVectors(readLocalVectors().filter((entry) => entry.id !== id));
+  callback?.({ status: "done" });
+  return true;
+}
+
+globalThis.__boobastudioLocalVectorize = localVectorize;
+globalThis.__boobastudioLocalVectorList = localVectorList;
+globalThis.__boobastudioLocalVectorDelete = localVectorDelete;
+
 async function routeReplicateImages(body) {
   const model = replicateModel(body);
   const endpoint = `${replicateBaseUrl()}/models/${model}/predictions`;
