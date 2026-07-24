@@ -1081,9 +1081,9 @@
     "grudge": {
       "title": "Report feedback/error",
       "github": "Write an issue on Github",
-      "discord": "Discuss with us and the community on Discord",
-      "patreon": "Send us a message on Patreon",
-      "youtube": "Leave a comment on Youtube",
+      "discord": "Discuss with the community on GitHub",
+      "patreon": "Open a GitHub issue",
+      "youtube": "Review releases and release notes",
       "description": "Please dont hesitate to report any issues or feedback. This will help to improve the module and make it better for everyone. If you have any suggestions or ideas, feel free to share them as well.",
       "getInContact": "Get in contact:"
     },

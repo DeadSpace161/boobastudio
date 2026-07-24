@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.83**. The public server remains on 2.2.75 until repository write access is restored.
+This status reflects the locally built package prepared as version **2.2.84**. The public server remains on 2.2.75 until repository write access is restored.
 
 ## Verified
 
@@ -38,6 +38,7 @@ This status reflects the locally built package prepared as version **2.2.83**. T
 - Existing scene wall detection remains fully local through the bundled OpenCV.js worker and Foundry wall-document update path; it does not require a provider or Cibola service.
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
+- Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
 - Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry smoke validation.
 
 ## Intentionally not hosted by this fork
