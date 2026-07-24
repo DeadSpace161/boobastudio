@@ -287,8 +287,8 @@ async def main():
                                 const applicationInstances = foundry.applications?.instances instanceof Map ? [...foundry.applications.instances.values()] : Object.values(foundry.applications?.instances || {});
                                 const sceneApps = [...(game.applications?.values?.() || []), ...Object.values(ui.windows || {}), ...applicationInstances];
                                 const sceneImageApp = sceneApps
-                                    .find(app => app?.source?.object === smokeScene || app?.document === smokeScene || app?.source?.object?.id === smokeScene.id)
-                                    || sceneApps.find(app => app?.element === sceneImageWindow || app?.element?.contains?.(sceneImageWindow));
+                                    .find(app => typeof app?.saveImg === 'function' && (app?.source?.object === smokeScene || app?.document === smokeScene || app?.source?.object?.id === smokeScene.id))
+                                    || sceneApps.find(app => typeof app?.saveImg === 'function' && (app?.element === sceneImageWindow || app?.element?.contains?.(sceneImageWindow)));
                                 const sceneSaveButton = sceneImageWindow?.querySelector?.('[data-action="saveImg"]');
                                 const sceneTargetImage = sceneImageWindow?.querySelector?.('.targetImg');
                                 sceneIntegration.imageWindowVisible = !!sceneImageWindow;
