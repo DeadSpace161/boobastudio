@@ -268,7 +268,7 @@ values.set("boobastudio.musicBaseUrl", "https://music.test/v1");
 values.set("boobastudio.musicInput", JSON.stringify({ duration: 8, prompt: "{{style}} | {{lyrics}}" }));
 values.set("boobastudio.replicateApiToken", "music-token");
 let localSongResult;
-await globalThis.__boobastudioLocalGenerateSong({ songtitle: "Tavern Song", lyrics: "Raise a glass", style: "folk" }, JSON.stringify({ type: "song" }), (result) => { localSongResult = result; }, { model: "test/music-model" });
+await globalThis.__boobastudioLocalGenerateSong({ songtitle: "Tavern Song", lyrics: "Raise a glass", style: "folk" }, JSON.stringify({ type: "song" }), (result) => { localSongResult = result; }, { model: "suno" });
 assert.equal(localSongResult.status, "done");
 const song = JSON.parse(localSongResult.result)[0];
 assert.equal(song.title, "Tavern Song");

@@ -166,7 +166,8 @@ globalThis.__boobastudioLocalGenerateTTS = localGenerateTTS;
 
 async function localGenerateSong(input, behavior, callback, options = {}) {
   if (!isEnabled()) return false;
-  const model = String(options?.model || get(S.musicModel) || "").trim();
+  const requestedModel = String(options?.model || "").trim();
+  const model = String(get(S.musicModel) || (requestedModel.includes("/") ? requestedModel : "")).trim();
   if (!model) {
     callback?.({ status: "error", errors: ["Configure a Replicate music model before generating a song."] });
     return true;
