@@ -323,7 +323,13 @@ async def main():
                         threadIntegration.created = !!smokeThreadJournal;
                         const smokeThreadPage = smokeThreadJournal?.pages?.contents?.[0];
                         if (smokeThreadPage) {
-                            await smokeThreadPage.update({system: {...(smokeThreadPage.system?.toObject?.() || {}), model: 'mock-local-thread-model'}});
+                            const modelField = smokeThreadPage.schema?.fields?.system?.fields?.model || smokeThreadPage.system?.schema?.fields?.model;
+                            threadIntegration.schemaChoices = Object.keys(modelField?.choices || modelField?.options?.choices || {});
+                            try {
+                                await smokeThreadPage.update({system: {...(smokeThreadPage.system?.toObject?.() || {}), model: 'mock-local-thread-model'}});
+                            } catch (error) {
+                                threadIntegration.updateError = String(error?.message || error);
+                            }
                             threadIntegration.customModel = smokeThreadPage.system?.model === 'mock-local-thread-model';
                             threadIntegration.pageType = smokeThreadPage.type;
                             threadIntegration.system = smokeThreadPage.system?.toObject?.() || smokeThreadPage.system || null;
