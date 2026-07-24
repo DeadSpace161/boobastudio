@@ -423,6 +423,37 @@ async function routeResponses(originalFetch, body) {
   return new Response(JSON.stringify({ output: [{ role: "assistant", content: [{ type: "output_text", text: content }] }] }), { status: 200, headers: { "Content-Type": "application/json" } });
 }
 
+async function localDescribe(image, callback) {
+  if (!isEnabled()) return false;
+  try {
+    if (protocol() !== "openai") {
+      callback?.({ status: "error", errors: ["Image description currently requires an OpenAI-compatible provider."] });
+      return true;
+    }
+    const response = await post(`${baseUrl()}/chat/completions`, {
+      model: String(get(S.model) || "gpt-4o-mini"),
+      messages: [{ role: "user", content: [
+        { type: "text", text: "Describe this image for a tabletop roleplaying game. Return only a concise, useful description of the visible subject, setting, composition, and notable details." },
+        { type: "image_url", image_url: { url: String(image?.image || "") } },
+      ] }],
+      max_tokens: Math.max(1, Number(get(S.maxTokens)) || 1024),
+    }, globalThis.__boobastudioOriginalFetch || fetch, "openai");
+    if (!response.ok) {
+      const result = await response.clone().json().catch(() => null);
+      callback?.({ status: "error", errors: [providerError({ message: result?.error?.message || `Provider request failed (${response.status})` })] });
+      return true;
+    }
+    const result = await response.json();
+    const content = text(result?.choices?.[0]?.message?.content);
+    callback?.(content ? { status: "done", result: content } : { status: "error", errors: ["Provider response did not contain an image description."] });
+  } catch (error) {
+    callback?.({ status: "error", errors: [providerError(error)] });
+  }
+  return true;
+}
+
+globalThis.__boobastudioLocalDescribe = localDescribe;
+
 async function routeImages(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
   const sharedKey = String(get(S.apiKey) || "").trim();
   let response;
