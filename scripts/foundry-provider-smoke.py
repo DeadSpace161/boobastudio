@@ -269,6 +269,43 @@ async def main():
                             itemIntegration.deleted = !game.items.has(smokeItem.id);
                         }
                     }
+                    const documentIntegrations = {};
+                    let smokeJournal, smokeRollTable, smokeTileScene;
+                    try {
+                        smokeJournal = await JournalEntry.create({name: `BoobaStudio Live Smoke Journal ${Date.now()}`, content: '', pages: [{name: 'Smoke Page', type: 'text', text: {format: 1, content: '<p>Smoke</p>'}}]});
+                        await smokeJournal.sheet?.render?.(true);
+                        await new Promise(resolve => setTimeout(resolve, 700));
+                        documentIntegrations.JournalEntry = {created: !!smokeJournal, sheetRendered: !!smokeJournal?.sheet?.rendered, controlVisible: !!document.querySelector('.boobastudio-document-control')};
+                        smokeJournal.sheet?.close?.();
+                    } catch (error) {
+                        documentIntegrations.JournalEntry = {created: !!smokeJournal, error: String(error?.message || error)};
+                    } finally {
+                        if (smokeJournal) await smokeJournal.delete();
+                    }
+                    try {
+                        smokeRollTable = await RollTable.create({name: `BoobaStudio Live Smoke RollTable ${Date.now()}`, formula: '1d1', results: []});
+                        await smokeRollTable.sheet?.render?.(true);
+                        await new Promise(resolve => setTimeout(resolve, 700));
+                        documentIntegrations.RollTable = {created: !!smokeRollTable, sheetRendered: !!smokeRollTable?.sheet?.rendered, controlVisible: !!document.querySelector('.boobastudio-document-control')};
+                        smokeRollTable.sheet?.close?.();
+                    } catch (error) {
+                        documentIntegrations.RollTable = {created: !!smokeRollTable, error: String(error?.message || error)};
+                    } finally {
+                        if (smokeRollTable) await smokeRollTable.delete();
+                    }
+                    try {
+                        smokeTileScene = await Scene.create({name: `BoobaStudio Live Smoke Tile Scene ${Date.now()}`});
+                        const tiles = await smokeTileScene.createEmbeddedDocuments('Tile', [{x: 0, y: 0, width: 100, height: 100, texture: {src: 'icons/svg/book.svg'}}]);
+                        const tile = tiles?.[0];
+                        await tile?.sheet?.render?.(true);
+                        await new Promise(resolve => setTimeout(resolve, 700));
+                        documentIntegrations.Tile = {created: !!tile, sheetRendered: !!tile?.sheet?.rendered, controlVisible: !!document.querySelector('.boobastudio-document-control')};
+                        tile?.sheet?.close?.();
+                    } catch (error) {
+                        documentIntegrations.Tile = {error: String(error?.message || error)};
+                    } finally {
+                        if (smokeTileScene) await smokeTileScene.delete();
+                    }
                     const sceneIntegration = {sheetRendered: false, controlVisible: false, imageApplied: false, deleted: false};
                     let smokeScene;
                     try {
@@ -432,6 +469,7 @@ async def main():
                         imageProviders,
                         actorIntegration,
                         itemIntegration,
+                        documentIntegrations,
                         sceneIntegration,
                         threadIntegration,
                         imageStatus: imageResponse.status,
