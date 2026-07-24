@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.112**. The public test server is being live-verified against the published 2.2.112 package.
+This status reflects the locally built package prepared as version **2.2.113**. The public test server is being live-verified against the published 2.2.113 package.
 
 ## Verified
 
@@ -67,6 +67,7 @@ This status reflects the locally built package prepared as version **2.2.112**. 
 - The 2.2.110 release republishes the corrected runtime asset manifest under a fresh versioned URL so Foundry does not reuse the stale 2.2.109 CDN response.
 - The 2.2.111 release preserves configured local text model IDs in the existing AI Thread data-model choices, allowing custom models to survive Foundry document updates; it also preserves the legacy Actor control class in the generalized v14 bridge.
 - The 2.2.112 release removes the static Thread choice validator only in configured local mode, allowing arbitrary local model IDs while retaining the bundled hosted-model choices otherwise; the Actor bridge receives a fresh cache-busted asset filename.
+- The 2.2.113 release removes the Thread schema choice validator entirely while preserving the existing model-selector template, eliminating initialization-order dependence for local model IDs.
 
 ## Intentionally not hosted by this fork
 
