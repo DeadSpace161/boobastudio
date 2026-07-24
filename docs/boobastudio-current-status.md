@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.91**. The public test server is running the prior 2.2.89 build until its setup administrator authentication is available for an automated install/update.
+This status reflects the locally built package prepared as version **2.2.92**. The public test server is running the prior 2.2.89 build until its setup administrator authentication is available for an automated install/update.
 
 ## Verified
 
@@ -13,6 +13,7 @@ This status reflects the locally built package prepared as version **2.2.91**. T
 - Direct `/c8` chat no longer requires the legacy client-only-mode toggle or hosted confirmation gate when a local provider is explicitly configured; the legacy gates remain active for unconfigured sessions.
 - Existing AI Thread JournalEntryPage sheets now recognize an explicitly configured local provider for account visibility, messaging controls, and local vector-file upload access; thread messages continue to persist in the existing JournalEntryPage `system.messages` field.
 - Local AI Thread replies now preserve `system.thread_id` when the local provider returns no hosted thread ID; hosted thread responses retain the original thread-ID update behavior.
+- Personal image packs now use a browser-local pack façade over local gallery IDs, preserving the existing pack create/list/detail/image/update/delete contracts without duplicating image payloads or contacting Cibola.
 - Local vector files with extractable text can now provide ranked token-overlap context to local text requests through a client setting; this is a lightweight local retrieval fallback, not a hosted embedding index.
 - Local provider chat fallback accepts the existing workflow modes used by threads, name generation, and other Cibola chat callers instead of restricting local use to the literal `chat` mode.
 - The existing `enhance` façade now routes through the local text provider and preserves its `{result}` callback contract for prompt improvement and document enhancement workflows.
@@ -44,12 +45,12 @@ This status reflects the locally built package prepared as version **2.2.91**. T
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - The onboarding “Web App” action now opens the BoobaStudio repository instead of the former hosted application URL.
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
-- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.91 build preserves compatible local gallery metadata for image/song history and safe local thread persistence without requiring hosted thread IDs.
+- Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The 2.2.92 build preserves compatible local gallery metadata, safe local thread persistence, and personal pack operations without requiring hosted IDs.
 
 ## Intentionally not hosted by this fork
 
-The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs and the legacy hosted translation queue remain unavailable unless a compatible replacement is configured or implemented. Local generated-image gallery records, local vector-library management, and configurable local music generation are available; semantic vector retrieval, public community views, and deeper gallery metadata parity still need further work.
+The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Public/community gallery browsing and the legacy hosted translation queue remain unavailable. Personal local packs, local generated-image gallery records, local vector-library management, and configurable local music generation are available; semantic vector retrieval and public community views remain out of scope for local mode.
 
 ## Next parity targets
 
-The highest-value remaining work is provider-specific live validation in Foundry, clearer capability/error presentation for user-supplied image models, and deeper local replacement for community packs/public gallery actions. AI document translation remains intentionally out of the local-only slice.
+The highest-value remaining work is provider-specific live validation in Foundry and clearer capability/error presentation for user-supplied image models. Public community gallery actions and AI document translation remain intentionally out of the local-only slice.

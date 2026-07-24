@@ -504,6 +504,120 @@ globalThis.__boobastudioLocalGalleryDelete = localGalleryDelete;
 globalThis.__boobastudioLocalGalleryShare = localGallerySharingUnavailable;
 globalThis.__boobastudioLocalGalleryTogglePublic = localGallerySharingUnavailable;
 
+// Keep personal image packs useful without Cibola's community-pack service.
+// Packs store gallery IDs, not duplicate image payloads, so deleting a gallery
+// item naturally removes it from the next local pack view.
+function localPackStorageKey() {
+  return `${NAMESPACE}-local-packs-${globalThis.game?.world?.id || "world"}`;
+}
+
+function readLocalPacks() {
+  try {
+    const value = globalThis.localStorage?.getItem(localPackStorageKey());
+    const parsed = value ? JSON.parse(value) : [];
+    return Array.isArray(parsed) ? parsed.filter((pack) => pack && typeof pack === "object" && pack.id) : [];
+  } catch { return []; }
+}
+
+function writeLocalPacks(packs) {
+  try { globalThis.localStorage?.setItem(localPackStorageKey(), JSON.stringify(packs.slice(0, 50))); } catch { /* quota or unavailable storage */ }
+}
+
+function localPackRecord(pack) {
+  const images = Array.isArray(pack.imageIds) ? pack.imageIds : [];
+  const gallery = readLocalGallery();
+  const thumbnails = images.map((id) => gallery.find((entry) => String(entry.id) === String(id))?.attributes?.thumbnail).filter(Boolean).slice(0, 4);
+  return { id: String(pack.id), type: "pack", attributes: { name: String(pack.name || "Untitled Pack"), tagline: String(pack.tagline || ""), description: String(pack.description || ""), category: String(pack.category || ""), style: String(pack.style || ""), primary_tag: String(pack.primary_tag || ""), drawing_style: String(pack.drawing_style || ""), visibility: "private", status: "draft", image_count: images.length, preview_thumbnails: thumbnails, created_at: String(pack.created_at || "") } };
+}
+
+function localPackImageRecords(pack) {
+  const gallery = readLocalGallery();
+  return (Array.isArray(pack?.imageIds) ? pack.imageIds : []).map((id) => gallery.find((entry) => String(entry.id) === String(id))).filter(Boolean).map((entry) => ({ ...entry, attributes: { ...entry.attributes, pack_id: String(pack.id) } }));
+}
+
+function localPackUnavailable(callback) {
+  callback?.({ status: "error", errors: ["Community pack browsing and publishing are unavailable in local mode."] });
+  return true;
+}
+
+async function localPackMyPacks() {
+  return isEnabled() ? { data: readLocalPacks().map(localPackRecord), meta: { total: readLocalPacks().length } } : false;
+}
+
+async function localPackCreate(input = {}) {
+  if (!isEnabled()) return false;
+  const pack = { id: `local-pack-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, ...input, imageIds: [], created_at: new Date().toISOString() };
+  writeLocalPacks([pack, ...readLocalPacks()]);
+  return { data: localPackRecord(pack) };
+}
+
+async function localPackAddImage(packId, galleryId) {
+  if (!isEnabled()) return false;
+  const packs = readLocalPacks();
+  const pack = packs.find((entry) => String(entry.id) === String(packId));
+  const image = readLocalGallery().find((entry) => String(entry.id) === String(galleryId));
+  if (!pack || !image) return { ok: false, error: "Pack or gallery image was not found." };
+  pack.imageIds = Array.isArray(pack.imageIds) ? pack.imageIds : [];
+  if (!pack.imageIds.some((id) => String(id) === String(galleryId))) pack.imageIds.push(String(galleryId));
+  writeLocalPacks(packs);
+  return { ok: true, data: image };
+}
+
+async function localPackDetail(packId) {
+  if (!isEnabled()) return false;
+  const pack = readLocalPacks().find((entry) => String(entry.id) === String(packId));
+  return pack ? { data: { ...localPackRecord(pack), images: localPackImageRecords(pack) } } : { status: "error", errors: ["Local pack was not found."] };
+}
+
+async function localPackImages(packId, page = 1) {
+  if (!isEnabled()) return false;
+  const pack = readLocalPacks().find((entry) => String(entry.id) === String(packId));
+  if (!pack) return { status: "error", errors: ["Local pack was not found."] };
+  const images = localPackImageRecords(pack);
+  const pageSize = 20;
+  const pageNumber = Math.max(1, Number(page) || 1);
+  return { data: images.slice((pageNumber - 1) * pageSize, pageNumber * pageSize), pagy: { next: pageNumber * pageSize < images.length ? pageNumber + 1 : null }, meta: { total: images.length, page: pageNumber, per_page: pageSize } };
+}
+
+async function localPackUpdate(packId, input = {}) {
+  if (!isEnabled()) return false;
+  const packs = readLocalPacks();
+  const pack = packs.find((entry) => String(entry.id) === String(packId));
+  if (!pack) return { status: "error", errors: ["Local pack was not found."] };
+  Object.assign(pack, input);
+  writeLocalPacks(packs);
+  return { data: localPackRecord(pack) };
+}
+
+async function localPackDelete(packId) {
+  if (!isEnabled()) return false;
+  const packs = readLocalPacks();
+  const remaining = packs.filter((entry) => String(entry.id) !== String(packId));
+  if (remaining.length === packs.length) return { status: "error", errors: ["Local pack was not found."] };
+  writeLocalPacks(remaining);
+  return { success: true, status: "done" };
+}
+
+async function localPackRemoveImage(packId, imageId) {
+  if (!isEnabled()) return false;
+  const packs = readLocalPacks();
+  const pack = packs.find((entry) => String(entry.id) === String(packId));
+  if (!pack) return { status: "error", errors: ["Local pack was not found."] };
+  pack.imageIds = (pack.imageIds || []).filter((id) => String(id) !== String(imageId));
+  writeLocalPacks(packs);
+  return { success: true, status: "done" };
+}
+
+globalThis.__boobastudioLocalPackMyPacks = localPackMyPacks;
+globalThis.__boobastudioLocalPackCreate = localPackCreate;
+globalThis.__boobastudioLocalPackAddImage = localPackAddImage;
+globalThis.__boobastudioLocalPackDetail = localPackDetail;
+globalThis.__boobastudioLocalPackImages = localPackImages;
+globalThis.__boobastudioLocalPackUpdate = localPackUpdate;
+globalThis.__boobastudioLocalPackDelete = localPackDelete;
+globalThis.__boobastudioLocalPackRemoveImage = localPackRemoveImage;
+globalThis.__boobastudioLocalPackUnavailable = localPackUnavailable;
+
 // Keep the existing vector-store UI usable without Cibola's hosted index.
 // This is deliberately a browser-local document library, not a new database
 // or service. The stored text is available for future local retrieval work;
