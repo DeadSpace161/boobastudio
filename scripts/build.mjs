@@ -69,9 +69,19 @@ const listAllVectorsMethod = "static async listAllVectors(t){let{AuthService:e}=
 const listAllVectorsReplacement = "static async listAllVectors(t){if(typeof globalThis.__boobastudioLocalVectorList===\"function\"&&await globalThis.__boobastudioLocalVectorList(t))return;let{AuthService:e}=await Promise.resolve().then(()=>(B(),H));await e.executeOperation(t,async()=>{let i=foundry.utils.mergeObject({body:JSON.stringify({gamesystem_id:game.system.id,gamesystem_title:game.system.title})},e.postRequestObject()),a=e.route(\"vector/list_all\"),s=await e.fetchJsonWithTimeout(a,i);t(s)})}";
 const removeVectorMethod = "static async removeVectorFile(t,e){let{AuthService:i}=await Promise.resolve().then(()=>(B(),H));await i.executeOperation(e,async()=>{let a=`vector/deleteVector?id=${t}`,s=await i.fetchJsonWithTimeout(i.route(a),i.deleteRequestObject());e(s)})}";
 const removeVectorReplacement = "static async removeVectorFile(t,e){if(typeof globalThis.__boobastudioLocalVectorDelete===\"function\"&&await globalThis.__boobastudioLocalVectorDelete(t,e))return;let{AuthService:i}=await Promise.resolve().then(()=>(B(),H));await i.executeOperation(e,async()=>{let a=`vector/deleteVector?id=${t}`,s=await i.fetchJsonWithTimeout(i.route(a),i.deleteRequestObject());e(s)})}";
+const threadAccountGate = "if(t.userInfo=C.userInfo(),!t.userInfo.alive){";
+const threadAccountReplacement = "if(t.userInfo=C.userInfo(),!(t.userInfo.alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())){";
+const threadDragDropGate = "return this.isEditable&&C.userInfo().alive&&C.userInfo().level>0";
+const threadDragDropReplacement = "return this.isEditable&&(C.userInfo().alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&(C.userInfo().level>0||game.user?.isGM)";
+const threadUploadGate = "return this.isWritable&&C.userInfo().level>0&&t.advanced";
+const threadUploadReplacement = "return this.isWritable&&(C.userInfo().level>0||game.user?.isGM||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&t.advanced";
 let vectorEntry = galleryEntry.replace(galleryPageMethod, galleryPageReplacement).replace(galleryDeleteMethod, galleryDeleteReplacement).replace(galleryAccess, galleryAccessReplacement).replace(galleryContext, galleryContext.replace("!!e.userInfo.alive", "!!(e.userInfo.alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())"));
 for (const [original, replacement] of [[vectorizeMethod, vectorizeReplacement], [listVectorsMethod, listVectorsReplacement], [listAllVectorsMethod, listAllVectorsReplacement], [removeVectorMethod, removeVectorReplacement]]) {
   if (!vectorEntry.includes(original)) throw new Error("Expected vector integration signature was not found");
+  vectorEntry = vectorEntry.replace(original, replacement);
+}
+for (const [original, replacement] of [[threadAccountGate, threadAccountReplacement], [threadDragDropGate, threadDragDropReplacement], [threadUploadGate, threadUploadReplacement]]) {
+  if (!vectorEntry.includes(original)) throw new Error("Expected thread local-access signature was not found");
   vectorEntry = vectorEntry.replace(original, replacement);
 }
 await writeFile(entryPath, vectorEntry);
