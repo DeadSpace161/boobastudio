@@ -18,6 +18,10 @@ For automated Foundry session checks, provide credentials through the environmen
 export BOOBA_FOUNDRY_ADMIN_PASSWORD='...'
 export BOOBA_FOUNDRY_GM_PASSWORD='...'
 /home/booba/playwright_env/bin/python scripts/foundry-smoke.py
+
+# Live v14 provider adapter test with Playwright request interception
+export BOOBA_FOUNDRY_GM_PASSWORD='...'
+/home/booba/playwright_env/bin/python scripts/foundry-provider-smoke.py
 ```
 
 The harness launches the test world when needed, retries the Gamemaster session, and reports the active BoobaStudio version and provider settings without printing credentials.
@@ -46,7 +50,7 @@ OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied
 
 For Anthropic and Gemini, set **Text provider protocol** to the matching native protocol. BoobaStudio sends Anthropic `x-api-key` and `anthropic-version` headers, or Gemini `x-goog-api-key` headers, and normalizes both response formats into the existing Cibola text response contract.
 
-Release 2.2.89 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, pack-action guard, and local startup config guard. It additionally clears local thread JournalEntryPage messages directly when the existing thread-delete action is used, avoiding the hosted `thread/{id}` delete endpoint in local-provider mode. The automated v14 harness now confirms the updated package is active on the test server; provider-backed feature actions still require configured endpoint credentials for deeper end-to-end exercise.
+Release 2.2.89 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, pack-action guard, and local startup config guard. It additionally clears local thread JournalEntryPage messages directly when the existing thread-delete action is used, avoiding the hosted `thread/{id}` delete endpoint in local-provider mode. The automated v14 harness confirms the updated package is active on the test server. The live provider harness then configured the actual module with a mock OpenAI-compatible endpoint and confirmed HTTP 200 normalized text, the existing local query callback, and HTTP 200 image generation without a paid provider request.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 
