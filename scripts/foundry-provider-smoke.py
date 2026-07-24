@@ -284,7 +284,8 @@ async def main():
                                 await new Promise(resolve => setTimeout(resolve, 900));
                                 const sceneImageWindow = [...document.querySelectorAll('.window, aside')]
                                     .find(element => /image generation|image tools|generate image/i.test((element.innerText || '').slice(0, 700)) && element.querySelector('.targetImg'));
-                                const sceneApps = [...(game.applications?.values?.() || []), ...Object.values(ui.windows || {})];
+                                const applicationInstances = foundry.applications?.instances instanceof Map ? [...foundry.applications.instances.values()] : Object.values(foundry.applications?.instances || {});
+                                const sceneApps = [...(game.applications?.values?.() || []), ...Object.values(ui.windows || {}), ...applicationInstances];
                                 const sceneImageApp = sceneApps
                                     .find(app => app?.element === sceneImageWindow || app?.element?.contains?.(sceneImageWindow) || app?.source?.object === smokeScene || app?.document === smokeScene || app?.source?.object?.id === smokeScene.id);
                                 const sceneSaveButton = sceneImageWindow?.querySelector?.('[data-action="saveImg"]');
