@@ -68,6 +68,7 @@ This status reflects the locally built package prepared as version **2.2.113**. 
 - The 2.2.111 release preserves configured local text model IDs in the existing AI Thread data-model choices, allowing custom models to survive Foundry document updates; it also preserves the legacy Actor control class in the generalized v14 bridge.
 - The 2.2.112 release removes the static Thread choice validator only in configured local mode, allowing arbitrary local model IDs while retaining the bundled hosted-model choices otherwise; the Actor bridge receives a fresh cache-busted asset filename.
 - The 2.2.113 release removes the Thread schema choice validator entirely while preserving the existing model-selector template, eliminating initialization-order dependence for local model IDs.
+- The published 2.2.113 package has now passed live Foundry v14 verification: Actor controls render, Item images upload and apply, Scene images upload and apply through `SceneRandomGen`, and custom local Thread model IDs persist through document updates.
 
 ## Intentionally not hosted by this fork
 
@@ -75,4 +76,4 @@ The personal fork does not require Cibola accounts, subscriptions, credits, tele
 
 ## Next parity targets
 
-The highest-value remaining work is end-to-end validation of image application into each supported Foundry document type and clearer capability/error presentation for user-supplied image models. Public community gallery actions and AI document translation remain intentionally out of the local-only slice.
+The highest-value remaining work is live validation of the generalized controls on JournalEntry, Tile, and RollTable sheets, plus clearer capability/error presentation for user-supplied image models. Public community gallery actions and AI document translation remain intentionally out of the local-only slice.
