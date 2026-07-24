@@ -44,7 +44,7 @@ async def main():
                 body = {}
             MockHandler.requests.append({"path": request.url, "body": body})
             if request.url.endswith("/images/generations"):
-                payload = {"data": [{"b64_json": "bW9ja19pbWFnZQ=="}]}
+                payload = {"data": [{"b64_json": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="}]}
             elif request.url.endswith("/audio/speech") or "/text-to-speech/" in request.url:
                 await route.fulfill(status=200, content_type="audio/mpeg", body="mock-audio")
                 return
@@ -68,12 +68,19 @@ async def main():
 
         await page.route("https://mock.boobastudio.test/v1/**", mock_route)
         await join_game(page, base_url, password)
+        await page.evaluate("""() => {
+            const onboarding = document.querySelector('.boobastudio-onboarding');
+            const close = onboarding?.querySelector('[data-action="close"], [data-action="exit"], [data-action="getStarted"]');
+            close?.click();
+        }""")
+        await page.wait_for_timeout(500)
         result = await page.evaluate(
                 """async ({base}) => {
                     const module = game.modules.get('boobastudio');
                     if (!module?.active) throw new Error('BoobaStudio is not active');
                     await game.settings.set('boobastudio', 'providerEnabled', true);
                     await game.settings.set('boobastudio', 'providerProtocol', 'openai');
+                    await game.settings.set('boobastudio', 'clientOnlyMode', true);
                     await game.settings.set('boobastudio', 'ttsBaseUrl', base);
                     await game.settings.set('boobastudio', 'ttsApiKey', 'mock-tts-key');
                     let openaiTts;
@@ -105,6 +112,7 @@ async def main():
                     await game.settings.set('boobastudio', 'imageProvider', 'openai');
                     let actorIntegration = {created: false, sheetRendered: false, controlVisible: false, deleted: false};
                     let smokeActor;
+                    let imageAppInstance;
                     try {
                         smokeActor = await Actor.create({name: `BoobaStudio Live Smoke ${Date.now()}`, type: 'character'});
                         actorIntegration.created = !!smokeActor;
@@ -118,14 +126,62 @@ async def main():
                                 actorControl.click();
                                 await new Promise(resolve => setTimeout(resolve, 700));
                                 actorIntegration.radialVisible = !!document.querySelector('.radial-menu-container');
+                                actorIntegration.radialButtons = [...document.querySelectorAll('.radial-menu-container button, .radial-menu-container .radial-button')]
+                                    .map(button => ({text: (button.innerText || '').trim(), tooltip: button.dataset?.tooltip || '', aria: button.getAttribute('aria-label') || '', className: String(button.className || '')})).slice(0, 20);
+                                const radialRoot = document.querySelector('.radial-menu-container');
+                                actorIntegration.radialInfo = {className: String(radialRoot?.className || ''), text: (radialRoot?.innerText || '').trim().slice(0, 500), html: radialRoot?.outerHTML?.slice(0, 1800) || ''};
                                 const radialButton = [...document.querySelectorAll('.radial-menu-container button, .radial-menu-container .radial-button')]
                                     .find(button => /image|ai/i.test(`${button.innerText || ''} ${button.dataset?.tooltip || ''} ${button.getAttribute('aria-label') || ''}`));
                                 if (radialButton) {
                                     radialButton.click();
                                     await new Promise(resolve => setTimeout(resolve, 900));
+                                } else if (typeof game.modules.get('boobastudio')?.api?.ImageGenerator === 'function') {
+                                    actorIntegration.imageGeneratorApi = true;
+                                    imageAppInstance = new (game.modules.get('boobastudio').api.ImageGenerator)(smokeActor, smokeActor.sheet);
+                                    await imageAppInstance.render(true);
+                                    await new Promise(resolve => setTimeout(resolve, 900));
                                 }
                                 actorIntegration.imageWindowVisible = [...document.querySelectorAll('.window, aside')]
                                     .some(element => /image generation|image tools|generate image/i.test((element.innerText || '').slice(0, 500)));
+                                const imageWindow = [...document.querySelectorAll('.window, aside')]
+                                    .find(element => /image generation|image tools|generate image/i.test((element.innerText || '').slice(0, 700)));
+                                const promptControl = imageWindow?.querySelector?.('textarea.prompt, input.prompt, textarea[name="prompt"], input[name="prompt"]');
+                                const generateControl = imageWindow?.querySelector?.('[data-action="generate"]');
+                                const promptLauncher = imageWindow?.querySelector?.('[data-action="goPrompt"]');
+                                actorIntegration.imageUi = {localConfigured: globalThis.__boobastudioLocalProviderConfigured?.() === true, clientOnlyMode: game.settings.get('boobastudio', 'clientOnlyMode'), promptControl: !!promptControl, generateControl: !!generateControl, submitted: false, renderedResult: false, text: (imageWindow?.innerText || '').trim().slice(0, 900), goPrompt: promptLauncher ? {disabled: !!promptLauncher.disabled, ariaDisabled: promptLauncher.getAttribute('aria-disabled') || '', outer: promptLauncher.outerHTML.slice(0, 600)} : null, controls: [...(imageWindow?.querySelectorAll?.('input, textarea, button, [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', className: String(control.className || ''), value: control.value || '', text: (control.innerText || '').trim()})).slice(0, 30)};
+                                if (promptLauncher) {
+                                    promptLauncher.click();
+                                    await new Promise(resolve => setTimeout(resolve, 700));
+                                }
+                                if (!document.querySelector('.boobastudio-dialog, .ciboladialog, [role="dialog"] textarea')) {
+                                    const imageApp = imageAppInstance || [...(game.applications?.values?.() || [])].find(app => app?.element === imageWindow || app?.element?.contains?.(imageWindow));
+                                    actorIntegration.imageAppGoPrompt = typeof imageApp?.goPrompt === 'function';
+                                    if (imageApp?.goPrompt && promptLauncher) {
+                                        await imageApp.goPrompt(promptLauncher);
+                                        await new Promise(resolve => setTimeout(resolve, 700));
+                                    }
+                                }
+                                const promptWindow = [...document.querySelectorAll('.window, aside')]
+                                    .find(element => element !== imageWindow && /prompt|description|generate/i.test((element.innerText || '').slice(0, 800)) && element.querySelector('textarea, input'));
+                                const actualPrompt = promptWindow?.querySelector?.('textarea.prompt, input.prompt, textarea[name="prompt"], input[name="prompt"], textarea');
+                                const actualGenerate = promptWindow?.querySelector?.('[data-action="generate"], [data-action="submit"], button[type="submit"]');
+                                actorIntegration.imageUi.promptDialog = {opened: !!promptWindow, promptControl: !!actualPrompt, generateControl: !!actualGenerate, text: (promptWindow?.innerText || '').trim().slice(0, 500)};
+                                if (actualPrompt && actualGenerate) {
+                                    actualPrompt.value = 'live actor image workflow probe';
+                                    actualPrompt.dispatchEvent(new Event('input', {bubbles: true}));
+                                    actualGenerate.click();
+                                    await new Promise(resolve => setTimeout(resolve, 1800));
+                                    actorIntegration.imageUi.submitted = true;
+                                    actorIntegration.imageUi.renderedResult = !!imageWindow?.querySelector?.('img[src^="data:image/"], img[src*="mock"]');
+                                }
+                                if (promptControl && generateControl) {
+                                    promptControl.value = 'live actor image workflow probe';
+                                    promptControl.dispatchEvent(new Event('input', {bubbles: true}));
+                                    generateControl.click();
+                                    await new Promise(resolve => setTimeout(resolve, 1800));
+                                    actorIntegration.imageUi.submitted = true;
+                                    actorIntegration.imageUi.renderedResult = !!imageWindow.querySelector('img[src^="data:image/"], img[src*="mock"]');
+                                }
                                 document.querySelectorAll('.radial-modal, .radial-menu-container').forEach(element => element.closest('.window')?.remove?.());
                             }
                             smokeActor.sheet.close?.();
@@ -177,7 +233,6 @@ async def main():
                     await game.settings.set('boobastudio', 'providerBaseUrl', base);
                     await game.settings.set('boobastudio', 'providerModel', 'mock-model');
                     await game.settings.set('boobastudio', 'providerJsonMode', false);
-                    await game.settings.set('boobastudio', 'clientOnlyMode', true);
                     const configured = globalThis.__boobastudioLocalProviderConfigured?.() === true;
                     const response = await fetch('https://api.openai.com/v1/responses', {
                         method: 'POST',

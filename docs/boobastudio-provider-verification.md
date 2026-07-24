@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.97**. The public test world now reports 2.2.97 after the versioned-asset JavaScript release was installed; the 2.2.97 manifest and ZIP are independently verified.
+The current locally packaged release is **2.2.98**. The public test world remains on the published 2.2.97 package; the 2.2.98 manifest and ZIP are independently verified locally and await repository publication.
 
 ## Build checks
 
