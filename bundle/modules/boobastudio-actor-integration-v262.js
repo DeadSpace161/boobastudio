@@ -1,26 +1,37 @@
-/* Foundry v14 ApplicationV2 compatibility bridge for actor sheets.
- * The inherited renderActorSheet hook is not emitted by some system sheets.
- * Reuse the existing BoobaStudio menu instead of duplicating any generator UI.
+/* Foundry v14 ApplicationV2 compatibility bridge for document sheets.
+ * Some systems do not emit the legacy document-sheet header hooks, so reuse
+ * the existing image generator for every document type supported by Cibola.
  */
-function addBoobaStudioActorControl(app) {
-  const actorDocument = app?.object ?? app?.document;
-  if (actorDocument?.documentName !== "Actor" || !actorDocument?.isOwner) return;
+function addBoobaStudioDocumentControl(app) {
+  const document = app?.object ?? app?.document;
+  const supported = new Set(["Actor", "Item", "JournalEntry", "RollTable", "Tile"]);
+  if (!supported.has(document?.documentName) || !document?.isOwner) return;
+  const local = globalThis.__boobastudioLocalProviderConfigured?.() === true;
+  if (!globalThis.game?.user?.isGM && !local) return;
   const root = app?.element;
-  const header = root?.querySelector?.(".window-header");
-  if (!header || header.querySelector(".boobastudio-actor-control")) return;
+  const header = root?.querySelector?.(".window-header") ?? root?.querySelector?.("header");
+  if (!header || header.querySelector(".boobastudio-document-control")) return;
   const button = globalThis.document?.createElement?.("button");
   if (!button) return;
   button.type = "button";
-  button.className = "header-control icon fa-solid fa-wand-magic-sparkles boobastudio-actor-control";
+  button.className = "header-control icon fa-solid fa-wand-magic-sparkles boobastudio-document-control";
   button.dataset.tooltip = "BoobaStudio";
   button.setAttribute("aria-label", "BoobaStudio");
   button.addEventListener("click", () => {
     const api = globalThis.game?.modules?.get("boobastudio")?.api;
-    if (api) api.__boobaActorDocument = actorDocument;
-    installRadialFallback(actorDocument);
-    const menu = api?.menu;
-    if (typeof menu === "function") menu();
-    else globalThis.ui?.notifications?.warn?.("BoobaStudio menu is not available yet.");
+    if (!api) {
+      globalThis.ui?.notifications?.warn?.("BoobaStudio is not available yet.");
+      return;
+    }
+    if (document.documentName === "Actor") {
+      api.__boobaActorDocument = document;
+      installRadialFallback(document);
+      typeof api.menu === "function"
+        ? api.menu()
+        : globalThis.ui?.notifications?.warn?.("BoobaStudio menu is not available yet.");
+      return;
+    }
+    if (typeof api.ImageGenerator === "function") new api.ImageGenerator(document, app).render(true);
   });
   const close = header.querySelector('[data-action="close"]');
   header.insertBefore(button, close || null);
@@ -70,8 +81,8 @@ function installRadialFallback(actorDocument = null) {
   };
 }
 
-Hooks.on("renderApplication", (app) => addBoobaStudioActorControl(app));
-Hooks.on("renderApplicationV2", (app) => addBoobaStudioActorControl(app));
+Hooks.on("renderApplication", (app) => addBoobaStudioDocumentControl(app));
+Hooks.on("renderApplicationV2", (app) => addBoobaStudioDocumentControl(app));
 Hooks.once("ready", () => {
   // The main bundle publishes module.api during its own ready sequence on
   // Foundry v14. Retry briefly so load order cannot leave the fallback inert.

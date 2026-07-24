@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.108**. The public test server remains on the last published 2.2.97 package while the 2.2.108 release awaits repository write access.
+This status reflects the locally built package prepared as version **2.2.109**. The public test server remains on the last published 2.2.97 package while the 2.2.109 release awaits repository write access.
 
 ## Verified
 
@@ -63,6 +63,7 @@ This status reflects the locally built package prepared as version **2.2.108**. 
 - The 2.2.106 build preserves arbitrary local thread model IDs through the recovered JournalEntryPage data-model migration instead of resetting them to the bundled Cibola default.
 - The 2.2.107 build adds the configured local music model to the existing song-generation selector, preserving the original hosted catalog and UI.
 - The 2.2.108 build allows configured local providers to expose the existing document-generation controls to eligible non-GM owners, while preserving the hosted account gate when local mode is disabled.
+- The 2.2.109 v14 compatibility bridge extends the existing Actor control to Item, JournalEntry, RollTable, and Tile sheets when their legacy header hooks are absent, reusing the same image generator and document ownership checks.
 
 ## Intentionally not hosted by this fork
 
