@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.90**. The public test server is running the prior 2.2.89 build until the next automated install/update check completes.
+This status reflects the locally built package prepared as version **2.2.91**. The public test server is running the prior 2.2.89 build until its setup administrator authentication is available for an automated install/update.
 
 ## Verified
 
@@ -12,6 +12,7 @@ This status reflects the locally built package prepared as version **2.2.90**. T
 - The direct chat service’s legacy GPT-only model restriction now applies only to unconfigured client-only mode; configured local providers can use OpenRouter, Ollama, LM Studio, or other compatible model names through the existing chat path.
 - Direct `/c8` chat no longer requires the legacy client-only-mode toggle or hosted confirmation gate when a local provider is explicitly configured; the legacy gates remain active for unconfigured sessions.
 - Existing AI Thread JournalEntryPage sheets now recognize an explicitly configured local provider for account visibility, messaging controls, and local vector-file upload access; thread messages continue to persist in the existing JournalEntryPage `system.messages` field.
+- Local AI Thread replies now preserve `system.thread_id` when the local provider returns no hosted thread ID; hosted thread responses retain the original thread-ID update behavior.
 - Local vector files with extractable text can now provide ranked token-overlap context to local text requests through a client setting; this is a lightweight local retrieval fallback, not a hosted embedding index.
 - Local provider chat fallback accepts the existing workflow modes used by threads, name generation, and other Cibola chat callers instead of restricting local use to the literal `chat` mode.
 - The existing `enhance` façade now routes through the local text provider and preserves its `{result}` callback contract for prompt improvement and document enhancement workflows.
@@ -51,4 +52,4 @@ The personal fork does not require Cibola accounts, subscriptions, credits, tele
 
 ## Next parity targets
 
-The highest-value remaining work is provider-specific live validation in Foundry, deeper gallery/thread metadata parity where hosted contracts cannot be reused, and clearer capability/error presentation for user-supplied image models. Community packs/public gallery actions and AI document translation remain intentionally out of the local-only slice.
+The highest-value remaining work is provider-specific live validation in Foundry, clearer capability/error presentation for user-supplied image models, and deeper local replacement for community packs/public gallery actions. AI document translation remains intentionally out of the local-only slice.
