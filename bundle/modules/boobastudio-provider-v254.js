@@ -415,8 +415,25 @@ function readLocalGallery() {
   try {
     const value = globalThis.localStorage?.getItem(localGalleryStorageKey());
     const parsed = value ? JSON.parse(value) : [];
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed.filter((entry) => entry && typeof entry === "object").map(normalizeLocalGalleryEntry) : [];
   } catch { return []; }
+}
+
+function normalizeLocalGalleryEntry(entry) {
+  const attributes = entry.attributes && typeof entry.attributes === "object" ? { ...entry.attributes } : {};
+  const result = String(attributes.result || "");
+  const isSong = attributes.type === "song" || result.startsWith("[") && attributes.audio_url;
+  return {
+    ...entry,
+    id: String(entry.id || `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`),
+    attributes: {
+      ...attributes,
+      type: isSong ? "song" : String(attributes.type || "image"),
+      publicstate: String(attributes.publicstate || "self_only"),
+      llmjobid: String(attributes.llmjobid || entry.id || ""),
+      created_at: String(attributes.created_at || new Date().toISOString()),
+    },
+  };
 }
 
 function writeLocalGallery(entries) {
@@ -425,9 +442,10 @@ function writeLocalGallery(entries) {
 
 function rememberLocalSong(song, input, model) {
   const entries = readLocalGallery();
+  const id = `local-song-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   entries.unshift({
-    id: `local-song-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    attributes: { result: JSON.stringify([song]), thumbnail: String(song.image_url || ""), prompt: String(input?.style || input?.lyrics || ""), model: String(model || ""), type: "song", created_at: new Date().toISOString() },
+    id,
+    attributes: { result: JSON.stringify([song]), thumbnail: String(song.image_url || ""), audio_url: String(song.audio_url || ""), prompt: String(input?.style || input?.lyrics || ""), model: String(model || ""), type: "song", publicstate: "self_only", llmjobid: id, created_at: new Date().toISOString() },
   });
   writeLocalGallery(entries);
 }
@@ -441,9 +459,11 @@ async function rememberLocalGallery(body, response) {
     for (const item of items) {
       const encoded = item?.b64_json ? `data:image/png;base64,${item.b64_json}` : String(item?.url || "");
       if (!encoded) continue;
+      const id = `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const model = String(body?.model || get(S.imageModel) || "");
       entries.unshift({
-        id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        attributes: { result: encoded, thumbnail: encoded, prompt: String(body?.prompt || ""), model: String(body?.model || get(S.imageModel) || ""), created_at: new Date().toISOString() },
+        id,
+        attributes: { result: encoded, thumbnail: encoded, prompt: String(body?.prompt || ""), model, provider: String(get(S.imageProvider) || "openai"), type: "image", publicstate: "self_only", llmjobid: id, created_at: new Date().toISOString() },
       });
     }
     writeLocalGallery(entries);
@@ -458,7 +478,7 @@ async function localGalleryPage(page, callback, filters = {}) {
   if (filter === "song") entries = entries.filter((entry) => entry.attributes?.type === "song");
   else if (filter === "own" || filter === "all") entries = entries.filter((entry) => entry.attributes?.type !== "song");
   const search = String(filters?.search || "").trim().toLowerCase();
-  if (search) entries = entries.filter((entry) => String(entry.attributes?.prompt || "").toLowerCase().includes(search));
+  if (search) entries = entries.filter((entry) => `${entry.attributes?.prompt || ""} ${entry.attributes?.model || ""}`.toLowerCase().includes(search));
   const pageSize = 20;
   const pageNumber = Math.max(1, Number(page) || 1);
   const next = pageNumber * pageSize < entries.length ? pageNumber + 1 : null;
