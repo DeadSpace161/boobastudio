@@ -5,10 +5,10 @@
 | Dependency | Calls/uses | Required? | Auth | Replaceability |
 |---|---|---|---|---|
 | Foundry VTT globals | All applications, documents, hooks, settings, file uploads, canvas, ProseMirror | Yes | Foundry session/permissions | Must remain native; compatibility shim already exists. |
-| Cibola API (`app.cibola.world`) | `AuthService`, `ApiConfigService`, text/image/TTS/song/translation/thread/gallery/vector/pack/queue methods | Required by normal hosted mode | Client setting `cibola8.apikey`, normalized as bearer/token header | Primary replacement target: retain façade, substitute provider adapters. |
+| Cibola API (`app.cibola.world`) | Compatibility `AuthService`, `ApiConfigService`, hosted text/image/TTS/song/translation/thread/gallery/vector/pack/queue methods | Optional; only required by unconfigured hosted fallback paths | Legacy client setting, normalized as bearer/token header | Local mode bypasses it for text, image, audio, threads, vectors, and local gallery operations. |
 | OpenAI REST | `OpenAIClientService` direct Responses and Images endpoints | Optional today; direct client-only mode | Client-scoped `openaiApiKey` | Directly usable, subject to browser CORS and key exposure. |
-| ElevenLabs | Voice search, voice previews, TTS/music labels and hosted calls | Optional/hosted | Service/API key is mediated by Cibola in current bundle | Direct adapter possible later; existing response/UI fields should be retained. |
-| Suno CDN | Plays generated song URLs from `cdn1.suno.ai` | Optional, result playback | URL returned by hosted service | Replace with returned provider URL or Foundry-uploaded asset. |
+| ElevenLabs | Direct TTS and local voice-catalog-compatible UI | Optional | Client-scoped ElevenLabs key and configurable base URL | Implemented directly; voice catalog is user-configured locally. |
+| Suno CDN | Plays hosted song URLs from `cdn1.suno.ai` | Optional hosted fallback | URL returned by hosted service | Local Replicate song results use their returned audio URL instead. |
 | OpenCV.js | `WallDetectionApp` and worker | Bundled, local | None | Keep bundled; no remote dependency. |
 | VTTA-Tokenizer | Token-horde automatic ring path | Optional module | Foundry module integration | Keep optional and detect module availability. |
 | Foundry FilePicker/File API | Generated files, folders, uploads | Required for durable assets | Foundry permissions | Keep; never write arbitrary Unraid paths from browser code. |
@@ -17,7 +17,7 @@
 
 The settings UI and localization explicitly describe Cibola API keys, Patreon connection, account creation, API validation, credits, subscription-only models, and hosted usage. `AuthService` also owns the `alive` health/credits payload and feature/model configuration. This means authentication is not a thin login screen: it initializes model availability, access checks, queue operation eligibility, and hosted request headers.
 
-The existing direct OpenAI mode is deliberately limited. `clientOnlyMode` plus a client-scoped `openaiApiKey` can enable direct text and text-prompt image generation, and the UI warns that threads, gallery, TTS, translation, and other backend features remain hosted. It is the best evidence-backed seed for the first local provider implementation.
+BoobaStudio local mode extends the original direct-client path. A client-scoped provider setting enables local text, image, TTS, song, thread-chat, vector-library, and browser-local gallery paths while preserving the original façade and hosted fallback behavior when local mode is disabled. AI document translation and community-pack/public-gallery infrastructure remain intentionally out of scope.
 
 ## CORS and key exposure
 
@@ -25,4 +25,4 @@ The module runs in the Foundry browser client. API keys in client-scoped Foundry
 
 ## Telemetry
 
-The required search terms found no clear Sentry, Segment, PostHog, Mixpanel, analytics, or telemetry endpoint in the compiled bundle. The hosted API necessarily receives prompts, generated-content requests, account/API-key authorization, usage/credit activity, and likely request metadata, but an independent analytics beacon was not identified. Treat this as “not found,” not proof of absence. Phase 1 should disable hosted health/config calls by default in local mode and audit request wrappers again after source recovery.
+The required search terms found no clear Sentry, Segment, PostHog, Mixpanel, analytics, or telemetry endpoint in the compiled bundle. The hosted API necessarily receives prompts, generated-content requests, account/API-key authorization, usage/credit activity, and likely request metadata, but an independent analytics beacon was not identified. Local mode skips hosted health/config initialization when a provider is configured; treat the absence of a separate beacon as “not found,” not proof of absence.
