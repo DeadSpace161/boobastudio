@@ -44,6 +44,7 @@ values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
 values.set("boobastudio.openaiApiKey", "test-key");
 values.set("boobastudio.imageProvider", "openai");
 values.set("boobastudio.providerModel", "local-model");
+values.set("boobastudio.providerJsonMode", true);
 values.set("boobastudio.imageModel", "local-image-model");
 values.set("boobastudio.providerHeaders", JSON.stringify({ "X-Test": "yes" }));
 await hooks.get("ready")();
@@ -53,6 +54,7 @@ const textResponse = await fetch("https://api.openai.com/v1/responses", { method
 assert.equal((await textResponse.json()).output[0].content[0].text, "provider response");
 assert.equal(requests[0].input, "http://provider.test/v1/chat/completions");
 assert.equal(JSON.parse(requests[0].init.body).model, "local-model");
+assert.deepEqual(JSON.parse(requests[0].init.body).response_format, { type: "json_object" });
 assert.equal(requests[0].init.headers.Authorization, "Bearer test-key");
 assert.equal(requests[0].init.headers["X-Test"], "yes");
 
