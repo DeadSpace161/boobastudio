@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.81**. The public server remains on 2.2.75 until repository write access is restored.
+This status reflects the locally built package prepared as version **2.2.82**. The public server remains on 2.2.75 until repository write access is restored.
 
 ## Verified
 
@@ -26,6 +26,7 @@ This status reflects the locally built package prepared as version **2.2.81**. T
 - Local TTS voice-catalog requests return an empty local catalog instead of contacting Cibola; hosted voice search remains unchanged when local mode is disabled.
 - Existing song generation now supports a client-configured Replicate music model, with configurable model-input JSON and placeholder substitution, while preserving the existing song preview, download, and playlist flow.
 - Local song results are indexed in the same browser-local gallery store and returned through the existing `filter:"song"` browser contract.
+- Local song cards now play and copy the provider-returned `audio_url`; hosted Suno CDN URLs remain the compatibility fallback for older records.
 - Actor sheet integration opens the existing image application with the selected Actor as its source document.
 - Generated Actor images can be saved through Foundry file handling and update the Actor image field; no arbitrary server path is written by browser code.
 - Provider requests and responses are normalized in the existing Cibola-compatible façade. Errors distinguish network/CORS, timeout, invalid key, access denied, rate limit, and generic provider failures.
