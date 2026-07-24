@@ -344,7 +344,8 @@ async function localGalleryPage(page, callback, filters = {}) {
   if (search) entries = entries.filter((entry) => String(entry.attributes?.prompt || "").toLowerCase().includes(search));
   const pageSize = 20;
   const pageNumber = Math.max(1, Number(page) || 1);
-  callback?.({ data: entries.slice((pageNumber - 1) * pageSize, pageNumber * pageSize), meta: { total: entries.length, page: pageNumber, per_page: pageSize } }, {});
+  const next = pageNumber * pageSize < entries.length ? pageNumber + 1 : null;
+  callback?.({ data: entries.slice((pageNumber - 1) * pageSize, pageNumber * pageSize), pagy: { next }, meta: { total: entries.length, page: pageNumber, per_page: pageSize } }, {});
   return true;
 }
 

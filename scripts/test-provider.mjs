@@ -244,6 +244,11 @@ await globalThis.__boobastudioLocalGalleryDelete(localGalleryPage.data[0].id, ()
 let emptyLocalGallery;
 await globalThis.__boobastudioLocalGalleryPage(1, (page) => { emptyLocalGallery = page; }, {});
 assert.equal(emptyLocalGallery.data.length, 0);
+for (let index = 0; index < 21; index++) await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: `pagination probe ${index}` }) });
+let paginatedGallery;
+await globalThis.__boobastudioLocalGalleryPage(1, (page) => { paginatedGallery = page; }, {});
+assert.equal(paginatedGallery.data.length, 20);
+assert.equal(paginatedGallery.pagy.next, 2);
 
 let enhanced;
 await globalThis.__boobastudioLocalVectorize({ get() { return { name: "campaign.txt", size: 32, text: async () => "tavern lore local context" }; } }, () => {}, () => {});
