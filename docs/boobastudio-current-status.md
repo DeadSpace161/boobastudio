@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the validated public package released as version **2.2.75**.
+This status reflects the locally built package prepared as version **2.2.76**. The public server remains on 2.2.75 until repository write access is restored.
 
 ## Verified
 
@@ -14,12 +14,13 @@ This status reflects the validated public package released as version **2.2.75**
 - Generated Actor images can be saved through Foundry file handling and update the Actor image field; no arbitrary server path is written by browser code.
 - Provider requests and responses are normalized in the existing Cibola-compatible façade. Errors distinguish network/CORS, timeout, invalid key, access denied, rate limit, and generic provider failures.
 - Locally configured image generations are persisted in browser-local storage through the existing gallery request/delete façade. The live Foundry browser probe confirmed pagination, record shape, and deletion without a Cibola-hosted request.
+- The existing vector-store upload, list, and delete callbacks now have a browser-local persistence path using the same Cibola-compatible response shape. Text-file content is retained locally when it fits the browser storage limit; no external vector index is required for library management.
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry smoke validation.
 
 ## Intentionally not hosted by this fork
 
-The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs, hosted vector stores, and the legacy hosted thread/translation queues remain unavailable unless a compatible replacement is configured or implemented. Local generated-image gallery records are now available; the full existing gallery browser and hosted community views still need deeper parity work.
+The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs and the legacy hosted thread/translation queues remain unavailable unless a compatible replacement is configured or implemented. Local generated-image gallery records and local vector-library management are available; semantic vector retrieval, the full existing gallery browser, and hosted community views still need deeper parity work.
 
 ## Next parity targets
 
