@@ -526,7 +526,8 @@ function writeLocalPacks(packs) {
 function localPackRecord(pack) {
   const images = Array.isArray(pack.imageIds) ? pack.imageIds : [];
   const gallery = readLocalGallery();
-  const thumbnails = images.map((id) => gallery.find((entry) => String(entry.id) === String(id))?.attributes?.thumbnail).filter(Boolean).slice(0, 4);
+  const orderedImages = pack.coverImageId ? [pack.coverImageId, ...images.filter((id) => String(id) !== String(pack.coverImageId))] : images;
+  const thumbnails = orderedImages.map((id) => gallery.find((entry) => String(entry.id) === String(id))?.attributes?.thumbnail).filter(Boolean).slice(0, 4);
   return { id: String(pack.id), type: "pack", attributes: { name: String(pack.name || "Untitled Pack"), tagline: String(pack.tagline || ""), description: String(pack.description || ""), category: String(pack.category || ""), style: String(pack.style || ""), primary_tag: String(pack.primary_tag || ""), drawing_style: String(pack.drawing_style || ""), visibility: "private", status: "draft", image_count: images.length, preview_thumbnails: thumbnails, created_at: String(pack.created_at || "") } };
 }
 
@@ -608,6 +609,17 @@ async function localPackRemoveImage(packId, imageId) {
   return { success: true, status: "done" };
 }
 
+async function localPackUpdateImage(packId, imageId, input = {}) {
+  if (!isEnabled()) return false;
+  const packs = readLocalPacks();
+  const pack = packs.find((entry) => String(entry.id) === String(packId));
+  if (!pack || !(pack.imageIds || []).some((id) => String(id) === String(imageId))) return { status: "error", errors: ["Local pack image was not found."] };
+  if (input?.is_cover === true || input?.isCover === true) pack.coverImageId = String(imageId);
+  if (input?.is_cover === false || input?.isCover === false) delete pack.coverImageId;
+  writeLocalPacks(packs);
+  return { success: true, status: "done", data: { id: String(imageId) } };
+}
+
 globalThis.__boobastudioLocalPackMyPacks = localPackMyPacks;
 globalThis.__boobastudioLocalPackCreate = localPackCreate;
 globalThis.__boobastudioLocalPackAddImage = localPackAddImage;
@@ -616,6 +628,7 @@ globalThis.__boobastudioLocalPackImages = localPackImages;
 globalThis.__boobastudioLocalPackUpdate = localPackUpdate;
 globalThis.__boobastudioLocalPackDelete = localPackDelete;
 globalThis.__boobastudioLocalPackRemoveImage = localPackRemoveImage;
+globalThis.__boobastudioLocalPackUpdateImage = localPackUpdateImage;
 globalThis.__boobastudioLocalPackUnavailable = localPackUnavailable;
 
 // Keep the existing vector-store UI usable without Cibola's hosted index.

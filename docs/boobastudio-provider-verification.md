@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.93**. The public test world currently reports 2.2.89 because its setup administrator authentication has not permitted an automated update; the 2.2.93 manifest and ZIP are published and independently verified.
+The current locally packaged release is **2.2.94**. The public test world currently reports 2.2.89 because its setup administrator authentication has not permitted an automated update; the 2.2.94 manifest and ZIP are published and independently verified.
 
 ## Build checks
 
@@ -50,7 +50,7 @@ OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied
 
 For Anthropic and Gemini, set **Text provider protocol** to the matching native protocol. BoobaStudio sends Anthropic `x-api-key` and `anthropic-version` headers, or Gemini `x-goog-api-key` headers, and normalizes both response formats into the existing Cibola text response contract.
 
-Release 2.2.93 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, personal local pack façade, configurable image-model selector, and local startup config guard. It preserves local thread JournalEntryPage messages without writing an absent hosted `thread_id`. The live provider harness configures the actual installed module with a mock OpenAI-compatible endpoint and confirms HTTP 200 normalized text, the existing local query callback, and HTTP 200 image generation without a paid provider request.
+Release 2.2.94 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, personal local pack façade including cover/detail operations, configurable image-model selector, and local startup config guard. It preserves local thread JournalEntryPage messages without writing an absent hosted `thread_id`. The live provider harness configures the actual installed module with a mock OpenAI-compatible endpoint and confirms HTTP 200 normalized text, the existing local query callback, and HTTP 200 image generation without a paid provider request.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 
