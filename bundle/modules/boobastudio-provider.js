@@ -366,7 +366,7 @@ async function localGalleryPage(page, callback, filters = {}) {
 async function localGalleryDelete(id, callback) {
   if (!isEnabled()) return false;
   writeLocalGallery(readLocalGallery().filter((entry) => entry.id !== id));
-  callback?.({ data: { attributes: { status: "success" } } });
+  callback?.({ success: true, status: "done", data: { attributes: { status: "success" } } });
   return true;
 }
 
