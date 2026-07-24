@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.95**. The public test world now reports 2.2.95 after an automated setup installation from the published manifest; the 2.2.95 manifest and ZIP are independently verified.
+The current locally packaged release is **2.2.96**. The public test world reports 2.2.95 until the cache-busted JavaScript release is installed; the 2.2.96 manifest and ZIP are independently verified.
 
 ## Build checks
 
@@ -50,7 +50,7 @@ OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied
 
 For Anthropic and Gemini, set **Text provider protocol** to the matching native protocol. BoobaStudio sends Anthropic `x-api-key` and `anthropic-version` headers, or Gemini `x-goog-api-key` headers, and normalizes both response formats into the existing Cibola text response contract.
 
-Release 2.2.95 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, personal local pack façade including cover/detail operations, configurable image-model selector, local token framing fallback, and local startup config guard. It preserves local thread JournalEntryPage messages without writing an absent hosted `thread_id`. The live provider harness configures the actual installed module with a mock OpenAI-compatible endpoint and confirms HTTP 200 normalized text, the existing local query callback, and HTTP 200 image generation without a paid provider request. The general UI probe confirms the active v14 module but does not locate the legacy “Text Generation” menu label in the current menu surface.
+Release 2.2.96 retains the live-validated Journal ProseMirror image action, Scene Image Tools flow, local gallery page/delete façade, image description, prompt builder, narration/TTS, configurable Replicate song path, local vector library, local chat/thread gates, local enhancement route, gallery sharing guard, personal local pack façade including cover/detail operations, configurable image-model selector, local token framing fallback, and local startup config guard. It preserves local thread JournalEntryPage messages without writing an absent hosted `thread_id`, and versioned asset URLs prevent stale JavaScript after package updates. The cache-busted release is ready for live installation; the general UI probe remains unable to locate the legacy “Text Generation” menu label in the current menu surface.
 
 The current checks validate the manifest, referenced files, localization JSON, JavaScript syntax, provider request transformation, and generated package layout. The release package is written to `dist/boobastudio`.
 
