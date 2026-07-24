@@ -26,7 +26,7 @@ for (const entry of entries) {
 // Expose the existing generic image application to compatibility bridges.
 // The original bundle keeps this class private, although actor and item
 // workflows already use its implementation internally.
-const entryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v249.js");
+const entryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v250.js");
 const entrySource = await readFile(entryPath, "utf8");
 const privateApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us}";
 const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke}";
