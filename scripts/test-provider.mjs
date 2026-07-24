@@ -263,4 +263,17 @@ let localTTSResult;
 await globalThis.__boobastudioLocalGenerateTTS("Narrate the tavern", JSON.stringify({ type: "tts", voice: "nova" }), "tts-1", (result) => { localTTSResult = result; });
 assert.deepEqual(localTTSResult, { status: "done", result: "data:audio/mpeg;base64,AQID" });
 
+values.set("boobastudio.musicModel", "test/music-model");
+values.set("boobastudio.musicBaseUrl", "https://music.test/v1");
+values.set("boobastudio.musicInput", JSON.stringify({ duration: 8, prompt: "{{style}} | {{lyrics}}" }));
+values.set("boobastudio.replicateApiToken", "music-token");
+let localSongResult;
+await globalThis.__boobastudioLocalGenerateSong({ songtitle: "Tavern Song", lyrics: "Raise a glass", style: "folk" }, JSON.stringify({ type: "song" }), (result) => { localSongResult = result; }, { model: "test/music-model" });
+assert.equal(localSongResult.status, "done");
+const song = JSON.parse(localSongResult.result)[0];
+assert.equal(song.title, "Tavern Song");
+assert.equal(song.audio_url, "https://cdn.test/generated.png");
+assert.equal(requests.at(-2).input, "https://music.test/v1/models/test/music-model/predictions");
+assert.equal(JSON.parse(requests.at(-2).init.body).input.prompt, "folk | Raise a glass");
+
 console.log("BoobaStudio provider smoke test passed");

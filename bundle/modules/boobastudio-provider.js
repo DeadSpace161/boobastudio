@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -164,6 +164,58 @@ async function localGenerateTTS(textInput, behavior, model, callback) {
 
 globalThis.__boobastudioLocalGenerateTTS = localGenerateTTS;
 
+async function localGenerateSong(input, behavior, callback, options = {}) {
+  if (!isEnabled()) return false;
+  const model = String(options?.model || get(S.musicModel) || "").trim();
+  if (!model) {
+    callback?.({ status: "error", errors: ["Configure a Replicate music model before generating a song."] });
+    return true;
+  }
+  const controller = new AbortController();
+  const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const base = String(get(S.musicBaseUrl) || "https://api.replicate.com/v1").trim().replace(/\/+$/, "");
+    const endpoint = `${base}/models/${model}/predictions`;
+    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify({ input: musicInput(input) }), signal: controller.signal });
+    let current = await started.json().catch(() => null);
+    if (!started.ok) {
+      callback?.({ status: "error", errors: [providerStatusMessage(started.status, String(current?.detail || current?.error || "").trim())] });
+      return true;
+    }
+    const deadline = Date.now() + timeout;
+    while (current?.status && !["succeeded", "failed", "canceled"].includes(current.status) && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const statusUrl = current.urls?.get || `${base}/predictions/${current.id}`;
+      const status = await fetch(statusUrl, { headers: replicateHeaders(), signal: controller.signal });
+      current = await status.json().catch(() => null);
+      if (!status.ok) {
+        callback?.({ status: "error", errors: [providerStatusMessage(status.status)] });
+        return true;
+      }
+    }
+    if (current?.status !== "succeeded") {
+      callback?.({ status: "error", errors: [String(current?.error || `Music prediction ended with status ${current?.status || "timeout"}`)] });
+      return true;
+    }
+    const output = Array.isArray(current.output) ? current.output[0] : current.output;
+    const audioUrl = typeof output === "string" ? output : output?.audio_url || output?.url || output?.audio || output?.output;
+    if (!audioUrl || typeof audioUrl !== "string") {
+      callback?.({ status: "error", errors: ["Music provider response did not contain an audio URL."] });
+      return true;
+    }
+    const id = current.id || globalThis.crypto?.randomUUID?.() || `boobastudio-song-${Date.now()}`;
+    callback?.({ status: "done", result: JSON.stringify([{ id, title: String(input?.songtitle || "BoobaStudio Song"), lyric: String(input?.lyrics || ""), audio_url: audioUrl, image_url: "" }]) });
+  } catch (error) {
+    callback?.({ status: "error", errors: [providerError(error)] });
+  } finally {
+    clearTimeout(timer);
+  }
+  return true;
+}
+
+globalThis.__boobastudioLocalGenerateSong = localGenerateSong;
+
 async function arrayBufferToBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";
@@ -199,6 +251,22 @@ function replicateInput(body, model = replicateModel(body)) {
     if (body[key] !== undefined && body[key] !== null && body[key] !== "") input[key] = body[key];
   }
   return input;
+}
+
+function musicInput(data) {
+  const fields = data && typeof data === "object" ? data : {};
+  const prompt = [fields.style, fields.lyrics, fields.songtitle].map((value) => String(value || "").trim()).filter(Boolean).join("\n");
+  const defaults = { prompt, lyrics: String(fields.lyrics || ""), title: String(fields.songtitle || "") };
+  if (fields.length_seconds !== undefined && fields.length_seconds !== "") defaults.duration = Number(fields.length_seconds);
+  let configured = {};
+  try { configured = JSON.parse(String(get(S.musicInput) || "{}")); } catch { configured = {}; }
+  const replace = (value) => {
+    if (typeof value === "string") return value.replaceAll("{{prompt}}", prompt).replaceAll("{{lyrics}}", defaults.lyrics).replaceAll("{{title}}", defaults.title).replaceAll("{{style}}", String(fields.style || ""));
+    if (Array.isArray(value)) return value.map(replace);
+    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replace(item)]));
+    return value;
+  };
+  return { ...defaults, ...replace(configured) };
 }
 
 function providerError(error) {
@@ -578,6 +646,9 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
   game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });
+  game.settings.register(NAMESPACE, S.musicModel, { name: "BoobaStudio: Replicate music model", hint: "Replicate owner/model identifier for the existing song generator. Leave blank to keep hosted song generation disabled in local mode.", scope: "client", config: true, type: String, default: "" });
+  game.settings.register(NAMESPACE, S.musicBaseUrl, { name: "BoobaStudio: Music provider base URL", hint: "Default: https://api.replicate.com/v1. Use a CORS-enabled compatible endpoint if necessary.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
+  game.settings.register(NAMESPACE, S.musicInput, { name: "BoobaStudio: Music model input JSON", hint: "Optional JSON object merged into Replicate input. Use {{prompt}}, {{lyrics}}, {{title}}, and {{style}} placeholders.", scope: "client", config: true, type: String, default: "{}" });
   game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
   game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
@@ -604,6 +675,9 @@ Hooks.once("ready", async () => {
     game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
     game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });
+    game.settings.register(NAMESPACE, S.musicModel, { name: "BoobaStudio: Replicate music model", hint: "Replicate owner/model identifier for the existing song generator. Leave blank to keep hosted song generation disabled in local mode.", scope: "client", config: true, type: String, default: "" });
+    game.settings.register(NAMESPACE, S.musicBaseUrl, { name: "BoobaStudio: Music provider base URL", hint: "Default: https://api.replicate.com/v1. Use a CORS-enabled compatible endpoint if necessary.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
+    game.settings.register(NAMESPACE, S.musicInput, { name: "BoobaStudio: Music model input JSON", hint: "Optional JSON object merged into Replicate input. Use {{prompt}}, {{lyrics}}, {{title}}, and {{style}} placeholders.", scope: "client", config: true, type: String, default: "{}" });
     game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
     game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
