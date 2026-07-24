@@ -19,6 +19,7 @@ This status reflects the locally built package prepared as version **2.2.76**. T
 - Provider requests and responses are normalized in the existing Cibola-compatible façade. Errors distinguish network/CORS, timeout, invalid key, access denied, rate limit, and generic provider failures.
 - Locally configured image generations are persisted in browser-local storage through the existing gallery request/delete façade. The live Foundry browser probe confirmed pagination, record shape, and deletion without a Cibola-hosted request.
 - Local gallery share and public-toggle actions now return an explicit local-mode limitation instead of reaching Cibola-hosted endpoints.
+- Existing gallery pack actions are explicitly disabled in local mode, preventing accidental requests to the hosted community-pack APIs.
 - The existing vector-store upload, list, and delete callbacks now have a browser-local persistence path using the same Cibola-compatible response shape. Text-file content is retained locally when it fits the browser storage limit; no external vector index is required for library management.
 - The visible active UI is rebranded to BoobaStudio; the legacy `cibola8` namespace and persisted data remain available for migration compatibility.
 - Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry smoke validation.
