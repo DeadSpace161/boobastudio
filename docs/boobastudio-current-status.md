@@ -16,6 +16,7 @@ This status reflects the locally built package prepared as version **2.2.76**. T
 - The existing `enhance` façade now routes through the local text provider and preserves its `{result}` callback contract for prompt improvement and document enhancement workflows.
 - Local-provider startup now skips the hosted model/config fetch and retains the bundled model defaults; hosted mode continues to use the original remote configuration path.
 - Existing scene image generation can preview a result and expose Save, Save As, Apply as Tile, and Download actions.
+- Local image generation bypasses the legacy hosted client-only session confirmation only when a local provider is configured; unconfigured sessions retain the original safety gate.
 - Existing image-tools description action now routes image data URLs through the configured OpenAI-compatible vision model and returns the original `{status:"done",result}` callback shape; the UI and editor insertion path are unchanged.
 - Existing image prompt-builder action now routes `{command, amount}` through the local text provider, validates the returned JSON array, and preserves the original prompt-tab population flow.
 - Actor sheet integration opens the existing image application with the selected Actor as its source document.
