@@ -121,6 +121,44 @@ async def main():
                             actorIntegration.deleted = !game.actors.has(smokeActor.id);
                         }
                     }
+                    const itemIntegration = {created: false, sheetRendered: false, controlVisible: false, deleted: false};
+                    let smokeItem;
+                    try {
+                        const itemType = Object.keys(game.system.documentTypes?.Item || {})[0] || 'asset';
+                        smokeItem = await Item.create({name: `BoobaStudio Live Smoke Item ${Date.now()}`, type: itemType});
+                        itemIntegration.type = itemType;
+                        itemIntegration.created = !!smokeItem;
+                        if (smokeItem?.sheet?.render) {
+                            await smokeItem.sheet.render(true);
+                            await new Promise(resolve => setTimeout(resolve, 800));
+                            itemIntegration.sheetRendered = !!smokeItem.sheet.rendered;
+                            const itemRoot = smokeItem.sheet.element;
+                            itemIntegration.rootClass = String(itemRoot?.className || '');
+                            itemIntegration.text = (itemRoot?.innerText || '').trim().slice(0, 700);
+                            const itemControls = [...(itemRoot?.querySelectorAll?.('button, a, [data-action]') || [])]
+                                .map(element => ({className: String(element.className || ''), action: element.dataset?.action || '', text: (element.innerText || '').trim()}))
+                                .filter(control => /booba|cibola|generate|ai/i.test(`${control.className} ${control.action} ${control.text}`));
+                            itemIntegration.controlVisible = itemControls.length > 0;
+                            itemIntegration.controls = itemControls.slice(0, 10);
+                            smokeItem.sheet.close?.();
+                        }
+                    } catch (error) {
+                        itemIntegration.error = String(error?.message || error);
+                    } finally {
+                        if (smokeItem) {
+                            await smokeItem.delete();
+                            itemIntegration.deleted = !game.items.has(smokeItem.id);
+                        }
+                    }
+                    const sceneIntegration = {sheetRendered: false, controlVisible: false};
+                    const smokeScene = canvas?.scene;
+                    if (smokeScene?.sheet?.render) {
+                        await smokeScene.sheet.render(true);
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                        sceneIntegration.sheetRendered = !!smokeScene.sheet.rendered;
+                        sceneIntegration.controlVisible = !!document.querySelector('.boobastudio-inject-btn');
+                        smokeScene.sheet.close?.();
+                    }
                     await game.settings.set('boobastudio', 'providerBaseUrl', base);
                     await game.settings.set('boobastudio', 'providerModel', 'mock-model');
                     await game.settings.set('boobastudio', 'providerJsonMode', false);
@@ -173,6 +211,8 @@ async def main():
                         tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}},
                         imageProviders,
                         actorIntegration,
+                        itemIntegration,
+                        sceneIntegration,
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
