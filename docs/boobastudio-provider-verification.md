@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.98**. The public test world remains on the published 2.2.97 package; the 2.2.98 manifest and ZIP are independently verified locally and await repository publication.
+The current locally packaged release is **2.2.99**. The public test world remains on the published 2.2.97 package; the 2.2.99 manifest and ZIP are independently verified locally and await repository publication.
 
 ## Build checks
 
@@ -29,6 +29,8 @@ The harness launches the test world when needed, retries the Gamemaster session,
 The image vertical slice now preserves the existing Image Tools application, accepts standard image URLs as well as OpenAI base64 output, and forces locally configured client image models through the local provider adapter.
 
 Release 2.2.98 fixes a local-mode Image Tools crash found during end-to-end probing: when the hosted model catalog is absent, the existing prompt workflow now receives a safe local model configuration instead of dereferencing an undefined model record. The published 2.2.97 server reproduces the pre-fix `modelDescription` error; 2.2.98 contains the fix but awaits repository publication.
+
+Release 2.2.99 applies the same narrowly scoped fallback to the existing TTS workflow: if a configured local audio model is not present in the hosted catalog, the UI uses an empty field list and continues into the local provider adapter. The package check, provider smoke test, build, archive integrity check, and manifest validation pass locally; live Foundry validation remains pending repository publication.
 
 ## Compatible text-provider configurations
 

@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.98**. The public test server remains on the last published 2.2.97 package while the 2.2.98 release awaits repository write access.
+This status reflects the locally built package prepared as version **2.2.99**. The public test server remains on the last published 2.2.97 package while the 2.2.99 release awaits repository write access.
 
 ## Verified
 
@@ -51,6 +51,7 @@ This status reflects the locally built package prepared as version **2.2.98**. T
 - Active configuration and feedback links now point to the BoobaStudio repository, issues, discussions, and releases rather than legacy community destinations.
 - Automated checks pass: package validation, provider smoke tests, JavaScript syntax/build, and live Foundry v14 smoke validation. The published 2.2.97 build preserves compatible local gallery metadata, safe local thread persistence, complete local pack operations, configurable local image model selection, and local token framing fallback. The live server reports 2.2.97 active; the live provider harness confirms normalized OpenAI-compatible, native Anthropic, and native Gemini text/query paths, OpenAI and ElevenLabs TTS audio responses, OpenAI-compatible, Replicate, Stability, and ComfyUI image responses, Actor-sheet and Scene-sheet control injection, radial-menu opening, image-generator window opening, temporary Item document lifecycle, local pack lifecycle, and the token fallback factory. All live provider calls use Playwright-intercepted mock requests.
 - The 2.2.98 build supplies a safe local model configuration when the hosted image catalog is unavailable, preventing the existing Image Tools prompt workflow from dereferencing a missing model config in local mode.
+- The 2.2.99 build extends the same local-catalog safety to the existing TTS window, preventing an unavailable hosted TTS model record from dereferencing `.fields` before the configured local audio provider is called.
 
 ## Intentionally not hosted by this fork
 

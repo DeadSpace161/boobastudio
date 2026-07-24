@@ -88,6 +88,8 @@ const localImageModelConfig = 'l=M.getModelConfig(s),u=$(this.element).find(".dr
 const localImageModelConfigReplacement = 'l=M.getModelConfig(s)||{description:"Local provider image model",maxSize:4194304,fields:[]},u=$(this.element).find(".drawingType").val()';
 const localSelectedImageModelConfig = 'oe=M.getModelConfig(ae);';
 const localSelectedImageModelConfigReplacement = 'oe=M.getModelConfig(ae)||{description:"Local provider image model",maxSize:4194304,fields:[]};';
+const localTtsModelConfig = 'o=M.getModelConfig(a);for(let n of o.fields)';
+const localTtsModelConfigReplacement = 'o=M.getModelConfig(a)||{fields:[]};for(let n of o.fields)';
 if (!imageOperationPatchedEntry.includes(localImageModelConfig) || !imageOperationPatchedEntry.includes(localSelectedImageModelConfig)) throw new Error("Expected image model configuration signatures were not found");
 const localImageConfigEntry = imageOperationPatchedEntry.replace(localImageModelConfig, localImageModelConfigReplacement).replace(localSelectedImageModelConfig, localSelectedImageModelConfigReplacement);
 const hostedSongCopy = 'if(a[0].dataset.type=="music"){await Et(`https://cdn1.suno.ai/${s}.mp3`,"boobastudio.clipboard.types.url");return}';
@@ -99,7 +101,8 @@ const songPatchedEntry = localImageConfigEntry.replace(hostedSongCopy, localSong
 const imageModelListInsertion = 'u&&!l[m]&&(l[`${m}::client`]=g)}return l}';
 const localImageModelListInsertion = 'u&&!l[m]&&(l[`${m}::client`]=g)}if(typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured()){let m=String(game.settings.get("boobastudio",game.settings.get("boobastudio","imageProvider")==="replicate"?"replicateModel":"imageModel")||"").trim();m&&(l[m]??=m)}return l}';
 if (!songPatchedEntry.includes(imageModelListInsertion)) throw new Error("Expected image model map signature was not found");
-const localImageModelEntry = songPatchedEntry.replace(imageModelListInsertion, localImageModelListInsertion);
+if (!songPatchedEntry.includes(localTtsModelConfig)) throw new Error("Expected TTS model config signature was not found");
+const localImageModelEntry = songPatchedEntry.replace(imageModelListInsertion, localImageModelListInsertion).replace(localTtsModelConfig, localTtsModelConfigReplacement);
 const tokenAutoMethod = 'static async _autoToken(t,e){this.lockbutton(e);let i=$(e).closest(".tokenRow"),a=await this.tokenOptions(i),s=await game.modules.get("vtta-tokenizer").api.autoToken(this.actor,a);s&&(i.find("img").attr("src",s),this._disableConfig()),this.unlockbutton(e)}';
 const tokenAutoReplacement = 'static async _autoToken(t,e){this.lockbutton(e);let i=$(e).closest(".tokenRow"),a=await this.tokenOptions(i),s=game.modules.get("vtta-tokenizer")?.api?await game.modules.get("vtta-tokenizer").api.autoToken(this.actor,a):await globalThis.__boobastudioLocalTokenize?.(a.avatarFilename,a.targetFolder,`${this.buildName(this.historyIndex++)}.webp`);s&&(i.find("img").attr("src",s),this._disableConfig()),this.unlockbutton(e)}';
 const tokenManualMethod = 'static async _manualToken(t,e){let i=$(e).closest(".tokenRow"),a=await this.tokenOptions(i);game.modules.get("vtta-tokenizer").api.launch(a,s=>{this.lockbutton(e),i.find("img").attr("src",s.tokenFilename),this._disableConfig(),this.unlockbutton(e)})}';
