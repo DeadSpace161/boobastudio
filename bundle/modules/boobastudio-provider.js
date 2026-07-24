@@ -490,7 +490,7 @@ async function routeResponses(originalFetch, body) {
   const maxTokens = Math.max(1, Number(get(S.maxTokens)) || 2048);
   let endpoint = `${baseUrl()}/chat/completions`;
   let payload = { model, messages: input, temperature, max_tokens: maxTokens };
-  if (kind === "openai" && get(S.jsonMode) === true) payload.response_format = { type: "json_object" };
+  if (kind === "openai" && get(S.jsonMode) === true && body.jsonMode !== false) payload.response_format = { type: "json_object" };
   if (kind === "anthropic") {
     endpoint = `${baseUrl()}/messages`;
     const system = input.filter((message) => message.role === "system").map((message) => message.content).join("\n");
@@ -563,7 +563,7 @@ async function localBuildPrompts(input, callback) {
     } catch {
       callback?.({ status: "error", errors: ["Provider returned invalid prompt-builder JSON."] });
     }
-  });
+  }, { jsonMode: false });
   return true;
 }
 
@@ -579,10 +579,10 @@ async function routeImages(body, originalFetch = globalThis.__boobastudioOrigina
   return rememberLocalGallery(body, response);
 }
 
-async function localQuery(prompt, behavior, callback) {
+async function localQuery(prompt, behavior, callback, options = {}) {
   if (!isEnabled()) return false;
   try {
-    const response = await routeResponses(globalThis.__boobastudioOriginalFetch || fetch, { model: String(get(S.model) || "gpt-5-mini"), input: [{ role: "user", content: [{ type: "input_text", text: `${String(prompt ?? "").trim()}\n\nGeneration instructions:\n${String(behavior ?? "").trim()}` }] }] });
+    const response = await routeResponses(globalThis.__boobastudioOriginalFetch || fetch, { model: String(get(S.model) || "gpt-5-mini"), input: [{ role: "user", content: [{ type: "input_text", text: `${String(prompt ?? "").trim()}\n\nGeneration instructions:\n${String(behavior ?? "").trim()}` }] }], ...(options.jsonMode === false ? { jsonMode: false } : {}) });
     const result = await response.json().catch(() => null);
     if (!response.ok) {
       const message = result?.error?.message || `Provider request failed (${response.status})`;

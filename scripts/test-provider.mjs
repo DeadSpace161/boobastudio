@@ -255,6 +255,7 @@ assert.match(String(requests.at(-1).init.body), /tavern lore local context/);
 let promptBuilderResult;
 await globalThis.__boobastudioLocalBuildPrompts({ command: "fantasy tavern", amount: 2 }, (result) => { promptBuilderResult = result; });
 assert.deepEqual(promptBuilderResult, { status: "done", result: '["prompt one","prompt two"]' });
+assert.equal(Object.hasOwn(JSON.parse(requests.at(-1).init.body), "response_format"), false);
 
 values.set("boobastudio.ttsProvider", "openai");
 values.set("boobastudio.ttsBaseUrl", "http://tts.test/v1");
