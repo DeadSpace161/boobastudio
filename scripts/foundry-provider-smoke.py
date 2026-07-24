@@ -305,8 +305,9 @@ async def main():
                                         sceneSaveButton.click();
                                         await new Promise(resolve => setTimeout(resolve, 3000));
                                     }
-                                    sceneIntegration.imageApplied = typeof smokeScene.background?.src === 'string' && smokeScene.background.src.length > 0;
-                                    sceneIntegration.imagePath = smokeScene.background?.src || null;
+                                    const sceneImagePath = smokeScene.background?.src || smokeScene.img || smokeScene.levels?.contents?.[0]?.background?.src || smokeScene.levels?.[0]?.background?.src || null;
+                                    sceneIntegration.imageApplied = typeof sceneImagePath === 'string' && sceneImagePath.length > 0;
+                                    sceneIntegration.imagePath = sceneImagePath;
                                 }
                                 sceneImageApp?.close?.();
                             }
