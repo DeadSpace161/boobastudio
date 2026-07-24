@@ -199,4 +199,21 @@ const rateFailure = await fetch("https://api.openai.com/v1/responses", { method:
 assert.equal(rateFailure.status, 429);
 assert.match((await rateFailure.json()).error.message, /^Provider rate limit exceeded/);
 
+const localStorageValues = new Map();
+globalThis.localStorage = {
+  getItem(key) { return localStorageValues.get(key) ?? null; },
+  setItem(key, value) { localStorageValues.set(key, String(value)); },
+};
+values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
+values.set("boobastudio.imageProvider", "openai");
+await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "local gallery probe" }) });
+let localGalleryPage;
+await globalThis.__boobastudioLocalGalleryPage(1, (page) => { localGalleryPage = page; }, {});
+assert.equal(localGalleryPage.data.length, 1);
+assert.equal(localGalleryPage.data[0].attributes.prompt, "local gallery probe");
+await globalThis.__boobastudioLocalGalleryDelete(localGalleryPage.data[0].id, () => {});
+let emptyLocalGallery;
+await globalThis.__boobastudioLocalGalleryPage(1, (page) => { emptyLocalGallery = page; }, {});
+assert.equal(emptyLocalGallery.data.length, 0);
+
 console.log("BoobaStudio provider smoke test passed");

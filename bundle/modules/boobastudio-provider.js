@@ -213,6 +213,62 @@ async function providerResponse(response) {
   return new Response(JSON.stringify({ error: { message: providerStatusMessage(response.status, detail) } }), { status: response.status, headers: { "Content-Type": "application/json" } });
 }
 
+function localGalleryStorageKey() {
+  return `${NAMESPACE}-local-gallery-${globalThis.game?.world?.id || "world"}`;
+}
+
+function readLocalGallery() {
+  try {
+    const value = globalThis.localStorage?.getItem(localGalleryStorageKey());
+    const parsed = value ? JSON.parse(value) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+function writeLocalGallery(entries) {
+  try { globalThis.localStorage?.setItem(localGalleryStorageKey(), JSON.stringify(entries.slice(0, 50))); } catch { /* quota or unavailable storage */ }
+}
+
+async function rememberLocalGallery(body, response) {
+  if (!isEnabled() || !response.ok || !globalThis.localStorage) return response;
+  try {
+    const payload = await response.clone().json();
+    const items = Array.isArray(payload?.data) ? payload.data : [];
+    const entries = readLocalGallery();
+    for (const item of items) {
+      const encoded = item?.b64_json ? `data:image/png;base64,${item.b64_json}` : String(item?.url || "");
+      if (!encoded) continue;
+      entries.unshift({
+        id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        attributes: { result: encoded, thumbnail: encoded, prompt: String(body?.prompt || ""), model: String(body?.model || get(S.imageModel) || ""), created_at: new Date().toISOString() },
+      });
+    }
+    writeLocalGallery(entries);
+  } catch { /* preserve the provider response if local indexing is unavailable */ }
+  return response;
+}
+
+async function localGalleryPage(page, callback, filters = {}) {
+  if (!isEnabled()) return false;
+  let entries = readLocalGallery();
+  const search = String(filters?.search || "").trim().toLowerCase();
+  if (search) entries = entries.filter((entry) => String(entry.attributes?.prompt || "").toLowerCase().includes(search));
+  const pageSize = 20;
+  const pageNumber = Math.max(1, Number(page) || 1);
+  callback?.({ data: entries.slice((pageNumber - 1) * pageSize, pageNumber * pageSize), meta: { total: entries.length, page: pageNumber, per_page: pageSize } }, {});
+  return true;
+}
+
+async function localGalleryDelete(id, callback) {
+  if (!isEnabled()) return false;
+  writeLocalGallery(readLocalGallery().filter((entry) => entry.id !== id));
+  callback?.({ data: { attributes: { status: "success" } } });
+  return true;
+}
+
+globalThis.__boobastudioLocalGalleryPage = localGalleryPage;
+globalThis.__boobastudioLocalGalleryDelete = localGalleryDelete;
+
 async function routeReplicateImages(body) {
   const model = replicateModel(body);
   const endpoint = `${replicateBaseUrl()}/models/${model}/predictions`;
@@ -275,10 +331,12 @@ async function routeResponses(originalFetch, body) {
 
 async function routeImages(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
   const sharedKey = String(get(S.apiKey) || "").trim();
-  if (String(get(S.imageProvider) || "openai") === "stability") return routeStabilityImages(body);
-  if (String(get(S.imageProvider) || "openai") === "comfyui") return routeComfyUIImages(body);
-  if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) return routeReplicateImages(body);
-  return providerResponse(await post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.imageModel) || body.model || "gpt-image-1").trim() }, originalFetch));
+  let response;
+  if (String(get(S.imageProvider) || "openai") === "stability") response = await routeStabilityImages(body);
+  else if (String(get(S.imageProvider) || "openai") === "comfyui") response = await routeComfyUIImages(body);
+  else if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) response = await routeReplicateImages(body);
+  else response = await providerResponse(await post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.imageModel) || body.model || "gpt-image-1").trim() }, originalFetch));
+  return rememberLocalGallery(body, response);
 }
 
 async function localQuery(prompt, behavior, callback) {

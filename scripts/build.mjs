@@ -47,7 +47,17 @@ const noPromptGate = "if(!await r.ensureEnabledForSession()){e({status:\"error\"
 const noPromptGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&!await r.ensureEnabledForSession()){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
 const directPatchedEntry = patchedChatEntry.replace(directChatGate, directChatGateReplacement);
 if (!directPatchedEntry.includes(noPromptGate)) throw new Error("Expected local chat confirmation gate was not found");
-await writeFile(entryPath, directPatchedEntry.replace(noPromptGate, noPromptGateReplacement));
+const galleryPageMethod = "static async getBrowserPage(t,e,i={}){let{AuthService:a}=await Promise.resolve().then(()=>(B(),H));await a.executeOperation(e,async()=>{let s=new URL(a.route(`browse/${t}`));Object.keys(i).forEach(n=>s.searchParams.append(n,i[n]));let o=await a.fetchJsonWithTimeout(s,a.getRequestObject());e(o,{})})}";
+const galleryPageReplacement = "static async getBrowserPage(t,e,i={}){if(typeof globalThis.__boobastudioLocalGalleryPage===\"function\"&&await globalThis.__boobastudioLocalGalleryPage(t,e,i))return;let{AuthService:a}=await Promise.resolve().then(()=>(B(),H));await a.executeOperation(e,async()=>{let s=new URL(a.route(`browse/${t}`));Object.keys(i).forEach(n=>s.searchParams.append(n,i[n]));let o=await a.fetchJsonWithTimeout(s,a.getRequestObject());e(o,{})})}";
+const galleryDeleteMethod = "static async deletePrediction(t,e,i=void 0){let{AuthService:a}=await Promise.resolve().then(()=>(B(),H));await a.executeOperation(e,async()=>{let s=i||`remove/${t}`,o=await a.fetchJsonWithTimeout(a.route(s),a.deleteRequestObject());e(o)})}";
+const galleryDeleteReplacement = "static async deletePrediction(t,e,i=void 0){if(typeof globalThis.__boobastudioLocalGalleryDelete===\"function\"&&await globalThis.__boobastudioLocalGalleryDelete(t,e))return;let{AuthService:a}=await Promise.resolve().then(()=>(B(),H));await a.executeOperation(e,async()=>{let s=i||`remove/${t}`,o=await a.fetchJsonWithTimeout(a.route(s),a.deleteRequestObject());e(o)})}";
+const galleryAccess = "static hasAccess(){return C.userInfo()?.alive??!1}";
+const galleryAccessReplacement = "static hasAccess(){return !!(C.userInfo()?.alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())}";
+const galleryContext = "e.canUseGallery=!!e.userInfo.alive,";
+const galleryContextReplacement = "e.canUseGallery=!!(e.userInfo.alive||typeof globalThis.__boobastudio.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()),";
+const galleryEntry = directPatchedEntry.replace(noPromptGate, noPromptGateReplacement);
+if (!galleryEntry.includes(galleryPageMethod) || !galleryEntry.includes(galleryDeleteMethod) || !galleryEntry.includes(galleryAccess) || !galleryEntry.includes(galleryContext)) throw new Error("Expected local gallery integration signatures were not found");
+await writeFile(entryPath, galleryEntry.replace(galleryPageMethod, galleryPageReplacement).replace(galleryDeleteMethod, galleryDeleteReplacement).replace(galleryAccess, galleryAccessReplacement).replace(galleryContext, galleryContext.replace("!!e.userInfo.alive", "!!(e.userInfo.alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())")));
 
 const manifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
