@@ -123,7 +123,7 @@ const localDocumentButtonGate = 'if(!game.user.isGM&&!(typeof globalThis.__booba
 const hostedDocumentAppGate = 'if(!game.user.isGM&&!C.userInfo().alive||!this.connectedDocuments.has(t.document.documentName)';
 const localDocumentAppGate = 'if((!game.user.isGM&&!(typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured())&&!C.userInfo().alive)||!this.connectedDocuments.has(t.document.documentName)';
 const hostedThreadModelChoices = 'choices:P.chatModels.reduce((o,n)=>(o[n]=n,o),{})';
-const localThreadModelChoices = 'choices:(()=>{let o=P.chatModels.reduce((o,n)=>(o[n]=n,o),{}),n=String(game.settings.get("boobastudio","providerModel")||"").trim();return typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured()&&n&&(o[n]=n),o})()';
+const localThreadModelChoices = 'choices:typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured()?void 0:P.chatModels.reduce((o,n)=>(o[n]=n,o),{})';
 if (!imageOperationPatchedEntry.includes(localImageModelConfig) || !imageOperationPatchedEntry.includes(localSelectedImageModelConfig)) throw new Error("Expected image model configuration signatures were not found");
 const localImageConfigEntry = imageOperationPatchedEntry.replace(localImageModelConfig, localImageModelConfigReplacement).replace(localSelectedImageModelConfig, localSelectedImageModelConfigReplacement);
 const hostedSongCopy = 'if(a[0].dataset.type=="music"){await Et(`https://cdn1.suno.ai/${s}.mp3`,"boobastudio.clipboard.types.url");return}';
