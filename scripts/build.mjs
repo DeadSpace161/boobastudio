@@ -23,6 +23,16 @@ for (const entry of entries) {
   await cp(path.join(root, entry), path.join(output, entry), { recursive: true });
 }
 
+// Expose the existing generic image application to compatibility bridges.
+// The original bundle keeps this class private, although actor and item
+// workflows already use its implementation internally.
+const entryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v244.js");
+const entrySource = await readFile(entryPath, "utf8");
+const privateApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us}";
+const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke}";
+if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio entry API signature was not found");
+await writeFile(entryPath, entrySource.replace(privateApi, publicApi));
+
 const manifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Built package at ${output}`);
