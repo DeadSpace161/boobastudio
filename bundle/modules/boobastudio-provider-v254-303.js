@@ -631,6 +631,19 @@ globalThis.__boobastudioLocalPackRemoveImage = localPackRemoveImage;
 globalThis.__boobastudioLocalPackUpdateImage = localPackUpdateImage;
 globalThis.__boobastudioLocalPackUnavailable = localPackUnavailable;
 
+async function ensureLocalUploadFolder(picker, targetFolder) {
+  const parts = String(targetFolder || "").split("/").filter(Boolean);
+  let path = "";
+  for (const part of parts) {
+    path = path ? `${path}/${part}` : part;
+    try {
+      await picker.browse("data", path);
+    } catch {
+      try { await picker.createDirectory("data", path); } catch { /* Foundry may already have created it concurrently. */ }
+    }
+  }
+}
+
 async function localTokenize(imageSource, targetFolder = "", outputName = "token.webp") {
   if (!isEnabled() || !imageSource) return false;
   try {
@@ -659,6 +672,7 @@ async function localTokenize(imageSource, targetFolder = "", outputName = "token
     if (!blob) return false;
     const picker = globalThis.foundry?.applications?.apps?.FilePicker?.implementation || globalThis.FilePicker;
     if (typeof picker?.upload !== "function") return false;
+    await ensureLocalUploadFolder(picker, targetFolder);
     const file = new File([blob], String(outputName || "token.webp").replace(/[\\/]/g, "_"), { type: "image/webp" });
     const result = await picker.upload("data", String(targetFolder || ""), file, {});
     return typeof result === "string" ? result : result?.path || result?.target || false;
