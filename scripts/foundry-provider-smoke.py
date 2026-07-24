@@ -78,6 +78,9 @@ async def main():
                 """async ({base}) => {
                     const module = game.modules.get('boobastudio');
                     if (!module?.active) throw new Error('BoobaStudio is not active');
+                    const smokeWarnings = [];
+                    const originalWarn = console.warn;
+                    console.warn = (...args) => { smokeWarnings.push(args.map(value => String(value)).join(' ')); originalWarn(...args); };
                     await game.settings.set('boobastudio', 'providerEnabled', true);
                     await game.settings.set('boobastudio', 'providerProtocol', 'openai');
                     await game.settings.set('boobastudio', 'clientOnlyMode', true);
@@ -322,6 +325,18 @@ async def main():
                     const image = await imageResponse.json();
                     const localPackFactory = typeof globalThis.__boobastudioLocalPackCreate;
                     const localTokenFactory = typeof globalThis.__boobastudioLocalTokenize;
+                    const tokenPicker = globalThis.foundry?.applications?.apps?.FilePicker?.implementation || globalThis.FilePicker;
+                    let directTokenUpload = null;
+                    try {
+                        directTokenUpload = await tokenPicker?.upload?.('data', 'modules/boobastudio/storage/token', new File([new Uint8Array([1, 2, 3])], `direct-token-${Date.now()}.bin`, {type: 'application/octet-stream'}), {}, {notify: false});
+                    } catch (error) {
+                        directTokenUpload = {error: String(error?.message || error)};
+                    }
+                    const localTokenPath = await globalThis.__boobastudioLocalTokenize?.(
+                        actorIntegration.imagePath || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+                        'modules/boobastudio/storage/token',
+                        `live-token-${Date.now()}.webp`
+                    );
                     const localPack = await globalThis.__boobastudioLocalPackCreate?.({name: 'Live Smoke Pack'});
                     const localPackId = localPack?.data?.id;
                     const localPacks = await globalThis.__boobastudioLocalPackMyPacks?.();
@@ -342,7 +357,8 @@ async def main():
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
-                        localTokenFallback: localTokenFactory === 'function',
+                        localTokenFallback: {factory: localTokenFactory === 'function', providerEnabled: game.settings.get('boobastudio', 'providerEnabled') === true, pickerUpload: typeof tokenPicker?.upload === 'function', directUploadType: typeof directTokenUpload, directUpload: directTokenUpload?.path || directTokenUpload?.target || directTokenUpload?.error || (typeof directTokenUpload === 'string' ? directTokenUpload : null), uploaded: typeof localTokenPath === 'string' && localTokenPath.length > 0, path: localTokenPath || null},
+                        smokeWarnings: smokeWarnings.filter(message => /token|image/i.test(message)).slice(-10),
                         providerSettings: [...game.settings.settings.keys()].filter(key => key.startsWith('boobastudio.'))
                     };
                 }""",
