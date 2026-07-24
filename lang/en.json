@@ -25,8 +25,8 @@
       "validateHint": "Check if your API key is valid and see your account status.",
       "configureAccess": "Configure API Access",
       "configureAccessDesc": "Configure a local provider or enter a compatible API key to use the AI features.",
-      "getKeyPatreon": "Get API Key (Patreon)",
-      "getKeyApp": "Get API Key (Web App)",
+      "getKeyPatreon": "Configure a provider",
+      "getKeyApp": "Provider documentation",
       "status": {
         "valid": "Valid",
         "invalid": "Invalid",
@@ -46,8 +46,8 @@
       }
     },
     "connect": {
-      "button": "Connect with Patreon",
-      "hint": "Sign in with your Patreon account to automatically set up your API key. No copy-paste needed.",
+      "button": "Configure Provider",
+      "hint": "Configure a provider endpoint and client-scoped credentials in BoobaStudio settings.",
       "manualEntry": "Enter key manually",
       "popupBlocked": "Popup was blocked. Please allow popups for this site and try again.",
       "openerBlocked": "Your browser blocked communication with the login window. Disable popup isolation/noopener for this site or copy your API key manually.",
@@ -67,7 +67,7 @@
       "homepage": "BoobaStudio Homepage",
       "faq": "FAQ & Documentation",
       "discord": "Discord Community",
-      "patreon": "Support on Patreon",
+      "patreon": "Project resources",
       "connected": "Connected",
       "notConnected": "Not connected"
     },
@@ -398,7 +398,7 @@
     "vector": {
       "uploadToStore": "Upload file to the Vector Store",
       "notForThisModel": "This model does not support vector stores.",
-      "uploadFile": "<p>Add a text or PDF file to your Vector Store to use it in conversations and access it as part of a semantic search.</p><h3>What does that mean?</h3><p>The main advantage of a semantic search is that the system understands your question in context and can answer it based on existing information. This way, you can find content specifically without knowing the exact terms, get extensive matters explained easily, and even discuss complex strategies, mechanics, and behaviors with the AI.</p><h3>How does it work?</h3><p>The Vector Store is a personal cloud storage for your documents, created separately for each of your game worlds and directly connected to the journal integration of Cibola 8. When adding a document, all images are automatically removed, and the contents are available to you as a reference for your threads.</p><p>This feature requires a small amount of mana each month, depending on the file size and the number of vectors generated. Please ensure that you only upload content for which you have the necessary rights and observe the privacy policy of ChatGPT.</p>",
+      "uploadFile": "<p>Add a text or PDF file to your local library to reference it in conversations.</p><h3>How does it work?</h3><p>Files are stored in this browser for the current game world. Extracted text can be ranked and added to local-provider prompts without a hosted vector service.</p><p>Please ensure that you only upload content for which you have the necessary rights.</p>",
       "selectFile": "Select a text file (e.g., txt or pdf)",
       "uploadTitle": "Vector Store",
       "invalidFileType": "Invalid file type. Please upload a text file.",
@@ -406,7 +406,7 @@
       "failed": "Upload failed",
       "success": "Upload successful. It may take a moment for the file to be processed.",
       "uploading": "Uploading file... {progress}%",
-      "notAvailable": "The Vector Store requires an active patron subscription for use. Upload text and PDF files to reference them later in threads.",
+      "notAvailable": "Local library access is available when a provider is configured. Upload text files to reference them later in local threads.",
       "status": "Status",
       "filename": "Filename",
       "files": "files",
@@ -574,7 +574,7 @@
     },
     "radialMenu": {
       "back": "Back",
-      "description": "Customize the radial menu of Cibola. Drag and drop macros or documents into the menu for quick access.",
+      "description": "Customize the BoobaStudio radial menu. Drag and drop macros or documents into the menu for quick access.",
       "headerDescription": "Customize your radial menu with macros, documents, and custom sections.",
       "placeholderContent": "Name",
       "test": "Test",
@@ -601,7 +601,7 @@
     },
     "settings": {
       "welcome": "Welcome & Getting Started",
-      "welcomeHint": "Open the welcome screen with an overview of Cibola 8 features and quick setup options.",
+      "welcomeHint": "Open the welcome screen with an overview of BoobaStudio features and provider setup options.",
       "radialconfig": "Radial menu",
       "radialconfigHint": "Configure the radial menu by adding your own functions.",
       "max_c8_history": "Maximum chat history (/c8)",
@@ -660,7 +660,7 @@
     "QueueViewer": {
       "title": "Queue",
       "elementStatus": "Queued/Success/Error/Expected",
-      "description": "Monitor all ongoing and completed items in Cibola's permanent queue. Items will continue processing even when Foundry is closed and will resume automatically when you start the world.",
+      "description": "Monitor ongoing and completed BoobaStudio operations. Local provider requests run in the current Foundry client.",
       "start": "Started",
       "end": "Completed",
       "success": "Completed",
@@ -733,7 +733,7 @@
       "promptTooLong": "The prompt is too long.",
       "noTranslations": "You have not created any translations yet.",
       "imageTooLarge": "The resolution of the image is already too high for further processing.",
-      "modelRequiresSubscription": "This model requires an active Patreon subscription."
+      "modelRequiresSubscription": "This model requires a compatible provider configuration."
     },
     "regionSelector": {
       "hint": "Click and drag to select a region. Press Escape to cancel.",
@@ -825,10 +825,10 @@
       "pickFromGallery": "Choose from the gallery",
       "publicelement": "Shared item",
       "yourchoice": "Select this item",
-      "randomContent": "Cibola 8 start",
+      "randomContent": "BoobaStudio start",
       "translate": "Translation",
       "generateImage": "Image Generation",
-      "generator": "Cibola 8",
+      "generator": "BoobaStudio",
       "enhancePrompt": "Improve the prompt with AI (English, more understandable for AI)",
       "addOwnLangFile": "Add your own language files",
       "temporaryItem": "Save temporary element",
@@ -952,7 +952,7 @@
       "noSelection": "Please select an entry first.",
       "description": "Here you will find all the content you generated. You can edit, delete, or download them.",
       "control": "Manage your generated content",
-      "requiresPatreon": "Gallery access requires an active Patreon subscription.",
+      "requiresPatreon": "Gallery access requires a configured local provider.",
       "noImages": "No images found",
       "loading": "Loading..."
     },
@@ -1056,7 +1056,7 @@
       "left": "Left",
       "right": "Right"
     },
-    "accountcreation": "<p class=\"hint\">To use BoobaStudio, you need an account. For content creation, data is sent to a server that processes and returns it - this involves costs and identification. Here's how to create your account:</p><ol><li>Become a member on Patreon: <a href=\"{patreon}\" target=\"_blank\">BoobaStudio Patreon</a></li><li>Log in with your Patreon account on <a href=\"{homepage}\" target=\"_blank\">BoobaStudio</a>.</li><li>Copy your API key.</li><li>Paste the API key here.</li></ol><p class=\"hint\">Also note that you need an internet connection. Once that is done, you can use all the features of BoobaStudio.</p>",
+    "accountcreation": "<p class=\"hint\">BoobaStudio does not require a hosted account. Configure a provider endpoint and client-scoped credentials in Module Settings.</p><p class=\"hint\">Requests are sent directly from the Foundry client to the endpoint you select. Review its privacy and key-storage requirements before use.</p>",
     "advancedConfig": "Advanced Settings",
     "upscalers": {
       "stability-ai/fast": "Quick upscaling up to 4 times.",
@@ -1375,15 +1375,15 @@
         "dontShowAgain": "Don't show this again",
         "getStarted": "Get Started",
         "wallsHint": "Wall detection is available via the scene context menu. Right-click a scene to access it.",
-        "dragToHotbarHint": "Drag this to your hotbar to create a macro that opens the Cibola 8 radial menu. Click the macro to access all AI features quickly.",
+        "dragToHotbarHint": "Drag this to your hotbar to create a macro that opens the BoobaStudio radial menu. Click the macro to access AI features quickly.",
         "openApp": "Web App",
         "openAppHint": "Open the BoobaStudio repository for documentation and release notes.",
         "hints": {
-          "text": "Use the Cibola icon in the editor toolbar to generate text with AI. You can also right-click on selected text for more AI options.",
+          "text": "Use the BoobaStudio icon in the editor toolbar to generate text with AI. You can also right-click on selected text for more AI options.",
           "threads": "Threads are persistent AI conversations stored in journals. Create additional Thread pages in any Journal Entry using the page type dropdown.",
           "scenesNoScene": "Please activate a scene first to use the Scene Generator. Open the Scenes sidebar and click a scene to activate it.",
           "wallsNoScene": "Activate a scene to use Wall Detection live. The documentation is shown for reference.",
-          "speakingTokens": "Select a token on the canvas, then use the Cibola icon on its Token HUD to configure AI voices and trigger speech.",
+          "speakingTokens": "Select a token on the canvas, then use the BoobaStudio icon on its Token HUD to configure AI voices and trigger speech.",
           "tokensPick": "Select an actor to open the AI generator for:",
           "tokensNew": "Or create a new actor with AI-generated content.",
           "tokensOpen": "Open Generator",

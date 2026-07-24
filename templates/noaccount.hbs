@@ -13,29 +13,26 @@
 
   {{!-- Options Section --}}
   <div class="boobastudio-options-section">
-    {{!-- Get API Key Links --}}
+    {{!-- Provider resources --}}
     <div class="boobastudio-link-list boobastudio-mb-2">
-      <a href="{{urls.patreon}}" target="_blank" class="boobastudio-link-item">
-        <i class="fab fa-patreon"></i> {{localize "boobastudio.token.getKeyPatreon"}}
-      </a>
-      <a href="{{urls.app}}" target="_blank" class="boobastudio-link-item">
+      <a href="https://github.com/DeadSpace161/boobastudio" target="_blank" class="boobastudio-link-item">
         <i class="fas fa-globe"></i> {{localize "boobastudio.token.getKeyApp"}}
       </a>
     </div>
 
     <hr class="boobastudio-divider" />
 
-    {{!-- Primary Action: Connect with Patreon --}}
+    {{!-- Primary Action: Configure a local provider --}}
     <div class="boobastudio-action-card">
       <div class="boobastudio-action-card-icon">
-        <i class="fab fa-patreon"></i>
+        <i class="fas fa-sliders-h"></i>
       </div>
       <div class="boobastudio-action-card-content">
         <h4>{{localize 'boobastudio.connect.button'}}</h4>
         <p>{{localize 'boobastudio.connect.hint'}}</p>
       </div>
-      <button class="boobastudio-btn--primary boobastudio-btn--accent" data-action="connectPatreon" type="button">
-        <i class="fab fa-patreon"></i> {{localize 'boobastudio.connect.button'}}
+      <button class="boobastudio-btn--primary boobastudio-btn--accent" data-action="openModuleSettings" type="button">
+        <i class="fas fa-sliders-h"></i> {{localize 'boobastudio.connect.button'}}
       </button>
     </div>
 
