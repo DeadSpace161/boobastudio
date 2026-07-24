@@ -149,12 +149,25 @@ async def main():
                                 const generateControl = imageWindow?.querySelector?.('[data-action="generate"]');
                                 const promptLauncher = imageWindow?.querySelector?.('[data-action="goPrompt"]');
                                 actorIntegration.imageUi = {localConfigured: globalThis.__boobastudioLocalProviderConfigured?.() === true, clientOnlyMode: game.settings.get('boobastudio', 'clientOnlyMode'), promptControl: !!promptControl, generateControl: !!generateControl, submitted: false, renderedResult: false, text: (imageWindow?.innerText || '').trim().slice(0, 900), goPrompt: promptLauncher ? {disabled: !!promptLauncher.disabled, ariaDisabled: promptLauncher.getAttribute('aria-disabled') || '', outer: promptLauncher.outerHTML.slice(0, 600)} : null, controls: [...(imageWindow?.querySelectorAll?.('input, textarea, button, [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', className: String(control.className || ''), value: control.value || '', text: (control.innerText || '').trim()})).slice(0, 30)};
+                                const imageApp = imageAppInstance || [...(game.applications?.values?.() || [])].find(app => app?.element === imageWindow || app?.element?.contains?.(imageWindow));
+                                const saveImageButton = imageWindow?.querySelector?.('[data-action="saveImg"]');
+                                const targetImage = imageWindow?.querySelector?.('.targetImg');
+                                if (imageApp && typeof imageApp.saveImg === 'function' && saveImageButton && targetImage) {
+                                    try {
+                                        targetImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+                                        targetImage.removeAttribute('data-realfile');
+                                        await imageApp.saveImg(saveImageButton);
+                                        actorIntegration.imageApplied = typeof smokeActor.img === 'string' && smokeActor.img.length > 0 && !smokeActor.img.startsWith('icons/');
+                                        actorIntegration.imagePath = smokeActor.img;
+                                    } catch (error) {
+                                        actorIntegration.imageApplyError = String(error?.message || error);
+                                    }
+                                }
                                 if (promptLauncher) {
                                     promptLauncher.click();
                                     await new Promise(resolve => setTimeout(resolve, 700));
                                 }
                                 if (!document.querySelector('.boobastudio-dialog, .ciboladialog, [role="dialog"] textarea')) {
-                                    const imageApp = imageAppInstance || [...(game.applications?.values?.() || [])].find(app => app?.element === imageWindow || app?.element?.contains?.(imageWindow));
                                     actorIntegration.imageAppGoPrompt = typeof imageApp?.goPrompt === 'function';
                                     if (imageApp?.goPrompt && promptLauncher) {
                                         try {
