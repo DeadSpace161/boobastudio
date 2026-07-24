@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.102**. The public test world remains on the published 2.2.97 package; the 2.2.102 manifest and ZIP are independently verified locally and await repository publication.
+The current locally packaged release is **2.2.103**. The public test world remains on the published 2.2.97 package; the 2.2.103 manifest and ZIP are independently verified locally and await repository publication.
 
 ## Build checks
 
@@ -37,6 +37,8 @@ Release 2.2.100 fixes the local token framing upload contract found during live 
 Release 2.2.101 extends the local model-catalog safety patch to the shared image-field collector, Scene prompt/upscale model reads, and TTS model-selection change handler. This protects the actual submitted local image/scene forms and model-switch UI from the same missing hosted-config condition. Package validation, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
 
 Release 2.2.102 adds the configured local image model to the existing Scene model map as well as the general image map, so Scene generation can select the same local OpenAI-compatible, Replicate, Stability, or ComfyUI model configuration without a hosted catalog. Package validation, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
+
+Release 2.2.103 completes the adjacent local image model boundary: configured local IDs are retained by the existing prepared-model map, and advanced image editing receives an empty safe field descriptor when hosted metadata is absent. Package checks, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
 
 The live Foundry v14 harness also exercised the existing Actor and Scene image application paths on the published test package: a temporary Actor received an uploaded image through the module's Save action, its `img` field changed to the Foundry-returned storage path, and a temporary Scene's `background.src` changed through the Scene Image Tools Save action. Both temporary documents were deleted afterward. The same probe still records the pre-2.2.98 Image Tools prompt crash on the public 2.2.97 package; 2.2.99 must be republished before the fixed prompt workflow can be live-verified.
 
