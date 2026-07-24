@@ -215,7 +215,7 @@ async def main():
                             actorIntegration.deleted = !game.actors.has(smokeActor.id);
                         }
                     }
-                    const itemIntegration = {created: false, sheetRendered: false, controlVisible: false, deleted: false};
+                    const itemIntegration = {created: false, sheetRendered: false, controlVisible: false, imageApplied: false, deleted: false};
                     let smokeItem;
                     try {
                         const itemType = Object.keys(game.system.documentTypes?.Item || {})[0] || 'asset';
@@ -234,6 +234,31 @@ async def main():
                                 .filter(control => /booba|cibola|generate|ai/i.test(`${control.className} ${control.action} ${control.text}`));
                             itemIntegration.controlVisible = itemControls.length > 0;
                             itemIntegration.controls = itemControls.slice(0, 10);
+                            const itemControl = itemRoot?.querySelector?.('.boobastudio-document-control, .AiBothGen, [data-action="boobastudio"]');
+                            if (itemControl) {
+                                itemControl.click();
+                                await new Promise(resolve => setTimeout(resolve, 900));
+                                const itemImageWindow = [...document.querySelectorAll('.window, aside')]
+                                    .find(element => /image generation|image tools|generate image/i.test((element.innerText || '').slice(0, 700)) && element.querySelector('.targetImg'));
+                                const itemApps = [...(game.applications?.values?.() || []), ...Object.values(ui.windows || {})];
+                                const itemImageApp = itemApps.find(app => app?.element === itemImageWindow || app?.element?.contains?.(itemImageWindow));
+                                const itemSaveButton = itemImageWindow?.querySelector?.('[data-action="saveImg"]');
+                                const itemTargetImage = itemImageWindow?.querySelector?.('.targetImg');
+                                itemIntegration.imageWindowVisible = !!itemImageWindow;
+                                itemIntegration.saveButtonVisible = !!itemSaveButton;
+                                if (itemSaveButton && itemTargetImage) {
+                                    itemTargetImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+                                    itemTargetImage.removeAttribute('data-realfile');
+                                    if (itemImageApp && typeof itemImageApp.saveImg === 'function') await itemImageApp.saveImg(itemSaveButton);
+                                    else {
+                                        itemSaveButton.click();
+                                        await new Promise(resolve => setTimeout(resolve, 1800));
+                                    }
+                                    itemIntegration.imageApplied = typeof smokeItem.img === 'string' && smokeItem.img.length > 0 && !smokeItem.img.startsWith('icons/');
+                                    itemIntegration.imagePath = smokeItem.img || null;
+                                }
+                                itemImageApp?.close?.();
+                            }
                             smokeItem.sheet.close?.();
                         }
                     } catch (error) {
