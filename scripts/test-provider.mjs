@@ -15,6 +15,8 @@ globalThis.game = {
 globalThis.fetch = async (input, init) => {
   requests.push({ input, init });
   if (String(input).includes("network.test")) throw new TypeError("Failed to fetch");
+  if (String(input).includes("status401.test")) return new Response(JSON.stringify({ error: { message: "bad key" } }), { status: 401 });
+  if (String(input).includes("status429.test")) return new Response(JSON.stringify({ error: { message: "slow down" } }), { status: 429 });
   if (String(input).endsWith("/prompt")) return new Response(JSON.stringify({ prompt_id: "comfy-prompt-1" }), { status: 200 });
   if (String(input).endsWith("/history/comfy-prompt-1")) return new Response(JSON.stringify({ "comfy-prompt-1": { outputs: { "9": { images: [{ filename: "generated.png", subfolder: "", type: "output" }] } } } }), { status: 200 });
   if (String(input).endsWith("/generate/core")) return new Response(JSON.stringify({ image: "c3RhYmlsaXR5" }), { status: 200, headers: { "Content-Type": "application/json" } });
@@ -185,5 +187,14 @@ for (const base of ["https://openrouter.ai/api/v1", "http://localhost:11434/v1",
   assert.deepEqual(compatibilityResult, { status: "done", result: "provider response" });
   assert.equal(requests.at(-1).input, `${base}/chat/completions`);
 }
+
+values.set("boobastudio.providerBaseUrl", "https://status401.test/v1");
+const authFailure = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "auth" }] }] }) });
+assert.equal(authFailure.status, 401);
+assert.match((await authFailure.json()).error.message, /^Invalid API key/);
+values.set("boobastudio.providerBaseUrl", "https://status429.test/v1");
+const rateFailure = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "rate" }] }] }) });
+assert.equal(rateFailure.status, 429);
+assert.match((await rateFailure.json()).error.message, /^Provider rate limit exceeded/);
 
 console.log("BoobaStudio provider smoke test passed");

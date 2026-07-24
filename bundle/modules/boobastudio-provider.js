@@ -107,7 +107,7 @@ async function routeStabilityImages(body) {
   const size = String(body.size || "").match(/^(\d+)x(\d+)$/);
   if (size) form.append("aspect_ratio", `${size[1]}:${size[2]}`);
   const response = await fetch(endpoint, { method: "POST", headers: { ...(key ? { Authorization: `Bearer ${key}` } : {}), Accept: "application/json" }, body: form });
-  if (!response.ok) return response;
+  if (!response.ok) return providerResponse(response);
   const type = response.headers.get("content-type") || "";
   if (type.includes("json")) {
     const result = await response.json();
@@ -137,7 +137,7 @@ async function routeTTS(body) {
     requestHeaders = { ...(key ? { Authorization: `Bearer ${key}` } : {}), "Content-Type": "application/json", Accept: "audio/mpeg" };
   }
   const response = await fetch(endpoint, { method: "POST", headers: requestHeaders, body: JSON.stringify(requestBody) });
-  if (!response.ok) return response;
+  if (!response.ok) return providerResponse(response);
   const type = response.headers.get("content-type") || "audio/mpeg";
   const encoded = type.includes("json") ? String((await response.json())?.audio || "") : await arrayBufferToBase64(await response.arrayBuffer());
   if (!encoded) return new Response(JSON.stringify({ success: false, error: { message: "TTS response did not contain audio data" } }), { status: 502, headers: { "Content-Type": "application/json" } });
@@ -192,6 +192,27 @@ function providerFailure(error, status = 502) {
   return new Response(JSON.stringify({ error: { message: providerError(error) } }), { status, headers: { "Content-Type": "application/json" } });
 }
 
+function providerStatusMessage(status, detail = "") {
+  const suffix = detail ? `: ${detail}` : "";
+  if (status === 401) return `Invalid API key or authentication failed${suffix}`;
+  if (status === 403) return `Provider access denied${suffix}`;
+  if (status === 408 || status === 504) return `Provider timeout${suffix}`;
+  if (status === 429) return `Provider rate limit exceeded${suffix}`;
+  return `Provider returned HTTP ${status}${suffix}`;
+}
+
+async function providerResponse(response) {
+  if (response.ok) return response;
+  let detail = "";
+  try {
+    const payload = await response.clone().json();
+    detail = String(payload?.error?.message || payload?.message || payload?.detail || "").trim();
+  } catch {
+    try { detail = (await response.clone().text()).trim().slice(0, 300); } catch { /* ignore unreadable error bodies */ }
+  }
+  return new Response(JSON.stringify({ error: { message: providerStatusMessage(response.status, detail) } }), { status: response.status, headers: { "Content-Type": "application/json" } });
+}
+
 async function routeReplicateImages(body) {
   const model = replicateModel(body);
   const endpoint = `${replicateBaseUrl()}/models/${model}/predictions`;
@@ -241,7 +262,7 @@ async function routeResponses(originalFetch, body) {
   if (!Number.isFinite(payload.temperature)) delete payload.temperature;
   if (kind === "gemini" && !Number.isFinite(temperature)) delete payload.generationConfig.temperature;
   const response = await post(endpoint, payload, originalFetch, kind);
-  if (!response.ok) return response;
+  if (!response.ok) return providerResponse(response);
   const result = await response.json();
   const content = kind === "anthropic" ? text(result?.content?.filter?.((part) => part?.type === "text").map((part) => part.text)) : kind === "gemini" ? text(result?.candidates?.[0]?.content?.parts?.map((part) => part.text)) : text(result?.choices?.[0]?.message?.content);
   if (!content) return new Response(JSON.stringify({ error: { message: "Provider response did not contain choices[0].message.content" } }), { status: 502, headers: { "Content-Type": "application/json" } });
@@ -253,7 +274,7 @@ async function routeImages(body, originalFetch = globalThis.__boobastudioOrigina
   if (String(get(S.imageProvider) || "openai") === "stability") return routeStabilityImages(body);
   if (String(get(S.imageProvider) || "openai") === "comfyui") return routeComfyUIImages(body);
   if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) return routeReplicateImages(body);
-  return post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.imageModel) || body.model || "gpt-image-1").trim() }, originalFetch);
+  return providerResponse(await post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.imageModel) || body.model || "gpt-image-1").trim() }, originalFetch));
 }
 
 async function localQuery(prompt, behavior, callback) {
