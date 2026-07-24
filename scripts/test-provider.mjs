@@ -57,6 +57,7 @@ values.set("boobastudio.providerHeaders", JSON.stringify({ "X-Test": "yes" }));
 await hooks.get("ready")();
 assert.equal(globalThis.__boobastudioLocalProviderConfigured(), true);
 const tokenUploads = [];
+const tokenUploadArgumentCounts = [];
 globalThis.Image = class {
   naturalWidth = 100;
   naturalHeight = 80;
@@ -75,10 +76,11 @@ globalThis.document = {
     };
   },
 };
-globalThis.foundry = { applications: { apps: { FilePicker: { implementation: { async upload(source, folder, file) { tokenUploads.push({ source, folder, file }); return { path: `${folder}/${file.name}` }; } } } } } };
+globalThis.foundry = { applications: { apps: { FilePicker: { implementation: { async upload(...args) { const [source, folder, file] = args; tokenUploadArgumentCounts.push(args.length); tokenUploads.push({ source, folder, file }); return `${folder}/${file.name}`; } } } } } };
 const tokenPath = await globalThis.__boobastudioLocalTokenize("data:image/png;base64,abc", "tokens", "hero.webp");
 assert.equal(tokenPath, "tokens/hero.webp");
 assert.equal(tokenUploads.length, 1);
+assert.equal(tokenUploadArgumentCounts[0], 4);
 assert.equal(tokenUploads[0].file.type, "image/webp");
 
 const textResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ model: "gpt-5", input: [{ role: "user", content: [{ type: "input_text", text: "hello" }] }] }) });
