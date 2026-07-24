@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.114**. The public test world has been live-verified against the published 2.2.114 package.
+The current locally packaged release is **2.2.116**. The public test world has been live-verified against the published 2.2.116 package.
 
 ## Build checks
 
@@ -93,6 +93,8 @@ Release 2.2.113 live validation additionally invoked the existing local image-va
 Release 2.2.114 adds the local Thread send adapter. It receives the existing Thread message history, preserves the selected model, calls the configured provider protocol, and returns the existing `{status, message}` callback shape consumed by the Thread sheet. The document persistence code remains in the recovered Cibola Thread sheet, which updates `system.messages` before and after the provider response.
 
 Live Foundry v14 Build 363 validation of 2.2.114 confirmed the full local Thread controller path: the custom local model remained selected, the controller submitted a prompt through the intercepted provider, the assistant result was visible in the returned message data, and `system.messages` contained both the user and assistant entries before cleanup. The same run confirmed local image description, JSON prompt-builder output, and enhancement callbacks.
+
+Release 2.2.115 live validation confirmed the local token fallback creates its target folder through Foundry's FilePicker directory contract and uploads the circular-framed WebP asset successfully. Release 2.2.116 live validation confirmed the restored image conversion worker loads without the prior `Image worker error` warning; the complete provider/document smoke run remained green with zero smoke warnings.
 
 Live Foundry v14 journal validation completed against the existing JournalEntryPage ProseMirror workflow. The automated test opened the existing BoobaStudio menu, selected `Generate description with AI`, submitted through an intercepted OpenAI-compatible `/chat/completions` response, accepted the generated result, and saved the page. The resulting JournalEntryPage content contained the generated paragraph. A separate image test confirmed generated image HTML is persisted in the same page model.
 

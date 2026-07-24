@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.114**. The public test server has been live-verified against the published 2.2.114 package.
+This status reflects the locally built package prepared as version **2.2.116**. The public test server has been live-verified against the published 2.2.116 package.
 
 ## Verified
 
@@ -70,6 +70,8 @@ This status reflects the locally built package prepared as version **2.2.114**. 
 - The 2.2.113 release removes the Thread schema choice validator entirely while preserving the existing model-selector template, eliminating initialization-order dependence for local model IDs.
 - The published 2.2.114 package has now passed live Foundry v14 verification: Actor, JournalEntry, RollTable, Item, Tile, and Scene controls render; Item and Scene images upload and apply through the existing workflows; custom local Thread model IDs persist through document updates; and the local Thread controller produces and persists a mocked assistant reply.
 - Release 2.2.114 routes existing AI Thread sends through the configured local provider when local mode is enabled, including custom local model IDs, while preserving the existing `system.messages` document update and reply-rendering path. The provider smoke suite and live harness cover the thread callback shape and selected model propagation.
+- Release 2.2.115 fixes local circular-token uploads by creating the configured Foundry data folder before invoking the v14 FilePicker upload contract. Live validation confirmed a generated `.webp` token asset under `modules/boobastudio/storage/token`.
+- Release 2.2.116 restores the missing `bundle/workers/image_processor.worker.js` asset referenced by the recovered image conversion path. Live validation now reports no image-worker warnings while preserving the existing main-thread fallback behavior.
 
 ## Intentionally not hosted by this fork
 
