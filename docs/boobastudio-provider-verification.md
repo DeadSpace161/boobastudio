@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.78**. The live Foundry probe described below predates the latest unpublished release because repository write access is still unavailable.
+The current locally packaged release is **2.2.79**. The live Foundry probe described below predates the latest unpublished release because repository write access is still unavailable.
 
 ## Build checks
 

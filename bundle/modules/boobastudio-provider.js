@@ -262,6 +262,32 @@ async function localGenerateSong(input, behavior, callback, options = {}) {
 
 globalThis.__boobastudioLocalGenerateSong = localGenerateSong;
 
+async function localGenerateVariant(prompt, behavior, model, callback, options = {}) {
+  if (!isEnabled()) return false;
+  try {
+    let fields = {};
+    try { fields = typeof behavior === "string" ? JSON.parse(behavior) : behavior || {}; } catch { fields = {}; }
+    const response = await routeImages({ ...fields, prompt: String(prompt || ""), model: String(model || get(S.imageModel) || "") });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok || payload?.error) {
+      callback?.({ success: false, status: "error", errors: [providerError({ message: payload?.error?.message || `Image variation failed (${response.status})` })] });
+      return true;
+    }
+    const item = Array.isArray(payload?.data) ? payload.data[0] : null;
+    const image = item?.b64_json ? `data:image/png;base64,${item.b64_json}` : String(item?.url || "");
+    if (!image) {
+      callback?.({ success: false, status: "error", errors: ["Image provider response did not contain a variation."] });
+      return true;
+    }
+    callback?.({ success: true, result: image, subdata: { clientOnly: true, provider: String(get(S.imageProvider) || "openai"), model: String(model || "") } });
+  } catch (error) {
+    callback?.({ success: false, status: "error", errors: [providerError(error)] });
+  }
+  return true;
+}
+
+globalThis.__boobastudioLocalGenerateVariant = localGenerateVariant;
+
 async function arrayBufferToBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";

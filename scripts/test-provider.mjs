@@ -304,4 +304,10 @@ assert.equal(requests.at(-1).init.body.get("prompt"), "remove the tower");
 assert.equal(requests.at(-1).init.body.get("image").name, "input.png");
 assert.equal(requests.at(-1).init.body.get("mask").name, "mask.png");
 
+let variantResult;
+await globalThis.__boobastudioLocalGenerateVariant("make a second version", JSON.stringify({ image: "data:image/png;base64,abc" }), "gpt-image-1", (result) => { variantResult = result; });
+assert.equal(variantResult.success, true);
+assert.equal(variantResult.result, "data:image/png;base64,ZWRpdGVk");
+assert.equal(requests.at(-1).input, "http://provider.test/v1/images/edits");
+
 console.log("BoobaStudio provider smoke test passed");
