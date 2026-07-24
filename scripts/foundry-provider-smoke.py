@@ -286,7 +286,7 @@ async def main():
                                     .find(element => /image generation|image tools|generate image/i.test((element.innerText || '').slice(0, 700)) && element.querySelector('.targetImg'));
                                 const sceneApps = [...(game.applications?.values?.() || []), ...Object.values(ui.windows || {})];
                                 const sceneImageApp = sceneApps
-                                    .find(app => app?.element === sceneImageWindow || app?.element?.contains?.(sceneImageWindow));
+                                    .find(app => app?.element === sceneImageWindow || app?.element?.contains?.(sceneImageWindow) || app?.source?.object === smokeScene || app?.document === smokeScene || app?.source?.object?.id === smokeScene.id);
                                 const sceneSaveButton = sceneImageWindow?.querySelector?.('[data-action="saveImg"]');
                                 const sceneTargetImage = sceneImageWindow?.querySelector?.('.targetImg');
                                 sceneIntegration.imageWindowVisible = !!sceneImageWindow;
@@ -299,7 +299,7 @@ async def main():
                                     if (sceneImageApp && typeof sceneImageApp.saveImg === 'function') await sceneImageApp.saveImg(sceneSaveButton);
                                     else {
                                         sceneSaveButton.click();
-                                        await new Promise(resolve => setTimeout(resolve, 1800));
+                                        await new Promise(resolve => setTimeout(resolve, 3000));
                                     }
                                     sceneIntegration.imageApplied = typeof smokeScene.background?.src === 'string' && smokeScene.background.src.length > 0;
                                     sceneIntegration.imagePath = smokeScene.background?.src || null;
