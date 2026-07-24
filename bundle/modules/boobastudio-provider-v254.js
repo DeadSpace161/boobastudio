@@ -322,7 +322,7 @@ function replicateInput(body, model = replicateModel(body)) {
     }
     return input;
   }
-  for (const key of ["image", "mask", "negative_prompt", "strength", "image_prompt_strength", "guidance", "steps", "seed", "width", "height", "aspect_ratio", "output_format"]) {
+  for (const key of ["image", "mask", "negative_prompt", "strength", "image_prompt_strength", "guidance", "steps", "seed", "width", "height", "aspect_ratio", "output_format", "factor", "scale", "upscale_factor", "face_enhance", "basePrompt", "outpaint", "canvas_size", "original_image_size", "original_image_location", "preserve_alpha"]) {
     if (body[key] !== undefined && body[key] !== null && body[key] !== "") input[key] = body[key];
   }
   return input;
@@ -657,14 +657,17 @@ async function localBuildPrompts(input, callback) {
 globalThis.__boobastudioLocalBuildPrompts = localBuildPrompts;
 
 async function routeImages(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
+  const promptValue = String(body?.prompt || "");
+  const embeddedImage = !body?.image && /^data:image\//i.test(promptValue) ? promptValue : "";
+  const requestBody = embeddedImage ? { ...body, image: embeddedImage, prompt: String(body?.basePrompt || "") } : body;
   const sharedKey = String(get(S.apiKey) || "").trim();
   let response;
-  if (String(get(S.imageProvider) || "openai") === "stability") response = await routeStabilityImages(body);
-  else if (String(get(S.imageProvider) || "openai") === "comfyui") response = await routeComfyUIImages(body);
-  else if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) response = await routeReplicateImages(body);
-  else if (body.image || body.mask) response = await routeOpenAIImageEdit(body, originalFetch);
-  else response = await providerResponse(await post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.imageModel) || body.model || "gpt-image-1").trim() }, originalFetch));
-  return rememberLocalGallery(body, response);
+  if (String(get(S.imageProvider) || "openai") === "stability") response = await routeStabilityImages(requestBody);
+  else if (String(get(S.imageProvider) || "openai") === "comfyui") response = await routeComfyUIImages(requestBody);
+  else if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) response = await routeReplicateImages(requestBody);
+  else if (requestBody.image || requestBody.mask) response = await routeOpenAIImageEdit(requestBody, originalFetch);
+  else response = await providerResponse(await post(`${baseUrl()}/images/generations`, { ...requestBody, model: String(get(S.imageModel) || requestBody.model || "gpt-image-1").trim() }, originalFetch));
+  return rememberLocalGallery(requestBody, response);
 }
 
 async function localQuery(prompt, behavior, callback, options = {}) {

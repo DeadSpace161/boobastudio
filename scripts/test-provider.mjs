@@ -310,4 +310,16 @@ assert.equal(variantResult.success, true);
 assert.equal(variantResult.result, "data:image/png;base64,ZWRpdGVk");
 assert.equal(requests.at(-1).input, "http://provider.test/v1/images/edits");
 
+values.set("boobastudio.imageProvider", "replicate");
+values.set("boobastudio.replicateBaseUrl", "https://replicate-upscale.test/v1");
+values.set("boobastudio.replicateModel", "nightmareai/real-esrgan");
+values.set("boobastudio.replicateApiToken", "upscale-token");
+const upscaleResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "nightmareai/real-esrgan", prompt: "data:image/png;base64,abc", basePrompt: "upscale this map", factor: 2 }) });
+assert.equal((await upscaleResponse.json()).data[0].url, "https://cdn.test/generated.png");
+const upscaleRequest = requests.at(-2);
+assert.equal(upscaleRequest.input, "https://replicate-upscale.test/v1/models/nightmareai/real-esrgan/predictions");
+assert.equal(JSON.parse(upscaleRequest.init.body).input.image, "data:image/png;base64,abc");
+assert.equal(JSON.parse(upscaleRequest.init.body).input.prompt, "upscale this map");
+assert.equal(JSON.parse(upscaleRequest.init.body).input.factor, 2);
+
 console.log("BoobaStudio provider smoke test passed");
