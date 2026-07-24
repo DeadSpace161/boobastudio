@@ -200,6 +200,7 @@ async def main():
                                     actorIntegration.imageUi.renderedResult = !!imageWindow.querySelector('img[src^="data:image/"], img[src*="mock"]');
                                 }
                                 document.querySelectorAll('.radial-modal, .radial-menu-container').forEach(element => element.closest('.window')?.remove?.());
+                                imageAppInstance?.close?.();
                             }
                             smokeActor.sheet.close?.();
                         }
@@ -238,14 +239,52 @@ async def main():
                             itemIntegration.deleted = !game.items.has(smokeItem.id);
                         }
                     }
-                    const sceneIntegration = {sheetRendered: false, controlVisible: false};
-                    const smokeScene = canvas?.scene;
-                    if (smokeScene?.sheet?.render) {
-                        await smokeScene.sheet.render(true);
-                        await new Promise(resolve => setTimeout(resolve, 800));
-                        sceneIntegration.sheetRendered = !!smokeScene.sheet.rendered;
-                        sceneIntegration.controlVisible = !!document.querySelector('.boobastudio-inject-btn');
-                        smokeScene.sheet.close?.();
+                    const sceneIntegration = {sheetRendered: false, controlVisible: false, imageApplied: false, deleted: false};
+                    let smokeScene;
+                    try {
+                        smokeScene = await Scene.create({name: `BoobaStudio Live Smoke Scene ${Date.now()}`});
+                        if (smokeScene?.sheet?.render) {
+                            await smokeScene.sheet.render(true);
+                            await new Promise(resolve => setTimeout(resolve, 800));
+                            sceneIntegration.sheetRendered = !!smokeScene.sheet.rendered;
+                            const sceneControl = smokeScene.sheet.element?.querySelector?.('.boobastudio-inject-btn');
+                            sceneIntegration.controlVisible = !!sceneControl;
+                            if (sceneControl) {
+                                sceneControl.click();
+                                await new Promise(resolve => setTimeout(resolve, 900));
+                                const sceneImageWindow = [...document.querySelectorAll('.window, aside')]
+                                    .find(element => /image generation|image tools|generate image/i.test((element.innerText || '').slice(0, 700)) && element.querySelector('.targetImg'));
+                                const sceneApps = [...(game.applications?.values?.() || []), ...Object.values(ui.windows || {})];
+                                const sceneImageApp = sceneApps
+                                    .find(app => app?.element === sceneImageWindow || app?.element?.contains?.(sceneImageWindow));
+                                const sceneSaveButton = sceneImageWindow?.querySelector?.('[data-action="saveImg"]');
+                                const sceneTargetImage = sceneImageWindow?.querySelector?.('.targetImg');
+                                sceneIntegration.imageWindowVisible = !!sceneImageWindow;
+                                sceneIntegration.applicationFound = !!sceneImageApp;
+                                sceneIntegration.saveButtonVisible = !!sceneSaveButton;
+                                sceneIntegration.targetImageVisible = !!sceneTargetImage;
+                                if (sceneSaveButton && sceneTargetImage) {
+                                    sceneTargetImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+                                    sceneTargetImage.removeAttribute('data-realfile');
+                                    if (sceneImageApp && typeof sceneImageApp.saveImg === 'function') await sceneImageApp.saveImg(sceneSaveButton);
+                                    else {
+                                        sceneSaveButton.click();
+                                        await new Promise(resolve => setTimeout(resolve, 1800));
+                                    }
+                                    sceneIntegration.imageApplied = typeof smokeScene.background?.src === 'string' && smokeScene.background.src.length > 0;
+                                    sceneIntegration.imagePath = smokeScene.background?.src || null;
+                                }
+                                sceneImageApp?.close?.();
+                            }
+                            smokeScene.sheet.close?.();
+                        }
+                    } catch (error) {
+                        sceneIntegration.error = String(error?.message || error);
+                    } finally {
+                        if (smokeScene) {
+                            await smokeScene.delete();
+                            sceneIntegration.deleted = !game.scenes.has(smokeScene.id);
+                        }
                     }
                     await game.settings.set('boobastudio', 'providerBaseUrl', base);
                     await game.settings.set('boobastudio', 'providerModel', 'mock-model');

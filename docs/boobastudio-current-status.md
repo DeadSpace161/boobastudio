@@ -40,6 +40,7 @@ This status reflects the locally built package prepared as version **2.2.99**. T
 - Actor sheet integration opens the existing image application with the selected Actor as its source document.
 - Generated Actor images can be saved through Foundry file handling and update the Actor image field; no arbitrary server path is written by browser code.
 - The automated Foundry v14 probe now exercises that native save path with a temporary Actor: Foundry accepted the upload and the Actor image field updated to the returned module storage path before cleanup.
+- The same probe now creates a temporary Scene, opens the existing Scene Image Tools control, saves a generated image through Foundry file handling, verifies `background.src` changed to the returned scene storage path, and deletes the temporary Scene.
 - Provider requests and responses are normalized in the existing Cibola-compatible façade. Errors distinguish network/CORS, timeout, invalid key, access denied, rate limit, and generic provider failures.
 - Locally configured image generations are persisted in browser-local storage through the existing gallery request/delete façade. The live Foundry browser probe confirmed pagination, record shape, and deletion without a Cibola-hosted request.
 - The local gallery façade now returns the existing `pagy.next` shape used by the browser’s infinite-scroll and embedded gallery components.

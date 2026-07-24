@@ -32,7 +32,7 @@ Release 2.2.98 fixes a local-mode Image Tools crash found during end-to-end prob
 
 Release 2.2.99 applies the same narrowly scoped fallback to the existing TTS workflow: if a configured local audio model is not present in the hosted catalog, the UI uses an empty field list and continues into the local provider adapter. The package check, provider smoke test, build, archive integrity check, and manifest validation pass locally; live Foundry validation remains pending repository publication.
 
-The live Foundry v14 harness also exercised the existing Actor image application path on the published test package: a temporary Actor received an uploaded image through the module's Save action, its `img` field changed to the Foundry-returned storage path, and the temporary document was deleted afterward. The same probe still records the pre-2.2.98 Image Tools prompt crash on the public 2.2.97 package; 2.2.99 must be republished before the fixed prompt workflow can be live-verified.
+The live Foundry v14 harness also exercised the existing Actor and Scene image application paths on the published test package: a temporary Actor received an uploaded image through the module's Save action, its `img` field changed to the Foundry-returned storage path, and a temporary Scene's `background.src` changed through the Scene Image Tools Save action. Both temporary documents were deleted afterward. The same probe still records the pre-2.2.98 Image Tools prompt crash on the public 2.2.97 package; 2.2.99 must be republished before the fixed prompt workflow can be live-verified.
 
 ## Compatible text-provider configurations
 
