@@ -157,8 +157,12 @@ async def main():
                                     const imageApp = imageAppInstance || [...(game.applications?.values?.() || [])].find(app => app?.element === imageWindow || app?.element?.contains?.(imageWindow));
                                     actorIntegration.imageAppGoPrompt = typeof imageApp?.goPrompt === 'function';
                                     if (imageApp?.goPrompt && promptLauncher) {
-                                        await imageApp.goPrompt(promptLauncher);
-                                        await new Promise(resolve => setTimeout(resolve, 700));
+                                        try {
+                                            await imageApp.goPrompt(promptLauncher);
+                                            await new Promise(resolve => setTimeout(resolve, 700));
+                                        } catch (error) {
+                                            actorIntegration.imageAppGoPromptError = String(error?.message || error);
+                                        }
                                     }
                                 }
                                 const promptWindow = [...document.querySelectorAll('.window, aside')]

@@ -28,6 +28,8 @@ The harness launches the test world when needed, retries the Gamemaster session,
 
 The image vertical slice now preserves the existing Image Tools application, accepts standard image URLs as well as OpenAI base64 output, and forces locally configured client image models through the local provider adapter.
 
+Release 2.2.98 fixes a local-mode Image Tools crash found during end-to-end probing: when the hosted model catalog is absent, the existing prompt workflow now receives a safe local model configuration instead of dereferencing an undefined model record. The published 2.2.97 server reproduces the pre-fix `modelDescription` error; 2.2.98 contains the fix but awaits repository publication.
+
 ## Compatible text-provider configurations
 
 The existing adapter supports these providers without a separate integration or UI:
