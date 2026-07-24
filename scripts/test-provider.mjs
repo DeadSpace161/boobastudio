@@ -33,7 +33,8 @@ globalThis.fetch = async (input, init) => {
   }
   if (String(input).endsWith("/chat/completions")) {
     const requestBody = JSON.parse(init?.body || "{}");
-    const content = Array.isArray(requestBody.messages?.[0]?.content) && requestBody.messages[0].content.some((part) => part?.type === "image_url") ? "image description" : requestBody.messages?.[0]?.content === "array-content" ? [{ type: "text", text: "array " }, { type: "text", text: "response" }] : "provider response";
+    const messageContent = Array.isArray(requestBody.messages?.[0]?.content) ? requestBody.messages[0].content.map((part) => part?.text || "").join(" ") : requestBody.messages?.[0]?.content;
+    const content = Array.isArray(requestBody.messages?.[0]?.content) && requestBody.messages[0].content.some((part) => part?.type === "image_url") ? "image description" : String(messageContent || "").includes("Return only a valid JSON array") ? '["prompt one", "prompt two"]' : requestBody.messages?.[0]?.content === "array-content" ? [{ type: "text", text: "array " }, { type: "text", text: "response" }] : "provider response";
     return new Response(JSON.stringify({ choices: [{ message: { content } }] }), { status: 200 });
   }
   if (String(input).endsWith("/messages")) return new Response(JSON.stringify({ content: [{ type: "text", text: "anthropic response" }] }), { status: 200 });
@@ -250,5 +251,9 @@ await globalThis.__boobastudioLocalEnhance("tavern lore prompt", JSON.stringify(
 assert.equal(enhanced.status, "done");
 assert.equal(enhanced.result, "provider response");
 assert.match(String(requests.at(-1).init.body), /tavern lore local context/);
+
+let promptBuilderResult;
+await globalThis.__boobastudioLocalBuildPrompts({ command: "fantasy tavern", amount: 2 }, (result) => { promptBuilderResult = result; });
+assert.deepEqual(promptBuilderResult, { status: "done", result: '["prompt one","prompt two"]' });
 
 console.log("BoobaStudio provider smoke test passed");

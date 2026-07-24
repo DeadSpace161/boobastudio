@@ -454,6 +454,32 @@ async function localDescribe(image, callback) {
 
 globalThis.__boobastudioLocalDescribe = localDescribe;
 
+async function localBuildPrompts(input, callback) {
+  if (!isEnabled()) return false;
+  const command = String(input?.command || "").trim();
+  const amount = Math.min(20, Math.max(1, Number.parseInt(input?.amount, 10) || 1));
+  if (!command) {
+    callback?.({ status: "error", errors: ["A prompt-building command is required."] });
+    return true;
+  }
+  await localQuery(command, `Generate exactly ${amount} distinct image prompts. Return only a valid JSON array of strings, with no markdown fences or explanation.`, (result) => {
+    if (result?.status !== "done") {
+      callback?.(result);
+      return;
+    }
+    try {
+      const parsed = JSON.parse(String(result.result).replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, ""));
+      if (!Array.isArray(parsed) || parsed.some((prompt) => typeof prompt !== "string")) throw new Error("not an array of strings");
+      callback?.({ status: "done", result: JSON.stringify(parsed.slice(0, amount)) });
+    } catch {
+      callback?.({ status: "error", errors: ["Provider returned invalid prompt-builder JSON."] });
+    }
+  });
+  return true;
+}
+
+globalThis.__boobastudioLocalBuildPrompts = localBuildPrompts;
+
 async function routeImages(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
   const sharedKey = String(get(S.apiKey) || "").trim();
   let response;
