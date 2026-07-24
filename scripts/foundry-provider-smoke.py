@@ -199,7 +199,7 @@ async def main():
                                         }
                                     }
                                 }
-                                const promptWindow = [...document.querySelectorAll('.window, aside')]
+                                const promptWindow = [...document.querySelectorAll('.application, dialog, .window, aside, [role="dialog"]')]
                                     .find(element => element !== imageWindow && /prompt|description|generate/i.test((element.innerText || '').slice(0, 800)) && element.querySelector('textarea, input'));
                                 const actualPrompt = promptWindow?.querySelector?.('textarea.prompt, input.prompt, textarea[name="prompt"], input[name="prompt"], textarea');
                                 const actualGenerate = promptWindow?.querySelector?.('[data-action="generate"], [data-action="submit"], button[type="submit"]');

@@ -72,6 +72,7 @@ This status reflects the locally built package prepared as version **2.2.116**. 
 - Release 2.2.114 routes existing AI Thread sends through the configured local provider when local mode is enabled, including custom local model IDs, while preserving the existing `system.messages` document update and reply-rendering path. The provider smoke suite and live harness cover the thread callback shape and selected model propagation.
 - Release 2.2.115 fixes local circular-token uploads by creating the configured Foundry data folder before invoking the v14 FilePicker upload contract. Live validation confirmed a generated `.webp` token asset under `modules/boobastudio/storage/token`.
 - Release 2.2.116 restores the missing `bundle/workers/image_processor.worker.js` asset referenced by the recovered image conversion path. Live validation now reports no image-worker warnings while preserving the existing main-thread fallback behavior.
+- The live 2.2.116 harness now opens the existing Actor Image Tools prompt dialog, submits a text prompt through the intercepted image provider, and observes the generated preview before exercising the existing Foundry save path.
 
 ## Intentionally not hosted by this fork
 

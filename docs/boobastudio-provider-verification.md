@@ -96,6 +96,8 @@ Live Foundry v14 Build 363 validation of 2.2.114 confirmed the full local Thread
 
 Release 2.2.115 live validation confirmed the local token fallback creates its target folder through Foundry's FilePicker directory contract and uploads the circular-framed WebP asset successfully. Release 2.2.116 live validation confirmed the restored image conversion worker loads without the prior `Image worker error` warning; the complete provider/document smoke run remained green with zero smoke warnings.
 
+The same 2.2.116 run opened the recovered Actor Image Tools prompt dialog, found its prompt and generate controls, submitted a text prompt, and observed the mock generated preview before saving through Foundry file handling.
+
 Live Foundry v14 journal validation completed against the existing JournalEntryPage ProseMirror workflow. The automated test opened the existing BoobaStudio menu, selected `Generate description with AI`, submitted through an intercepted OpenAI-compatible `/chat/completions` response, accepted the generated result, and saved the page. The resulting JournalEntryPage content contained the generated paragraph. A separate image test confirmed generated image HTML is persisted in the same page model.
 
 ## Foundry v14 manual test
