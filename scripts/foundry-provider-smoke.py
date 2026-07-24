@@ -293,6 +293,7 @@ async def main():
                                 const sceneTargetImage = sceneImageWindow?.querySelector?.('.targetImg');
                                 sceneIntegration.imageWindowVisible = !!sceneImageWindow;
                                 sceneIntegration.applicationFound = !!sceneImageApp;
+                                sceneIntegration.applicationClass = sceneImageApp?.constructor?.name || null;
                                 sceneIntegration.applicationDocument = sceneImageApp?.source?.object?.documentName || sceneImageApp?.document?.documentName || null;
                                 sceneIntegration.applicationSourceId = sceneImageApp?.source?.object?.id || sceneImageApp?.document?.id || null;
                                 sceneIntegration.saveButtonVisible = !!sceneSaveButton;
