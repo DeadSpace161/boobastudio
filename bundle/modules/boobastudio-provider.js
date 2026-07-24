@@ -124,7 +124,7 @@ async function routeOpenAIImageEdit(body, originalFetch = globalThis.__boobastud
   const timer = setTimeout(() => controller.abort(), Math.max(1000, Number(get(S.timeout)) || 120000));
   try {
     const form = new FormData();
-    form.append("model", String(get(S.imageModel) || body.model || "gpt-image-1").trim());
+    form.append("model", String(body.model || get(S.imageModel) || "gpt-image-1").trim());
     form.append("prompt", String(body.prompt || ""));
     if (body.n !== undefined) form.append("n", String(body.n));
     if (body.size) form.append("size", String(body.size));
@@ -267,7 +267,10 @@ async function localGenerateVariant(prompt, behavior, model, callback, options =
   try {
     let fields = {};
     try { fields = typeof behavior === "string" ? JSON.parse(behavior) : behavior || {}; } catch { fields = {}; }
-    const response = await routeImages({ ...fields, prompt: String(prompt || ""), model: String(model || get(S.imageModel) || "") });
+    const moreFields = fields.moreFields && typeof fields.moreFields === "object" && !Array.isArray(fields.moreFields) ? fields.moreFields : {};
+    const request = { ...fields, ...moreFields, prompt: String(prompt || ""), model: String(model || get(S.imageModel) || "") };
+    delete request.moreFields;
+    const response = await routeImages(request);
     const payload = await response.json().catch(() => null);
     if (!response.ok || payload?.error) {
       callback?.({ success: false, status: "error", errors: [providerError({ message: payload?.error?.message || `Image variation failed (${response.status})` })] });

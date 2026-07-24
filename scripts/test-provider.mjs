@@ -299,13 +299,13 @@ const editResponse = await fetch("https://api.openai.com/v1/images/generations",
 assert.equal((await editResponse.json()).data[0].b64_json, "ZWRpdGVk");
 assert.equal(requests.at(-1).input, "http://provider.test/v1/images/edits");
 assert.equal(requests.at(-1).init.headers.Authorization, "Bearer test-key");
-assert.equal(requests.at(-1).init.body.get("model"), "local-image-model");
+assert.equal(requests.at(-1).init.body.get("model"), "gpt-image-1");
 assert.equal(requests.at(-1).init.body.get("prompt"), "remove the tower");
 assert.equal(requests.at(-1).init.body.get("image").name, "input.png");
 assert.equal(requests.at(-1).init.body.get("mask").name, "mask.png");
 
 let variantResult;
-await globalThis.__boobastudioLocalGenerateVariant("make a second version", JSON.stringify({ image: "data:image/png;base64,abc" }), "gpt-image-1", (result) => { variantResult = result; });
+await globalThis.__boobastudioLocalGenerateVariant("make a second version", JSON.stringify({ image: "data:image/png;base64,abc", moreFields: { strength: 0.7 } }), "gpt-image-1", (result) => { variantResult = result; });
 assert.equal(variantResult.success, true);
 assert.equal(variantResult.result, "data:image/png;base64,ZWRpdGVk");
 assert.equal(requests.at(-1).input, "http://provider.test/v1/images/edits");
