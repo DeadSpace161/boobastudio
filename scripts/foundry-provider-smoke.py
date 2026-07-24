@@ -48,6 +48,16 @@ async def main():
             elif request.url.endswith("/audio/speech") or "/text-to-speech/" in request.url:
                 await route.fulfill(status=200, content_type="audio/mpeg", body="mock-audio")
                 return
+            elif request.url.endswith("/stability/core"):
+                payload = {"image": "bW9ja19zdGFiaWxpdHk="}
+            elif "/replicate/v1/models/" in request.url and request.url.endswith("/predictions"):
+                payload = {"id": "mock-prediction", "status": "starting", "urls": {"get": f"{mock_base}/replicate/v1/predictions/mock-prediction"}}
+            elif request.url.endswith("/replicate/v1/predictions/mock-prediction"):
+                payload = {"id": "mock-prediction", "status": "succeeded", "output": ["https://mock.boobastudio.test/generated.png"]}
+            elif request.url.endswith("/comfyui/prompt"):
+                payload = {"prompt_id": "mock-comfy-prompt"}
+            elif request.url.endswith("/comfyui/history/mock-comfy-prompt"):
+                payload = {"mock-comfy-prompt": {"outputs": {"9": {"images": [{"filename": "mock.png", "subfolder": "", "type": "output"}]}}}}
             elif request.url.endswith("/messages"):
                 payload = {"content": [{"type": "text", "text": "Mock Anthropic response"}]}
             elif ":generateContent" in request.url:
@@ -74,6 +84,25 @@ async def main():
                     let elevenTts;
                     await globalThis.__boobastudioLocalGenerateTTS('live ElevenLabs TTS probe', JSON.stringify({voice_id: 'voice-1'}), 'eleven_turbo_v2_5', result => { elevenTts = result; });
                     await game.settings.set('boobastudio', 'ttsProvider', 'openai');
+                    const imageProviders = {};
+                    for (const [name, settings] of Object.entries({
+                        stability: {base: `${base}/stability`, model: 'core'},
+                        replicate: {base: `${base}/replicate/v1`, model: 'owner/mock-image'},
+                        comfyui: {base: `${base}/comfyui`, model: ''}
+                    })) {
+                        await game.settings.set('boobastudio', 'imageProvider', name);
+                        await game.settings.set('boobastudio', 'stabilityBaseUrl', settings.base);
+                        await game.settings.set('boobastudio', 'stabilityModel', settings.model || 'core');
+                        await game.settings.set('boobastudio', 'replicateBaseUrl', settings.base);
+                        await game.settings.set('boobastudio', 'replicateModel', settings.model || 'owner/mock-image');
+                        await game.settings.set('boobastudio', 'replicateApiToken', 'mock-replicate-key');
+                        await game.settings.set('boobastudio', 'comfyuiBaseUrl', settings.base);
+                        await game.settings.set('boobastudio', 'comfyuiWorkflow', JSON.stringify({prompt: '{{prompt}}'}));
+                        const imageProbe = await fetch('https://api.openai.com/v1/images/generations', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({model: settings.model || 'mock-image', prompt: `live ${name} image probe`})});
+                        const imagePayload = await imageProbe.json();
+                        imageProviders[name] = {status: imageProbe.status, hasImage: !!imagePayload?.data?.[0]?.b64_json || typeof imagePayload?.data?.[0]?.url === 'string', url: imagePayload?.data?.[0]?.url || null};
+                    }
+                    await game.settings.set('boobastudio', 'imageProvider', 'openai');
                     await game.settings.set('boobastudio', 'providerBaseUrl', base);
                     await game.settings.set('boobastudio', 'providerModel', 'mock-model');
                     await game.settings.set('boobastudio', 'providerJsonMode', false);
@@ -124,6 +153,7 @@ async def main():
                         query,
                         nativeProviders,
                         tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}},
+                        imageProviders,
                         imageStatus: imageResponse.status,
                         image,
                         localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
