@@ -316,6 +316,7 @@ values.set("boobastudio.imageProvider", "replicate");
 values.set("boobastudio.replicateBaseUrl", "https://replicate-upscale.test/v1");
 values.set("boobastudio.replicateModel", "nightmareai/real-esrgan");
 values.set("boobastudio.replicateApiToken", "upscale-token");
+values.set("boobastudio.replicateImageInput", JSON.stringify({ num_inference_steps: 12, prompt: "{{prompt}}" }));
 const upscaleResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "nightmareai/real-esrgan", prompt: "data:image/png;base64,abc", basePrompt: "upscale this map", factor: 2 }) });
 assert.equal((await upscaleResponse.json()).data[0].url, "https://cdn.test/generated.png");
 const upscaleRequest = requests.at(-2);
@@ -323,5 +324,7 @@ assert.equal(upscaleRequest.input, "https://replicate-upscale.test/v1/models/nig
 assert.equal(JSON.parse(upscaleRequest.init.body).input.image, "data:image/png;base64,abc");
 assert.equal(JSON.parse(upscaleRequest.init.body).input.prompt, "upscale this map");
 assert.equal(JSON.parse(upscaleRequest.init.body).input.factor, 2);
+assert.equal(JSON.parse(upscaleRequest.init.body).input.num_inference_steps, 12);
+values.set("boobastudio.replicateImageInput", "{}");
 
 console.log("BoobaStudio provider smoke test passed");

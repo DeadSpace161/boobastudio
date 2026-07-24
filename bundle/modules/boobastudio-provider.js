@@ -1,5 +1,5 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", replicateInput: "replicateImageInput", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -316,7 +316,17 @@ async function arrayBufferToBase64(buffer) {
 }
 
 function replicateInput(body, model = replicateModel(body)) {
-  const input = {};
+  let configured = {};
+  try { configured = JSON.parse(String(get(S.replicateInput) || "{}")); } catch { configured = {}; }
+  const values = { prompt: String(body.prompt || ""), image: body.image ?? "", mask: body.mask ?? "", factor: body.factor ?? "", scale: body.scale ?? "", width: body.width ?? "", height: body.height ?? "" };
+  const replace = (value) => {
+    if (typeof value === "string") return value.replace(/\{\{(prompt|image|mask|factor|scale|width|height)\}\}/g, (_, key) => String(values[key] ?? ""));
+    if (Array.isArray(value)) return value.map(replace);
+    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replace(item)]));
+    return value;
+  };
+  const replaced = replace(configured);
+  const input = replaced && typeof replaced === "object" && !Array.isArray(replaced) ? replaced : {};
   const size = String(body.size || "").match(/^(\d+)x(\d+)$/);
   if (size) {
     input.width = Number(size[1]);
@@ -760,6 +770,7 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.musicInput, { name: "BoobaStudio: Music model input JSON", hint: "Optional JSON object merged into Replicate input. Use {{prompt}}, {{lyrics}}, {{title}}, and {{style}} placeholders.", scope: "client", config: true, type: String, default: "{}" });
   game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
+  game.settings.register(NAMESPACE, S.replicateInput, { name: "BoobaStudio: Replicate image input JSON", hint: "Optional JSON merged into Replicate image inputs. Use {{prompt}}, {{image}}, {{mask}}, {{factor}}, {{scale}}, {{width}}, and {{height}} placeholders.", scope: "client", config: true, type: String, default: "{}" });
   game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
   game.settings.register(NAMESPACE, S.stabilityApiKey, { name: "BoobaStudio: Stability AI API key", hint: "Client-scoped key used for direct Stability image requests.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.stabilityModel, { name: "BoobaStudio: Stability AI model", hint: "Path segment after the Stability generate endpoint, for example core.", scope: "client", config: true, type: String, default: "core" });
@@ -789,6 +800,7 @@ Hooks.once("ready", async () => {
     game.settings.register(NAMESPACE, S.musicInput, { name: "BoobaStudio: Music model input JSON", hint: "Optional JSON object merged into Replicate input. Use {{prompt}}, {{lyrics}}, {{title}}, and {{style}} placeholders.", scope: "client", config: true, type: String, default: "{}" });
     game.settings.register(NAMESPACE, S.replicateToken, { name: "BoobaStudio: Replicate API token", hint: "Client-scoped token used only for direct Replicate image requests.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.replicateModel, { name: "BoobaStudio: Replicate image model", hint: "Replicate model in owner/name form, for example black-forest-labs/flux-schnell.", scope: "client", config: true, type: String, default: "black-forest-labs/flux-schnell" });
+    game.settings.register(NAMESPACE, S.replicateInput, { name: "BoobaStudio: Replicate image input JSON", hint: "Optional JSON merged into Replicate image inputs. Use {{prompt}}, {{image}}, {{mask}}, {{factor}}, {{scale}}, {{width}}, and {{height}} placeholders.", scope: "client", config: true, type: String, default: "{}" });
     game.settings.register(NAMESPACE, S.replicateBaseUrl, { name: "BoobaStudio: Replicate API base URL", hint: "Default: https://api.replicate.com/v1. Use a compatible CORS-enabled proxy or local endpoint if the provider blocks browser requests.", scope: "client", config: true, type: String, default: "https://api.replicate.com/v1" });
     game.settings.register(NAMESPACE, S.stabilityApiKey, { name: "BoobaStudio: Stability AI API key", hint: "Client-scoped key used for direct Stability image requests.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.stabilityModel, { name: "BoobaStudio: Stability AI model", hint: "Path segment after the Stability generate endpoint, for example core.", scope: "client", config: true, type: String, default: "core" });

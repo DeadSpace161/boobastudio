@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.86**. The public server remains on 2.2.75 until repository write access is restored.
+This status reflects the locally built package prepared as version **2.2.87**. The public server remains on 2.2.75 until repository write access is restored.
 
 ## Verified
 
@@ -22,6 +22,7 @@ This status reflects the locally built package prepared as version **2.2.86**. T
 - Existing image edit/variation requests that include an input image or mask now route to the configured OpenAI-compatible `/images/edits` endpoint as multipart form data, while ordinary generation continues to use `/images/generations`; data-URL inputs are converted in the browser without a server upload.
 - The existing `genVariant` façade now has the same local-provider bridge as `genImage`, preserving the current callback/result shape and routing variants through the configured OpenAI-compatible, Replicate, Stability, or ComfyUI image adapter.
 - Existing Scene Upscale payloads that carry the source image in the prompt now normalize that image into the provider input and preserve scale/factor controls for Replicate-compatible upscalers.
+- Replicate image workflows now support optional client-scoped input JSON with placeholders for prompt, image, mask, factor, scale, width, and height, allowing model-specific controls without modifying the module.
 - Existing image prompt-builder action now routes `{command, amount}` through the local text provider, validates the returned JSON array, and preserves the original prompt-tab population flow.
 - Existing narration/TTS generation now routes through the configured OpenAI or ElevenLabs adapter and preserves the existing audio preview, Foundry upload, and playlist flow.
 - Local TTS voice-catalog requests no longer contact Cibola; hosted voice search remains unchanged when local mode is disabled.
