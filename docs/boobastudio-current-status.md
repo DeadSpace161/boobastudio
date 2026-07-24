@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.110**. The public test server remains on the last published 2.2.97 package while the 2.2.110 release awaits live installation verification.
+This status reflects the locally built package prepared as version **2.2.111**. The public test server is being live-verified against the published 2.2.111 package.
 
 ## Verified
 
@@ -65,6 +65,7 @@ This status reflects the locally built package prepared as version **2.2.110**. 
 - The 2.2.108 build allows configured local providers to expose the existing document-generation controls to eligible non-GM owners, while preserving the hosted account gate when local mode is disabled.
 - The 2.2.109 v14 compatibility bridge extends the existing Actor control to Item, JournalEntry, RollTable, and Tile sheets when their legacy header hooks are absent, reusing the same image generator and document ownership checks.
 - The 2.2.110 release republishes the corrected runtime asset manifest under a fresh versioned URL so Foundry does not reuse the stale 2.2.109 CDN response.
+- The 2.2.111 release preserves configured local text model IDs in the existing AI Thread data-model choices, allowing custom models to survive Foundry document updates; it also preserves the legacy Actor control class in the generalized v14 bridge.
 
 ## Intentionally not hosted by this fork
 

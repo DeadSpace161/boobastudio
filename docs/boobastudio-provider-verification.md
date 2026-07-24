@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.110**. The public test world remains on the published 2.2.97 package; the 2.2.110 manifest and ZIP are independently verified locally and await live installation verification.
+The current locally packaged release is **2.2.111**. The public test world is being live-verified against the published 2.2.111 package.
 
 ## Build checks
 
@@ -44,7 +44,7 @@ Release 2.2.104 extends local model compatibility to persistent AI Threads. Arbi
 
 Release 2.2.105 closes the remaining custom-thread-model filter dereference for persisted conversations. Package checks, provider tests, build output, and archive integrity pass locally; live verification awaits publication.
 
-Release 2.2.106 prevents the original thread data-model migration from overwriting arbitrary local provider model IDs. Release 2.2.107 exposes the configured local music model in the existing song selector. Release 2.2.108 makes the existing document-generation controls available to eligible local-mode owners. Release 2.2.109 extends the v14 compatibility bridge to Item, JournalEntry, RollTable, and Tile sheets. Release 2.2.110 republishes the corrected asset manifest under a fresh URL after CDN cache verification. The local provider retains ownership of custom model validation while hosted-mode migration behavior remains unchanged. Package checks, provider tests, build output, and archive integrity pass locally; live installation verification remains.
+Release 2.2.106 prevents the original thread data-model migration from overwriting arbitrary local provider model IDs. Release 2.2.107 exposes the configured local music model in the existing song selector. Release 2.2.108 makes the existing document-generation controls available to eligible local-mode owners. Release 2.2.109 extends the v14 compatibility bridge to Item, JournalEntry, RollTable, and Tile sheets. Release 2.2.110 republishes the corrected asset manifest under a fresh URL after CDN cache verification. Release 2.2.111 adds configured local text models to the existing Thread data-model choices and restores the legacy Actor control class. The local provider retains ownership of custom model validation while hosted-mode migration behavior remains unchanged. Package checks, provider tests, build output, and archive integrity pass locally; live verification is in progress.
 
 The live Foundry v14 harness also exercised the existing Actor and Scene image application paths on the published test package: a temporary Actor received an uploaded image through the module's Save action, its `img` field changed to the Foundry-returned storage path, and a temporary Scene's `background.src` changed through the Scene Image Tools Save action. Both temporary documents were deleted afterward. The same probe still records the pre-2.2.98 Image Tools prompt crash on the public 2.2.97 package; 2.2.99 must be republished before the fixed prompt workflow can be live-verified.
 

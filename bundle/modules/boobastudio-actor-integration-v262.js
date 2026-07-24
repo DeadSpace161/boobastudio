@@ -14,7 +14,7 @@ function addBoobaStudioDocumentControl(app) {
   const button = globalThis.document?.createElement?.("button");
   if (!button) return;
   button.type = "button";
-  button.className = "header-control icon fa-solid fa-wand-magic-sparkles boobastudio-document-control";
+  button.className = `header-control icon fa-solid fa-wand-magic-sparkles boobastudio-document-control${document.documentName === "Actor" ? " boobastudio-actor-control" : ""}`;
   button.dataset.tooltip = "BoobaStudio";
   button.setAttribute("aria-label", "BoobaStudio");
   button.addEventListener("click", () => {
