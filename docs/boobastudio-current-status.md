@@ -69,6 +69,7 @@ This status reflects the locally built package prepared as version **2.2.113**. 
 - The 2.2.112 release removes the static Thread choice validator only in configured local mode, allowing arbitrary local model IDs while retaining the bundled hosted-model choices otherwise; the Actor bridge receives a fresh cache-busted asset filename.
 - The 2.2.113 release removes the Thread schema choice validator entirely while preserving the existing model-selector template, eliminating initialization-order dependence for local model IDs.
 - The published 2.2.113 package has now passed live Foundry v14 verification: Actor, JournalEntry, RollTable, Item, Tile, and Scene controls render; Item and Scene images upload and apply through the existing workflows; and custom local Thread model IDs persist through document updates.
+- Release 2.2.114 routes existing AI Thread sends through the configured local provider when local mode is enabled, including custom local model IDs, while preserving the existing `system.messages` document update and reply-rendering path. The provider smoke suite covers the thread callback shape and selected model propagation.
 
 ## Intentionally not hosted by this fork
 
@@ -76,4 +77,4 @@ The personal fork does not require Cibola accounts, subscriptions, credits, tele
 
 ## Next parity targets
 
-Advanced image routing is now live-validated through the existing variation/edit façade: a data-URL image and mask reached the configured OpenAI-compatible `/images/edits` path and returned the existing data-URL callback shape. Replicate model-specific inpaint, erase, outpaint, background-removal, and upscale input shaping is also covered by the provider smoke suite. The remaining parity work is primarily provider-specific capability presentation and cosmetic/manual coverage of every toolbar operation. Public community gallery actions and AI document translation remain intentionally out of the local-only slice.
+Advanced image routing is live-validated through the existing variation/edit façade: a data-URL image and mask reached the configured OpenAI-compatible `/images/edits` path and returned the existing data-URL callback shape. Replicate model-specific inpaint, erase, outpaint, background-removal, and upscale input shaping is also covered by the provider smoke suite. The next parity work is capability presentation and runtime coverage of lower-frequency toolbar operations. Public community gallery actions and AI document translation remain intentionally out of the local-only slice.

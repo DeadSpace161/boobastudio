@@ -373,7 +373,17 @@ async def main():
                             sceneIntegration.deleted = !game.scenes.has(smokeScene.id);
                         }
                     }
-                    const threadIntegration = {created: false, rendered: false, customModel: false, submitted: false, replyVisible: false, persisted: false, deleted: false};
+                    const threadIntegration = {created: false, rendered: false, customModel: false, submitted: false, replyVisible: false, persisted: false, deleted: false, localProvider: false};
+                    let localThreadProviderResult;
+                    if (typeof globalThis.__boobastudioLocalThreadChat === 'function') {
+                        await globalThis.__boobastudioLocalThreadChat(
+                            [{role: 'user', content: 'live local thread provider probe'}],
+                            result => { localThreadProviderResult = result; },
+                            {model: 'mock-local-thread-model'}
+                        );
+                        threadIntegration.localProvider = localThreadProviderResult?.status === 'done' && /Mock BoobaStudio response/i.test(localThreadProviderResult?.message?.content || '');
+                        threadIntegration.providerResult = localThreadProviderResult || null;
+                    }
                     let smokeThreadJournal;
                     try {
                         smokeThreadJournal = await JournalEntry.create({name: `BoobaStudio Live Smoke Thread ${Date.now()}`, content: '', pages: [{name: 'Local Thread', type: 'boobastudio.threadgpt'}]});
@@ -394,10 +404,13 @@ async def main():
                         if (smokeThreadPage?.sheet?.render) {
                             await smokeThreadPage.sheet.render(true);
                             await new Promise(resolve => setTimeout(resolve, 900));
+                            await smokeThreadPage.sheet.close?.();
+                            await smokeThreadPage.sheet.render({force: true, mode: 'view'});
+                            await new Promise(resolve => setTimeout(resolve, 700));
                             const threadRoot = smokeThreadPage.sheet.element;
-                            const threadPrompt = threadRoot?.querySelector?.('textarea[name="prompt"], textarea[name="system.prompt"], textarea');
+                            const threadPrompt = threadRoot?.querySelector?.('textarea[name="prompt"], textarea[name="system.prompt"], textarea, [contenteditable="true"], [data-edit="system.prompt"]');
                             const threadSend = threadRoot?.querySelector?.('[data-action="sendMessage"], button[type="submit"]');
-                            threadIntegration.controls = [...(threadRoot?.querySelectorAll?.('textarea, input, button, [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', text: (control.innerText || '').trim(), value: control.value || ''})).slice(0, 40);
+                            threadIntegration.controls = [...(threadRoot?.querySelectorAll?.('textarea, input, button, [contenteditable="true"], [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', text: (control.innerText || '').trim(), value: control.value || '', contenteditable: control.getAttribute('contenteditable') || ''})).slice(0, 60);
                             threadIntegration.rendered = !!threadRoot && /thread|mock-local-thread-model|send/i.test((threadRoot.innerText || '').slice(0, 1200));
                             if (threadPrompt && threadSend) {
                                 threadPrompt.value = 'live custom local thread probe';

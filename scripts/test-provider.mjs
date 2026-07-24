@@ -207,6 +207,14 @@ let queryResult;
 await globalThis.__boobastudioLocalQuery("Write a tavern description", "{\"type\":\"object\"}", (result) => { queryResult = result; });
 assert.deepEqual(queryResult, { status: "done", result: "provider response" });
 assert.equal(requests.at(-1).input, "http://provider.test/v1/chat/completions");
+let threadResult;
+await globalThis.__boobastudioLocalThreadChat([
+  { role: "user", content: "Remember the tavern layout." },
+  { role: "system", content: "Answer as a concise game master." },
+], (result) => { threadResult = result; }, { model: "custom-local-thread-model" });
+assert.deepEqual(threadResult, { status: "done", message: { role: "assistant", content: "provider response" } });
+assert.equal(requests.at(-1).input, "http://provider.test/v1/chat/completions");
+assert.equal(JSON.parse(requests.at(-1).init.body).model, "custom-local-thread-model");
 const arrayResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", body: JSON.stringify({ input: [{ role: "user", content: [{ type: "input_text", text: "array-content" }] }] }) });
 assert.equal((await arrayResponse.json()).output[0].content[0].text, "array response");
 

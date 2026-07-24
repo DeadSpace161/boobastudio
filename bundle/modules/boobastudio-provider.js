@@ -788,7 +788,7 @@ async function routeReplicateImages(body) {
 
 async function routeResponses(originalFetch, body) {
   const kind = protocol();
-  const model = String(get(S.model) || body.model || "gpt-5-mini").trim();
+  const model = String(body.useBodyModel ? body.model : (get(S.model) || body.model) || "gpt-5-mini").trim();
   const input = withLocalVectorContext(messages(body.input));
   const temperature = Number(get(S.temperature));
   const maxTokens = Math.max(1, Number(get(S.maxTokens)) || 2048);
@@ -890,7 +890,7 @@ async function routeImages(body, originalFetch = globalThis.__boobastudioOrigina
 async function localQuery(prompt, behavior, callback, options = {}) {
   if (!isEnabled()) return false;
   try {
-    const response = await routeResponses(globalThis.__boobastudioOriginalFetch || fetch, { model: String(get(S.model) || "gpt-5-mini"), input: [{ role: "user", content: [{ type: "input_text", text: `${String(prompt ?? "").trim()}\n\nGeneration instructions:\n${String(behavior ?? "").trim()}` }] }], ...(options.jsonMode === false ? { jsonMode: false } : {}) });
+    const response = await routeResponses(globalThis.__boobastudioOriginalFetch || fetch, { model: String(options.model || get(S.model) || "gpt-5-mini"), input: [{ role: "user", content: [{ type: "input_text", text: `${String(prompt ?? "").trim()}\n\nGeneration instructions:\n${String(behavior ?? "").trim()}` }] }], ...(options.jsonMode === false ? { jsonMode: false } : {}) });
     const result = await response.json().catch(() => null);
     if (!response.ok) {
       const message = result?.error?.message || `Provider request failed (${response.status})`;
@@ -907,6 +907,24 @@ async function localQuery(prompt, behavior, callback, options = {}) {
 
 globalThis.__boobastudioLocalQuery = localQuery;
 globalThis.__boobastudioLocalEnhance = localQuery;
+async function localThreadChat(messagesInput, callback, options = {}) {
+  if (!isEnabled()) return false;
+  try {
+    const input = Array.isArray(messagesInput) ? messagesInput.map((message) => ({ role: message?.role || "user", content: [{ type: "input_text", text: String(message?.content || "") }] })) : [];
+    const response = await routeResponses(globalThis.__boobastudioOriginalFetch || fetch, { model: String(options.model || get(S.model) || "gpt-5-mini"), useBodyModel: true, input, jsonMode: false });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) {
+      callback?.({ status: "error", errors: [providerError({ message: result?.error?.message || `Provider request failed (${response.status})` })] });
+      return true;
+    }
+    const content = text(result?.output?.[0]?.content?.map?.((part) => part.text));
+    callback?.(content ? { status: "done", message: { role: "assistant", content } } : { status: "error", errors: ["Provider response did not contain thread content."] });
+  } catch (error) {
+    callback?.({ status: "error", errors: [providerError(error)] });
+  }
+  return true;
+}
+globalThis.__boobastudioLocalThreadChat = localThreadChat;
 globalThis.__boobastudioLocalProviderConfigured = () => isEnabled() && Boolean(baseUrl());
 
 Hooks.once("ready", () => {
