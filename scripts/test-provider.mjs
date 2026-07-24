@@ -85,7 +85,6 @@ let galleryShare;
 await globalThis.__boobastudioLocalGalleryShare((result) => { galleryShare = result; });
 assert.equal(galleryShare.status, "error");
 assert.match(galleryShare.errors[0], /unavailable in local mode/i);
-
 values.set("boobastudio.imageProvider", "replicate");
 values.set("boobastudio.replicateApiToken", "replicate-test-token");
 values.set("boobastudio.replicateModel", "black-forest-labs/flux-schnell");
@@ -238,5 +237,10 @@ await globalThis.__boobastudioLocalGalleryDelete(localGalleryPage.data[0].id, ()
 let emptyLocalGallery;
 await globalThis.__boobastudioLocalGalleryPage(1, (page) => { emptyLocalGallery = page; }, {});
 assert.equal(emptyLocalGallery.data.length, 0);
+
+let enhanced;
+await globalThis.__boobastudioLocalEnhance("a rough prompt", JSON.stringify({ type: "improvisePrompt" }), (result) => { enhanced = result; });
+assert.equal(enhanced.status, "done");
+assert.equal(enhanced.result, "provider response");
 
 console.log("BoobaStudio provider smoke test passed");

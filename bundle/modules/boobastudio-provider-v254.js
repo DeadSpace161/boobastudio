@@ -432,6 +432,7 @@ async function localQuery(prompt, behavior, callback) {
 }
 
 globalThis.__boobastudioLocalQuery = localQuery;
+globalThis.__boobastudioLocalEnhance = localQuery;
 globalThis.__boobastudioLocalProviderConfigured = () => isEnabled() && Boolean(baseUrl());
 
 Hooks.once("ready", () => {
