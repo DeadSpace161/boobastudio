@@ -28,10 +28,10 @@
     }
   ],
   "esmodules": [
-    "bundle/modules/boobastudio-provider-v254-308.js",
+    "bundle/modules/boobastudio-provider-v254-309.js",
     "bundle/modules/boobastudio-actor-integration-v263.js",
     "bundle/modules/boobastudio-migration-v256.js",
-    "bundle/modules/boobastudio-entry-v250-308.js"
+    "bundle/modules/boobastudio-entry-v250-309.js"
   ],
   "styles": [
     "styles/css/css.css"
