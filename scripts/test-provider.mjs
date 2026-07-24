@@ -40,6 +40,7 @@ globalThis.fetch = async (input, init) => {
   if (String(input).endsWith("/messages")) return new Response(JSON.stringify({ content: [{ type: "text", text: "anthropic response" }] }), { status: 200 });
   if (String(input).includes(":generateContent")) return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: "gemini response" }] } }] }), { status: 200 });
   if (String(input).endsWith("/images/generations")) return new Response(JSON.stringify({ data: [{ b64_json: "aGVsbG8=" }] }), { status: 200 });
+  if (String(input).endsWith("/images/edits")) return new Response(JSON.stringify({ data: [{ b64_json: "ZWRpdGVk" }] }), { status: 200 });
   return new Response(JSON.stringify({ error: { message: "unexpected request" } }), { status: 500 });
 };
 
@@ -289,5 +290,18 @@ let localSongGallery;
 await globalThis.__boobastudioLocalGalleryPage(1, (page) => { localSongGallery = page; }, { filter: "song" });
 assert.equal(localSongGallery.data.length, 1);
 assert.equal(localSongGallery.data[0].attributes.type, "song");
+
+values.set("boobastudio.providerBaseUrl", "http://provider.test/v1");
+values.set("boobastudio.imageProvider", "openai");
+values.set("boobastudio.imageModel", "local-image-model");
+values.set("boobastudio.openaiApiKey", "test-key");
+const editResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "gpt-image-1", prompt: "remove the tower", image: "data:image/png;base64,abc", mask: "data:image/png;base64,mask" }) });
+assert.equal((await editResponse.json()).data[0].b64_json, "ZWRpdGVk");
+assert.equal(requests.at(-1).input, "http://provider.test/v1/images/edits");
+assert.equal(requests.at(-1).init.headers.Authorization, "Bearer test-key");
+assert.equal(requests.at(-1).init.body.get("model"), "local-image-model");
+assert.equal(requests.at(-1).init.body.get("prompt"), "remove the tower");
+assert.equal(requests.at(-1).init.body.get("image").name, "input.png");
+assert.equal(requests.at(-1).init.body.get("mask").name, "mask.png");
 
 console.log("BoobaStudio provider smoke test passed");

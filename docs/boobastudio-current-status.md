@@ -18,6 +18,7 @@ This status reflects the locally built package prepared as version **2.2.77**. T
 - Existing scene image generation can preview a result and expose Save, Save As, Apply as Tile, and Download actions.
 - Local image generation bypasses the legacy hosted client-only session confirmation only when a local provider is configured; unconfigured sessions retain the original safety gate.
 - Existing image-tools description action now routes image data URLs through the configured OpenAI-compatible vision model and returns the original `{status:"done",result}` callback shape; the UI and editor insertion path are unchanged.
+- Existing image edit/variation requests that include an input image or mask now route to the configured OpenAI-compatible `/images/edits` endpoint as multipart form data, while ordinary generation continues to use `/images/generations`; data-URL inputs are converted in the browser without a server upload.
 - Existing image prompt-builder action now routes `{command, amount}` through the local text provider, validates the returned JSON array, and preserves the original prompt-tab population flow.
 - Existing narration/TTS generation now routes through the configured OpenAI or ElevenLabs adapter and preserves the existing audio preview, Foundry upload, and playlist flow.
 - Local TTS voice-catalog requests return an empty local catalog instead of contacting Cibola; hosted voice search remains unchanged when local mode is disabled.
@@ -40,4 +41,4 @@ The personal fork does not require Cibola accounts, subscriptions, credits, tele
 
 ## Next parity targets
 
-The existing image editor already exposes advanced operations. The next useful validation work is provider-capability gating and live mocked checks for inpainting, outpainting, background removal, upscale, and scene wall detection, followed by local persistence for threads/gallery metadata where the existing hosted contract cannot be reused.
+The existing image editor already exposes advanced operations. The next useful validation work is provider-capability gating and live mocked checks for Replicate inpainting, outpainting, background removal, upscale, and scene wall detection, followed by local persistence for threads/gallery metadata where the existing hosted contract cannot be reused.

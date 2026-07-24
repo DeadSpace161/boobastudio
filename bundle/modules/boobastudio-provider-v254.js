@@ -119,6 +119,47 @@ async function routeStabilityImages(body) {
   return new Response(JSON.stringify({ data: [{ b64_json: encoded }] }), { status: 200, headers: { "Content-Type": "application/json" } });
 }
 
+async function routeOpenAIImageEdit(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), Math.max(1000, Number(get(S.timeout)) || 120000));
+  try {
+    const form = new FormData();
+    form.append("model", String(get(S.imageModel) || body.model || "gpt-image-1").trim());
+    form.append("prompt", String(body.prompt || ""));
+    if (body.n !== undefined) form.append("n", String(body.n));
+    if (body.size) form.append("size", String(body.size));
+    if (body.quality) form.append("quality", String(body.quality));
+    if (body.response_format) form.append("response_format", String(body.response_format));
+    for (const [field, filename] of [["image", "input.png"], ["mask", "mask.png"]]) {
+      if (body[field] === undefined || body[field] === null || body[field] === "") continue;
+      const value = body[field];
+      if (typeof value === "string" && value.startsWith("data:")) {
+        const match = value.match(/^data:([^;,]+)?(;base64)?,(.*)$/s);
+        if (!match) form.append(field, value, filename);
+        else {
+          const mime = match[1] || "application/octet-stream";
+          const bytes = match[2] ? Uint8Array.from(atob(match[3]), (character) => character.charCodeAt(0)) : new TextEncoder().encode(decodeURIComponent(match[3]));
+          form.append(field, new Blob([bytes], { type: mime }), filename);
+        }
+      } else if (value instanceof Blob) form.append(field, value, filename);
+      else form.append(field, String(value));
+    }
+    const endpoint = `${baseUrl()}/images/edits`;
+    const { "Content-Type": _contentType, ...editHeaders } = headers("openai");
+    const response = await originalFetch(endpoint, {
+      method: "POST",
+      headers: editHeaders,
+      body: form,
+      signal: controller.signal,
+    });
+    return await providerResponse(response);
+  } catch (error) {
+    return providerFailure(error);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function routeTTS(body) {
   let fields = body?.prompt;
   try { fields = typeof fields === "string" ? JSON.parse(fields) : fields || {}; } catch { fields = {}; }
@@ -592,6 +633,7 @@ async function routeImages(body, originalFetch = globalThis.__boobastudioOrigina
   if (String(get(S.imageProvider) || "openai") === "stability") response = await routeStabilityImages(body);
   else if (String(get(S.imageProvider) || "openai") === "comfyui") response = await routeComfyUIImages(body);
   else if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) response = await routeReplicateImages(body);
+  else if (body.image || body.mask) response = await routeOpenAIImageEdit(body, originalFetch);
   else response = await providerResponse(await post(`${baseUrl()}/images/generations`, { ...body, model: String(get(S.imageModel) || body.model || "gpt-image-1").trim() }, originalFetch));
   return rememberLocalGallery(body, response);
 }
