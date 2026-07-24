@@ -204,8 +204,25 @@ async function localGenerateTTS(textInput, behavior, model, callback) {
 }
 
 globalThis.__boobastudioLocalGenerateTTS = localGenerateTTS;
-globalThis.__boobastudioLocalVoices = async () => isEnabled() ? { voices: [], has_more: false } : false;
-globalThis.__boobastudioLocalVoicePage = async () => isEnabled() ? { voices: [], has_more: false } : false;
+const LOCAL_OPENAI_VOICES = [
+  ["alloy", "Alloy"], ["ash", "Ash"], ["ballad", "Ballad"], ["coral", "Coral"], ["echo", "Echo"],
+  ["fable", "Fable"], ["nova", "Nova"], ["onyx", "Onyx"], ["sage", "Sage"], ["shimmer", "Shimmer"], ["verse", "Verse"],
+].map(([voice_id, name]) => ({ voice_id, name, description: "OpenAI text-to-speech voice", preview_url: "", labels: {} }));
+
+function localVoiceCatalog() {
+  return String(get(S.ttsProvider) || "openai").toLowerCase() === "openai" ? LOCAL_OPENAI_VOICES : [];
+}
+
+globalThis.__boobastudioLocalVoices = async () => isEnabled() ? { voices: localVoiceCatalog(), has_more: false } : false;
+globalThis.__boobastudioLocalVoicePage = async (query = {}) => {
+  if (!isEnabled()) return false;
+  const voices = localVoiceCatalog();
+  const search = String(query?.search || query?.q || "").trim().toLowerCase();
+  const filtered = search ? voices.filter((voice) => `${voice.name} ${voice.voice_id}`.toLowerCase().includes(search)) : voices;
+  const page = Math.max(1, Number(query?.page) || 1);
+  const perPage = Math.max(1, Math.min(100, Number(query?.page_size || query?.limit) || 20));
+  return { voices: filtered.slice((page - 1) * perPage, page * perPage), has_more: page * perPage < filtered.length };
+};
 
 async function localGenerateSong(input, behavior, callback, options = {}) {
   if (!isEnabled()) return false;
