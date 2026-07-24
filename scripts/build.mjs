@@ -180,5 +180,11 @@ vectorEntry = vectorEntry.replace(threadResponseIdUpdate, threadResponseIdUpdate
 await writeFile(entryPath, vectorEntry);
 
 const manifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
+const versionedEntryAsset = manifest.esmodules.find((file) => /boobastudio-entry-v250-\d+\.js$/.test(file.split("?", 1)[0]));
+const versionedProviderAsset = manifest.esmodules.find((file) => /boobastudio-provider-v254-\d+\.js$/.test(file.split("?", 1)[0]));
+if (!versionedEntryAsset || !versionedProviderAsset) throw new Error("Versioned runtime assets are missing from module.json");
+await cp(entryPath, path.join(output, versionedEntryAsset.split("?", 1)[0]));
+await rm(entryPath, { force: true });
+await rm(path.join(output, "bundle", "modules", "boobastudio-provider-v254.js"), { force: true });
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Built package at ${output}`);
