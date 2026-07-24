@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the validated public package released as version **2.2.67**.
+This status reflects the validated public package released as version **2.2.70**.
 
 ## Verified
 
@@ -8,6 +8,7 @@ This status reflects the validated public package released as version **2.2.67**
 - The existing Cibola application structure, templates, settings, document hooks, image editor, history, gallery, and file handling remain in use.
 - Client-scoped provider settings support OpenAI-compatible endpoints, OpenRouter, Ollama, LM Studio, Anthropic, Gemini, ComfyUI, Stability AI, Replicate, OpenAI TTS, and ElevenLabs.
 - Existing prose generation can submit a prompt, render a result, insert it into a Journal editor, and persist the JournalEntryPage update.
+- The existing direct `/c8` chat path is routed to the configured local provider before account connectivity is checked; its local response is normalized to the existing chat message object and browser-local history contract.
 - Existing scene image generation can preview a result and expose Save, Save As, Apply as Tile, and Download actions.
 - Actor sheet integration opens the existing image application with the selected Actor as its source document.
 - Generated Actor images can be saved through Foundry file handling and update the Actor image field; no arbitrary server path is written by browser code.
