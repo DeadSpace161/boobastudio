@@ -15,6 +15,7 @@ function addBoobaStudioActorControl(app) {
   button.dataset.tooltip = "BoobaStudio";
   button.setAttribute("aria-label", "BoobaStudio");
   button.addEventListener("click", () => {
+    installRadialFallback();
     const menu = globalThis.game?.modules?.get("boobastudio")?.api?.menu;
     if (typeof menu === "function") menu();
     else globalThis.ui?.notifications?.warn?.("BoobaStudio menu is not available yet.");
