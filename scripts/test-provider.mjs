@@ -281,5 +281,9 @@ assert.equal(song.title, "Tavern Song");
 assert.equal(song.audio_url, "https://cdn.test/generated.png");
 assert.equal(requests.at(-2).input, "https://music.test/v1/models/test/music-model/predictions");
 assert.equal(JSON.parse(requests.at(-2).init.body).input.prompt, "folk | Raise a glass");
+let localSongGallery;
+await globalThis.__boobastudioLocalGalleryPage(1, (page) => { localSongGallery = page; }, { filter: "song" });
+assert.equal(localSongGallery.data.length, 1);
+assert.equal(localSongGallery.data[0].attributes.type, "song");
 
 console.log("BoobaStudio provider smoke test passed");

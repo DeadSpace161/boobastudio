@@ -206,7 +206,9 @@ async function localGenerateSong(input, behavior, callback, options = {}) {
       return true;
     }
     const id = current.id || globalThis.crypto?.randomUUID?.() || `boobastudio-song-${Date.now()}`;
-    callback?.({ status: "done", result: JSON.stringify([{ id, title: String(input?.songtitle || "BoobaStudio Song"), lyric: String(input?.lyrics || ""), audio_url: audioUrl, image_url: "" }]) });
+    const song = { id, title: String(input?.songtitle || "BoobaStudio Song"), lyric: String(input?.lyrics || ""), audio_url: audioUrl, image_url: "" };
+    rememberLocalSong(song, input, model);
+    callback?.({ status: "done", result: JSON.stringify([song]) });
   } catch (error) {
     callback?.({ status: "error", errors: [providerError(error)] });
   } finally {
@@ -318,6 +320,15 @@ function writeLocalGallery(entries) {
   try { globalThis.localStorage?.setItem(localGalleryStorageKey(), JSON.stringify(entries.slice(0, 50))); } catch { /* quota or unavailable storage */ }
 }
 
+function rememberLocalSong(song, input, model) {
+  const entries = readLocalGallery();
+  entries.unshift({
+    id: `local-song-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    attributes: { result: JSON.stringify([song]), thumbnail: String(song.image_url || ""), prompt: String(input?.style || input?.lyrics || ""), model: String(model || ""), type: "song", created_at: new Date().toISOString() },
+  });
+  writeLocalGallery(entries);
+}
+
 async function rememberLocalGallery(body, response) {
   if (!isEnabled() || !response.ok || !globalThis.localStorage) return response;
   try {
@@ -340,6 +351,9 @@ async function rememberLocalGallery(body, response) {
 async function localGalleryPage(page, callback, filters = {}) {
   if (!isEnabled()) return false;
   let entries = readLocalGallery();
+  const filter = String(filters?.filter || "").trim().toLowerCase();
+  if (filter === "song") entries = entries.filter((entry) => entry.attributes?.type === "song");
+  else if (filter === "own" || filter === "all") entries = entries.filter((entry) => entry.attributes?.type !== "song");
   const search = String(filters?.search || "").trim().toLowerCase();
   if (search) entries = entries.filter((entry) => String(entry.attributes?.prompt || "").toLowerCase().includes(search));
   const pageSize = 20;
