@@ -91,7 +91,7 @@ async def main():
                             const module = game.modules.get('boobastudio');
                             if (!module?.api?.menu) return {opened: false, reason: 'module menu API unavailable'};
                             try {
-                                const menuResult = module.api.menu();
+                                const menuResult = await module.api.menu();
                                 await new Promise(resolve => setTimeout(resolve, 1200));
                                 if (%s) {
                                     const textAction = [...document.querySelectorAll('[data-action="openFeature"]')]
