@@ -656,7 +656,7 @@
       "modelNotAllowed": "Client-only OpenAI mode only supports ChatGPT 5 or higher.",
       "imageRequiresTextPrompt": "Client-only image generation requires a text prompt."
     },
-    "changelog": "If you want to know more about new features, also check out the <a href=\"https://github.com/BoobaStudio/boobastudio/releases\" target=\"_blank\">Changelog</a>.",
+    "changelog": "If you want to know more about new features, also check out the <a href=\"https://github.com/DeadSpace161/boobastudio/releases\" target=\"_blank\">Changelog</a>.",
     "QueueViewer": {
       "title": "Queue",
       "elementStatus": "Queued/Success/Error/Expected",
@@ -1377,7 +1377,7 @@
         "wallsHint": "Wall detection is available via the scene context menu. Right-click a scene to access it.",
         "dragToHotbarHint": "Drag this to your hotbar to create a macro that opens the Cibola 8 radial menu. Click the macro to access all AI features quickly.",
         "openApp": "Web App",
-        "openAppHint": "Open app.cibola.world to manage your account, view usage, and access additional features.",
+        "openAppHint": "Open the BoobaStudio repository for documentation and release notes.",
         "hints": {
           "text": "Use the Cibola icon in the editor toolbar to generate text with AI. You can also right-click on selected text for more AI options.",
           "threads": "Threads are persistent AI conversations stored in journals. Create additional Thread pages in any Journal Entry using the page type dropdown.",
