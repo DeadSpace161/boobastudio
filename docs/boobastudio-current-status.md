@@ -33,7 +33,7 @@ This status reflects the locally built package prepared as version **2.2.76**. T
 
 ## Intentionally not hosted by this fork
 
-The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs and the legacy hosted thread/translation queues remain unavailable unless a compatible replacement is configured or implemented. Local generated-image gallery records and local vector-library management are available; semantic vector retrieval, the full existing gallery browser, and hosted community views still need deeper parity work.
+The personal fork does not require Cibola accounts, subscriptions, credits, telemetry, or a Cibola server for the validated local workflows. Hosted gallery/community packs and the legacy hosted translation queue remain unavailable unless a compatible replacement is configured or implemented. Local generated-image gallery records, local vector-library management, and configurable local music generation are available; semantic vector retrieval, the full existing gallery browser, and hosted community views still need deeper parity work.
 
 ## Next parity targets
 
