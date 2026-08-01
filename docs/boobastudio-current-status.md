@@ -36,6 +36,7 @@ This status reflects the locally built package prepared as version **2.2.116**. 
 - ElevenLabs users can now provide a client-scoped local voice catalog JSON array, preserving voice selection and search without contacting ElevenLabs voice-list endpoints.
 - Existing song generation now supports a client-configured Replicate music model, with configurable model-input JSON and placeholder substitution, while preserving the existing song preview, download, and playlist flow.
 - The live auxiliary workflow probe now exercises that song-generation path end to end through an intercepted Replicate prediction: submission, polling, audio URL normalization, and zero-warning completion all pass without contacting a paid provider.
+- The same live probe now verifies the local personal-pack relationship contract: a generated gallery image can be added to a pack, listed through pack detail and paging, marked as the cover, and removed. Browser-local vector upload, listing, and deletion also pass with temporary text data.
 - Local song results are indexed in the same browser-local gallery store and returned through the existing `filter:"song"` browser contract.
 - Local song cards now play and copy the provider-returned `audio_url`; hosted Suno CDN URLs remain the compatibility fallback for older records.
 - Actor sheet integration opens the existing image application with the selected Actor as its source document.

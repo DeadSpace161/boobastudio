@@ -30,6 +30,8 @@ The image vertical slice now preserves the existing Image Tools application, acc
 
 The current live probe also covers the existing music-generation controller through the local Replicate adapter. A mocked prediction is submitted and polled to completion, producing a playable audio URL with no paid provider request and no smoke warnings.
 
+The live probe also validates local pack image membership, pack detail/paging, cover metadata, and removal, plus local vector-library upload/list/delete using temporary browser data.
+
 Release 2.2.98 fixes a local-mode Image Tools crash found during end-to-end probing: when the hosted model catalog is absent, the existing prompt workflow now receives a safe local model configuration instead of dereferencing an undefined model record. The published 2.2.97 server reproduces the pre-fix `modelDescription` error; 2.2.98 contains the fix but awaits repository publication.
 
 Release 2.2.99 applies the same narrowly scoped fallback to the existing TTS workflow: if a configured local audio model is not present in the hosted catalog, the UI uses an empty field list and continues into the local provider adapter. The package check, provider smoke test, build, archive integrity check, and manifest validation pass locally; live Foundry validation remains pending repository publication.

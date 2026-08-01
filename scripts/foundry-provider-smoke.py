@@ -525,9 +525,26 @@ async def main():
                     );
                     const localPack = await globalThis.__boobastudioLocalPackCreate?.({name: 'Live Smoke Pack'});
                     const localPackId = localPack?.data?.id;
+                    let localGalleryResult;
+                    await globalThis.__boobastudioLocalGalleryPage?.(1, result => { localGalleryResult = result; }, {filter: 'own'});
+                    const localGalleryImageId = localGalleryResult?.data?.find(entry => entry?.attributes?.type === 'image')?.id;
+                    const addedPackImage = localPackId && localGalleryImageId ? await globalThis.__boobastudioLocalPackAddImage?.(localPackId, localGalleryImageId) : null;
+                    const localPackDetail = localPackId ? await globalThis.__boobastudioLocalPackDetail?.(localPackId) : null;
+                    const localPackImages = localPackId ? await globalThis.__boobastudioLocalPackImages?.(localPackId, 1) : null;
+                    const updatedPackImage = localPackId && localGalleryImageId ? await globalThis.__boobastudioLocalPackUpdateImage?.(localPackId, localGalleryImageId, {is_cover: true}) : null;
+                    const removedPackImage = localPackId && localGalleryImageId ? await globalThis.__boobastudioLocalPackRemoveImage?.(localPackId, localGalleryImageId) : null;
                     const localPacks = await globalThis.__boobastudioLocalPackMyPacks?.();
                     const updatedPack = localPackId ? await globalThis.__boobastudioLocalPackUpdate?.(localPackId, {tagline: 'Live'}) : null;
                     const deletedPack = localPackId ? await globalThis.__boobastudioLocalPackDelete?.(localPackId) : null;
+                    const vectorForm = new FormData();
+                    vectorForm.append('file_upload', new File(['local smoke vector text'], 'live-vector.txt', {type: 'text/plain'}));
+                    let vectorizeResult;
+                    await globalThis.__boobastudioLocalVectorize?.(vectorForm, result => { vectorizeResult = result; });
+                    let vectorListResult;
+                    await globalThis.__boobastudioLocalVectorList?.(result => { vectorListResult = result; });
+                    const vectorId = vectorListResult?.included?.find(entry => entry?.type === 'vector_store_file')?.id;
+                    let vectorDeleteResult;
+                    if (vectorId) await globalThis.__boobastudioLocalVectorDelete?.(vectorId, result => { vectorDeleteResult = result; });
                     return {
                         version: module.version,
                         configured,
@@ -547,7 +564,8 @@ async def main():
                         localAuxiliary,
                         imageStatus: imageResponse.status,
                         image,
-                        localPack: {factory: localPackFactory, created: !!localPackId, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
+                        localPack: {factory: localPackFactory, created: !!localPackId, imageId: localGalleryImageId || null, addedImage: addedPackImage?.ok === true, detailHasImage: (localPackDetail?.data?.images || []).length > 0, imagesPageHasImage: (localPackImages?.data || []).length > 0, updatedImage: updatedPackImage?.success === true, removedImage: removedPackImage?.success === true, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
+                        localVectors: {uploaded: vectorizeResult?.status === 'done', listed: !!vectorId, deleted: vectorDeleteResult?.status === 'done'},
                         localTokenFallback: {factory: localTokenFactory === 'function', providerEnabled: game.settings.get('boobastudio', 'providerEnabled') === true, pickerUpload: typeof tokenPicker?.upload === 'function', directUploadType: typeof directTokenUpload, directUpload: directTokenUpload?.path || directTokenUpload?.target || directTokenUpload?.error || (typeof directTokenUpload === 'string' ? directTokenUpload : null), uploaded: typeof localTokenPath === 'string' && localTokenPath.length > 0, path: localTokenPath || null},
                         smokeWarnings: smokeWarnings.filter(message => /token|image/i.test(message)).slice(-10),
                         providerSettings: [...game.settings.settings.keys()].filter(key => key.startsWith('boobastudio.'))
