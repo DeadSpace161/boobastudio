@@ -53,7 +53,11 @@ async def main():
             elif request.url.endswith("/stability/core"):
                 payload = {"image": "bW9ja19zdGFiaWxpdHk="}
             elif "/replicate/v1/models/" in request.url and request.url.endswith("/predictions"):
-                payload = {"id": "mock-prediction", "status": "starting", "urls": {"get": f"{mock_base}/replicate/v1/predictions/mock-prediction"}}
+                is_music = "mock-music" in request.url or "mock-music" in json.dumps(body)
+                prediction_id = "mock-music-prediction" if is_music else "mock-prediction"
+                payload = {"id": prediction_id, "status": "starting", "urls": {"get": f"{mock_base}/replicate/v1/predictions/{prediction_id}"}}
+            elif request.url.endswith("/replicate/v1/predictions/mock-music-prediction"):
+                payload = {"id": "mock-music-prediction", "status": "succeeded", "output": ["https://mock.boobastudio.test/generated.mp3"]}
             elif request.url.endswith("/replicate/v1/predictions/mock-prediction"):
                 payload = {"id": "mock-prediction", "status": "succeeded", "output": ["https://mock.boobastudio.test/generated.png"]}
             elif request.url.endswith("/comfyui/prompt"):
@@ -100,6 +104,17 @@ async def main():
                     let elevenTts;
                     await globalThis.__boobastudioLocalGenerateTTS('live ElevenLabs TTS probe', JSON.stringify({voice_id: 'voice-1'}), 'eleven_turbo_v2_5', result => { elevenTts = result; });
                     await game.settings.set('boobastudio', 'ttsProvider', 'openai');
+                    await game.settings.set('boobastudio', 'musicBaseUrl', `${base}/replicate/v1`);
+                    await game.settings.set('boobastudio', 'musicModel', 'owner/mock-music');
+                    await game.settings.set('boobastudio', 'replicateApiToken', 'mock-replicate-key');
+                    let musicResult;
+                    await globalThis.__boobastudioLocalGenerateSong(
+                        {prompt: 'live ambient music probe', songtitle: 'BoobaStudio Smoke Song', lyrics: 'Smoke test'},
+                        JSON.stringify({style: 'ambient'}),
+                        result => { musicResult = result; },
+                        {model: 'owner/mock-music'}
+                    );
+                    const music = {status: musicResult?.status || null, hasAudio: (() => { try { return String(JSON.parse(musicResult?.result || '[]')?.[0]?.audio_url || '').endsWith('.mp3'); } catch { return false; } })()};
                     const imageProviders = {};
                     for (const [name, settings] of Object.entries({
                         stability: {base: `${base}/stability`, model: 'core'},
@@ -521,6 +536,7 @@ async def main():
                         query,
                         nativeProviders,
                         tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}},
+                        music,
                         imageProviders,
                         advancedImage,
                         actorIntegration,
