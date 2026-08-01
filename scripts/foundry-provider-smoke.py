@@ -434,7 +434,7 @@ async def main():
                             const threadRoot = [...document.querySelectorAll('.boobastudio-thread')]
                                 .find(element => element.querySelector('[data-action="sendMessage"]'))
                                 || [...document.querySelectorAll('article, .journal-page-content')]
-                                    .find(element => /Thread \(GPT Chat\)|send message/i.test((element.innerText || '').slice(0, 1200)));
+                                    .find(element => /Thread \\(GPT Chat\\)|send message/i.test((element.innerText || '').slice(0, 1200)));
                             const threadPrompt = threadRoot?.querySelector?.('textarea[name="prompt"], textarea[name="system.prompt"], textarea, [contenteditable="true"], [data-edit="system.prompt"]');
                             const threadSend = threadRoot?.querySelector?.('[data-action="sendMessage"], button[type="submit"]');
                             threadIntegration.controls = [...(threadRoot?.querySelectorAll?.('textarea, input, button, [contenteditable="true"], [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', text: (control.innerText || '').trim(), value: control.value || '', contenteditable: control.getAttribute('contenteditable') || ''})).slice(0, 60);
