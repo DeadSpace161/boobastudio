@@ -49,9 +49,14 @@ async def main():
                 body = {}
             MockHandler.requests.append({"path": request.url, "body": body})
             if request.url.endswith("/images/generations"):
-                payload = {"data": [{"b64_json": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="}]}
+                pixels = [
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==",
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNg+M/wHwAEAQH/cetH5QAAAABJRU5ErkJggg==",
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYPj/HwADAgH/5ncLrgAAAABJRU5ErkJggg==",
+                ]
+                payload = {"data": [{"b64_json": pixels[len(MockHandler.requests) % len(pixels)]}]}
             elif request.url.endswith("/images/edits"):
-                payload = {"data": [{"b64_json": "bW9ja19pbWFnZV9lZGl0"}]}
+                payload = {"data": [{"b64_json": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg=="}]}
             elif request.url.endswith("/audio/speech") or "/text-to-speech/" in request.url:
                 await route.fulfill(status=200, content_type="audio/mpeg", body="mock-audio")
                 return

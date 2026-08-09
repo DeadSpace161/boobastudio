@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.117**. The public test server has live-verified the prior 2.2.116 package; 2.2.117 is locally checked and published, but its clean reinstall is still pending Foundry package-state refresh.
+This status reflects the locally built package prepared as version **2.2.117**. The public test server has now cleanly reinstalled and live-verified 2.2.117.
 
 ## Verified
 
@@ -78,6 +78,7 @@ This status reflects the locally built package prepared as version **2.2.117**. 
 - The live local-mode harness now blocks and records `*.cibola.world` requests; the complete v14 local workflow run produced zero hosted requests and zero smoke warnings.
 - The migration smoke test now verifies legacy `cibola8` client/world settings, browser history, and radial macro flags are copied into `boobastudio` while the old values remain intact.
 - Release 2.2.117 makes local-provider mode suppress the legacy account/provider panel in the existing image and vector applications, so configured local users see the working local UI instead of a hosted-account prompt.
+- The clean 2.2.117 v14 run confirms the module is active after uninstall/reinstall, image application succeeds, local music/packs/vectors succeed, hosted-request capture is empty, and smoke warnings are empty.
 
 ## Intentionally not hosted by this fork
 

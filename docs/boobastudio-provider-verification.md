@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.117**. The public test world has been live-verified against 2.2.116; 2.2.117 passes local package/provider/migration checks and awaits a clean Foundry package-state refresh.
+The current locally packaged release is **2.2.117**. The public test world has been cleanly reinstalled and live-verified against 2.2.117.
 
 ## Build checks
 
