@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.116**. The public test server has been live-verified against the published 2.2.116 package.
+This status reflects the locally built package prepared as version **2.2.117**. The public test server has live-verified the prior 2.2.116 package; 2.2.117 is locally checked and published, but its clean reinstall is still pending Foundry package-state refresh.
 
 ## Verified
 
@@ -77,6 +77,7 @@ This status reflects the locally built package prepared as version **2.2.116**. 
 - The live 2.2.116 harness now opens the existing Actor Image Tools prompt dialog, submits a text prompt through the intercepted image provider, and observes the generated preview before exercising the existing Foundry save path.
 - The live local-mode harness now blocks and records `*.cibola.world` requests; the complete v14 local workflow run produced zero hosted requests and zero smoke warnings.
 - The migration smoke test now verifies legacy `cibola8` client/world settings, browser history, and radial macro flags are copied into `boobastudio` while the old values remain intact.
+- Release 2.2.117 makes local-provider mode suppress the legacy account/provider panel in the existing image and vector applications, so configured local users see the working local UI instead of a hosted-account prompt.
 
 ## Intentionally not hosted by this fork
 
