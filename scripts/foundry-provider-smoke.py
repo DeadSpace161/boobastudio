@@ -35,6 +35,11 @@ async def main():
         browser_context = await browser.new_context(ignore_https_errors=True, viewport={"width": 1440, "height": 900})
         page = await browser_context.new_page()
         mock_base = "https://mock.boobastudio.test/v1"
+        hosted_requests = []
+
+        async def block_hosted_route(route):
+            hosted_requests.append({"url": route.request.url, "method": route.request.method})
+            await route.abort()
 
         async def mock_route(route):
             request = route.request
@@ -75,6 +80,7 @@ async def main():
             await route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
         await page.route("https://mock.boobastudio.test/v1/**", mock_route)
+        await page.route("https://*.cibola.world/**", block_hosted_route)
         await join_game(page, base_url, password)
         await page.evaluate("""() => {
             const onboarding = document.querySelector('.boobastudio-onboarding');
@@ -573,6 +579,7 @@ async def main():
                 }""",
                 {"base": mock_base},
             )
+        result["hostedRequests"] = hosted_requests
         result.get("advancedImage", {})["editRequest"] = any(request["path"].endswith("/images/edits") for request in MockHandler.requests)
         print(json.dumps({"mockBase": mock_base, "foundry": result, "requests": MockHandler.requests}, indent=2))
         await browser_context.close()

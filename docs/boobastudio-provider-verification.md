@@ -32,6 +32,8 @@ The current live probe also covers the existing music-generation controller thro
 
 The live probe also validates local pack image membership, pack detail/paging, cover metadata, and removal, plus local vector-library upload/list/delete using temporary browser data.
 
+During the same run, all `*.cibola.world` requests were blocked and recorded as a safety assertion. The local workflow produced no hosted requests and no smoke warnings.
+
 Release 2.2.98 fixes a local-mode Image Tools crash found during end-to-end probing: when the hosted model catalog is absent, the existing prompt workflow now receives a safe local model configuration instead of dereferencing an undefined model record. The published 2.2.97 server reproduces the pre-fix `modelDescription` error; 2.2.98 contains the fix but awaits repository publication.
 
 Release 2.2.99 applies the same narrowly scoped fallback to the existing TTS workflow: if a configured local audio model is not present in the hosted catalog, the UI uses an empty field list and continues into the local provider adapter. The package check, provider smoke test, build, archive integrity check, and manifest validation pass locally; live Foundry validation remains pending repository publication.
