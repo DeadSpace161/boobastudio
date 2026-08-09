@@ -73,6 +73,7 @@ From the repository root:
 ```bash
 npm run check
 npm run test:provider
+npm run test:migration
 npm run build
 python -W error::SyntaxWarning -m py_compile scripts/foundry-provider-smoke.py
 ```

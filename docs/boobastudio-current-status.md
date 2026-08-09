@@ -76,6 +76,7 @@ This status reflects the locally built package prepared as version **2.2.116**. 
 - Release 2.2.116 restores the missing `bundle/workers/image_processor.worker.js` asset referenced by the recovered image conversion path. Live validation now reports no image-worker warnings while preserving the existing main-thread fallback behavior.
 - The live 2.2.116 harness now opens the existing Actor Image Tools prompt dialog, submits a text prompt through the intercepted image provider, and observes the generated preview before exercising the existing Foundry save path.
 - The live local-mode harness now blocks and records `*.cibola.world` requests; the complete v14 local workflow run produced zero hosted requests and zero smoke warnings.
+- The migration smoke test now verifies legacy `cibola8` client/world settings, browser history, and radial macro flags are copied into `boobastudio` while the old values remain intact.
 
 ## Intentionally not hosted by this fork
 
