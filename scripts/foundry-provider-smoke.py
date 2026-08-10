@@ -273,6 +273,22 @@ async def main():
                     } catch (error) {
                         wallDetection.error = String(error?.message || error);
                     }
+                    const nameGeneration = {api: false, rendered: false, controls: []};
+                    try {
+                        const Names = game.modules.get("boobastudio")?.api?.CibolaNames;
+                        nameGeneration.api = typeof Names === "function";
+                        if (Names) {
+                            const nameApp = new Names();
+                            await nameApp.render(true);
+                            await new Promise(resolve => setTimeout(resolve, 900));
+                            const nameWindow = nameApp.element || [...document.querySelectorAll(".window, aside")].find(element => element.id === "cibolanamegen");
+                            nameGeneration.rendered = !!nameWindow;
+                            nameGeneration.controls = [...(nameWindow?.querySelectorAll?.("button, input, textarea, [data-action]") || [])].map(control => ({action: control.dataset?.action || "", name: control.getAttribute("name") || "", text: (control.innerText || "").trim()})).slice(0, 20);
+                            nameApp.close?.();
+                        }
+                    } catch (error) {
+                        nameGeneration.error = String(error?.message || error);
+                    }
                     const itemIntegration = {created: false, sheetRendered: false, controlVisible: false, imageApplied: false, deleted: false};
                     let smokeItem;
                     try {
@@ -586,6 +602,7 @@ async def main():
                         imageToolbarComplete: ["crop", "upscale", "removebg", "subModelFunction", "selectRegion", "applyAsTile", "undo", "redo"].every(action => actorIntegration.imageUi?.toolbarActions?.includes(action)),
                         actorIntegration,
                         wallDetection,
+                        nameGeneration,
                         itemIntegration,
                         documentIntegrations,
                         sceneIntegration,
