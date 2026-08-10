@@ -257,6 +257,22 @@ async def main():
                             actorIntegration.deleted = !game.actors.has(smokeActor.id);
                         }
                     }
+                    const wallDetection = {scene: !!canvas?.scene, toolVisible: false, windowVisible: false, controls: []};
+                    try {
+                        const controlCandidates = [ui.controls?.control?.tools?.cibolaDetectWalls, ...Object.values(ui.controls?.controls || {}).flatMap(control => Object.values(control?.tools || {}))];
+                        const wallTool = controlCandidates.find(tool => tool?.name === "cibolaDetectWalls" || String(tool?.icon || "").includes("border-all"));
+                        wallDetection.toolVisible = !!wallTool;
+                        if (wallTool?.onChange) {
+                            await wallTool.onChange(null, true);
+                            await new Promise(resolve => setTimeout(resolve, 900));
+                            const wallWindow = [...document.querySelectorAll(".window, aside")].find(element => String(element.innerText || "").toLowerCase().includes("wall") && String(element.innerText || "").toLowerCase().includes("detect"));
+                            wallDetection.windowVisible = !!wallWindow;
+                            wallDetection.controls = [...(wallWindow?.querySelectorAll?.("button, input, select, [data-action]") || [])].map(control => ({action: control.dataset?.action || "", name: control.getAttribute("name") || "", text: (control.innerText || "").trim()})).slice(0, 20);
+                            wallWindow?.querySelector?.("[data-action=close], .header-control.fa-solid.fa-xmark")?.click?.();
+                        }
+                    } catch (error) {
+                        wallDetection.error = String(error?.message || error);
+                    }
                     const itemIntegration = {created: false, sheetRendered: false, controlVisible: false, imageApplied: false, deleted: false};
                     let smokeItem;
                     try {
@@ -569,6 +585,7 @@ async def main():
                         advancedImage,
                         imageToolbarComplete: ["crop", "upscale", "removebg", "subModelFunction", "selectRegion", "applyAsTile", "undo", "redo"].every(action => actorIntegration.imageUi?.toolbarActions?.includes(action)),
                         actorIntegration,
+                        wallDetection,
                         itemIntegration,
                         documentIntegrations,
                         sceneIntegration,
