@@ -195,7 +195,7 @@ async def main():
                                 const promptControl = imageWindow?.querySelector?.('textarea.prompt, input.prompt, textarea[name="prompt"], input[name="prompt"]');
                                 const generateControl = imageWindow?.querySelector?.('[data-action="generate"]');
                                 const promptLauncher = imageWindow?.querySelector?.('[data-action="goPrompt"]');
-                                actorIntegration.imageUi = {localConfigured: globalThis.__boobastudioLocalProviderConfigured?.() === true, clientOnlyMode: game.settings.get('boobastudio', 'clientOnlyMode'), promptControl: !!promptControl, generateControl: !!generateControl, submitted: false, renderedResult: false, text: (imageWindow?.innerText || '').trim().slice(0, 900), goPrompt: promptLauncher ? {disabled: !!promptLauncher.disabled, ariaDisabled: promptLauncher.getAttribute('aria-disabled') || '', outer: promptLauncher.outerHTML.slice(0, 600)} : null, controls: [...(imageWindow?.querySelectorAll?.('input, textarea, button, [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', className: String(control.className || ''), value: control.value || '', text: (control.innerText || '').trim()})).slice(0, 30)};
+                                actorIntegration.imageUi = {toolbarActions: [...(imageWindow?.querySelectorAll?.("[data-action]") || [])].map(control => control.dataset?.action || "").filter(Boolean), localConfigured: globalThis.__boobastudioLocalProviderConfigured?.() === true, clientOnlyMode: game.settings.get('boobastudio', 'clientOnlyMode'), promptControl: !!promptControl, generateControl: !!generateControl, submitted: false, renderedResult: false, text: (imageWindow?.innerText || '').trim().slice(0, 900), goPrompt: promptLauncher ? {disabled: !!promptLauncher.disabled, ariaDisabled: promptLauncher.getAttribute('aria-disabled') || '', outer: promptLauncher.outerHTML.slice(0, 600)} : null, controls: [...(imageWindow?.querySelectorAll?.('input, textarea, button, [data-action]') || [])].map(control => ({tag: control.tagName, name: control.getAttribute('name') || '', action: control.dataset?.action || '', className: String(control.className || ''), value: control.value || '', text: (control.innerText || '').trim()})).slice(0, 30)};
                                 const imageApp = imageAppInstance || [...(game.applications?.values?.() || [])].find(app => app?.element === imageWindow || app?.element?.contains?.(imageWindow));
                                 const saveImageButton = imageWindow?.querySelector?.('[data-action="saveImg"]');
                                 const targetImage = imageWindow?.querySelector?.('.targetImg');
@@ -567,6 +567,7 @@ async def main():
                         music,
                         imageProviders,
                         advancedImage,
+                        imageToolbarComplete: ["crop", "upscale", "removebg", "subModelFunction", "selectRegion", "applyAsTile", "undo", "redo"].every(action => actorIntegration.imageUi?.toolbarActions?.includes(action)),
                         actorIntegration,
                         itemIntegration,
                         documentIntegrations,
@@ -578,13 +579,15 @@ async def main():
                         localPack: {factory: localPackFactory, created: !!localPackId, imageId: localGalleryImageId || null, addedImage: addedPackImage?.ok === true, detailHasImage: (localPackDetail?.data?.images || []).length > 0, imagesPageHasImage: (localPackImages?.data || []).length > 0, updatedImage: updatedPackImage?.success === true, removedImage: removedPackImage?.success === true, count: localPacks?.data?.length || 0, updated: updatedPack?.data?.attributes?.tagline === 'Live', deleted: deletedPack?.success === true},
                         localVectors: {uploaded: vectorizeResult?.status === 'done', listed: !!vectorId, deleted: vectorDeleteResult?.status === 'done'},
                         localTokenFallback: {factory: localTokenFactory === 'function', providerEnabled: game.settings.get('boobastudio', 'providerEnabled') === true, pickerUpload: typeof tokenPicker?.upload === 'function', directUploadType: typeof directTokenUpload, directUpload: directTokenUpload?.path || directTokenUpload?.target || directTokenUpload?.error || (typeof directTokenUpload === 'string' ? directTokenUpload : null), uploaded: typeof localTokenPath === 'string' && localTokenPath.length > 0, path: localTokenPath || null},
-                        smokeWarnings: smokeWarnings.filter(message => /token|image/i.test(message)).slice(-10),
+                        smokeWarnings: smokeWarnings.filter(message => /token|image/i.test(message) && !message.includes("BaseTexture added to the cache")).slice(-10),
                         providerSettings: [...game.settings.settings.keys()].filter(key => key.startsWith('boobastudio.'))
                     };
                 }""",
                 {"base": mock_base},
             )
         result["hostedRequests"] = hosted_requests
+        if not result.get("imageToolbarComplete"):
+            raise RuntimeError("Image Tools toolbar is missing one or more required Cibola capability actions")
         result.get("advancedImage", {})["editRequest"] = any(request["path"].endswith("/images/edits") for request in MockHandler.requests)
         print(json.dumps({"mockBase": mock_base, "foundry": result, "requests": MockHandler.requests}, indent=2))
         await browser_context.close()
