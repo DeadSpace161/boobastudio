@@ -71,5 +71,10 @@ for (const relativePath of new Set(jsFiles)) {
   });
 }
 
+const entryBundle = await readFile(path.join(root, "bundle/modules/boobastudio-entry-v250-317.js"), "utf8");
+for (const marker of ["FoundryV12Shims", "FoundryV13Shims", "FoundryV14Shims", "foundry.applications?.ux?.DragDrop", "foundry.applications.handlebars.renderTemplate", "foundry.applications.api.DialogV2"]) {
+  if (!entryBundle.includes(marker)) fail(`compatibility marker missing from shipped entry bundle: ${marker}`);
+}
+
 if (process.exitCode) process.exit(process.exitCode);
 console.log(`BoobaStudio package check passed: ${manifest.id} ${manifest.version}, Foundry ${manifest.compatibility.minimum}-${manifest.compatibility.maximum}`);
