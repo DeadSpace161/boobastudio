@@ -34,6 +34,8 @@ The live probe also validates local pack image membership, pack detail/paging, c
 
 The migration smoke test verifies legacy settings, browser history, and radial macro flags are copied without deleting the original `cibola8` values.
 
+The live v14 harness also creates a temporary Scene token and exercises the existing Name Generator UI end to end. The configured local OpenAI-compatible mock returns a name, the token field changes through the recovered controller, and both temporary documents are removed afterward.
+
 During the same run, all `*.cibola.world` requests were blocked and recorded as a safety assertion. The local workflow produced no hosted requests and no smoke warnings.
 
 Release 2.2.98 fixes a local-mode Image Tools crash found during end-to-end probing: when the hosted model catalog is absent, the existing prompt workflow now receives a safe local model configuration instead of dereferencing an undefined model record. The published 2.2.97 server reproduces the pre-fix `modelDescription` error; 2.2.98 contains the fix but awaits repository publication.

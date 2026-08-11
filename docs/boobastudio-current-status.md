@@ -82,6 +82,7 @@ This status reflects the locally built package prepared as version **2.2.121**. 
 - Release 2.2.119 republishes the corrected versioned entry bundle. Its public compatibility API now includes the existing Image Tools application and Name Generator class, and the build fails if the manifest-loaded versioned bundle is not patched.
 - Release 2.2.120 initializes the existing lazy Name Generator class before exposing it through the compatibility API; the live harness now requires both the API and its window to initialize.
 - Release 2.2.121 moves the corrected entry bundle to a fresh versioned filename so Foundry/browser caches cannot retain the prior entry asset.
+- The 2.2.121 live harness now creates a temporary Scene token, opens the existing Name Generator, submits through the configured local text provider, verifies the generated name populates the token field, and removes the temporary documents.
 
 ## Intentionally not hosted by this fork
 

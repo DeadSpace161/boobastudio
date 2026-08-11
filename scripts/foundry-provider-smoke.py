@@ -80,7 +80,7 @@ async def main():
                 payload = {"candidates": [{"content": {"parts": [{"text": "Mock Gemini response"}]}}]}
             else:
                 request_text = json.dumps(body)
-                content = '["Mock generated prompt"]' if "valid JSON array of strings" in request_text else "Mock BoobaStudio response"
+                content = '["Smoke Name"]' if "gender:" in request_text else ('["Mock generated prompt"]' if "valid JSON array of strings" in request_text else "Mock BoobaStudio response")
                 payload = {"choices": [{"message": {"role": "assistant", "content": content}}]}
             await route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
@@ -273,8 +273,12 @@ async def main():
                     } catch (error) {
                         wallDetection.error = String(error?.message || error);
                     }
-                    const nameGeneration = {api: false, rendered: false, controls: []};
+                    const nameGeneration = {api: false, rendered: false, controls: [], providerSubmitted: false, valueChanged: false};
+                    let nameActor;
+                    let nameToken;
                     try {
+                        nameActor = await Actor.create({name: `BoobaStudio Name Smoke ${Date.now()}`, type: 'character'});
+                        if (canvas.scene) [nameToken] = await canvas.scene.createEmbeddedDocuments('Token', [{name: 'Smoke Token', actorId: nameActor.id, x: 0, y: 0, texture: {src: 'icons/svg/mystery-man.svg'}}]);
                         const Names = game.modules.get("boobastudio")?.api?.CibolaNames;
                         nameGeneration.api = typeof Names === "function";
                         if (Names) {
@@ -284,10 +288,26 @@ async def main():
                             const nameWindow = nameApp.element || [...document.querySelectorAll(".window, aside")].find(element => element.id === "cibolanamegen");
                             nameGeneration.rendered = !!nameWindow;
                             nameGeneration.controls = [...(nameWindow?.querySelectorAll?.("button, input, textarea, [data-action]") || [])].map(control => ({action: control.dataset?.action || "", name: control.getAttribute("name") || "", text: (control.innerText || "").trim()})).slice(0, 20);
+                            const nameInput = nameWindow?.querySelector?.('input[type="text"]');
+                            const namePrompt = nameWindow?.querySelector?.('textarea');
+                            const rollName = nameWindow?.querySelector?.('[data-action="rollName"]');
+                            if (nameInput && rollName) {
+                                if (namePrompt) {
+                                    namePrompt.value = 'a wandering swordsman';
+                                    namePrompt.dispatchEvent(new Event('input', {bubbles: true}));
+                                }
+                                rollName.click();
+                                await new Promise(resolve => setTimeout(resolve, 1_800));
+                                nameGeneration.providerSubmitted = true;
+                                nameGeneration.valueChanged = nameInput.value === 'Smoke Name';
+                            }
                             nameApp.close?.();
                         }
                     } catch (error) {
                         nameGeneration.error = String(error?.message || error);
+                    } finally {
+                        if (nameToken && canvas.scene) await canvas.scene.deleteEmbeddedDocuments('Token', [nameToken.id]);
+                        if (nameActor) await nameActor.delete();
                     }
                     const itemIntegration = {created: false, sheetRendered: false, controlVisible: false, imageApplied: false, deleted: false};
                     let smokeItem;
@@ -622,8 +642,8 @@ async def main():
         result["hostedRequests"] = hosted_requests
         if not result.get("imageToolbarComplete"):
             raise RuntimeError("Image Tools toolbar is missing one or more required Cibola capability actions")
-        if not result.get("nameGeneration", {}).get("api") or not result.get("nameGeneration", {}).get("rendered"):
-            raise RuntimeError("Native Name Generator API or window failed to initialize")
+        if not result.get("nameGeneration", {}).get("api") or not result.get("nameGeneration", {}).get("rendered") or not result.get("nameGeneration", {}).get("valueChanged"):
+            raise RuntimeError("Native Name Generator API, window, or local provider workflow failed")
         result.get("advancedImage", {})["editRequest"] = any(request["path"].endswith("/images/edits") for request in MockHandler.requests)
         print(json.dumps({"mockBase": mock_base, "foundry": result, "requests": MockHandler.requests}, indent=2))
         await browser_context.close()
