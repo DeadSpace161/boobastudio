@@ -622,6 +622,8 @@ async def main():
         result["hostedRequests"] = hosted_requests
         if not result.get("imageToolbarComplete"):
             raise RuntimeError("Image Tools toolbar is missing one or more required Cibola capability actions")
+        if not result.get("nameGeneration", {}).get("api") or not result.get("nameGeneration", {}).get("rendered"):
+            raise RuntimeError("Native Name Generator API or window failed to initialize")
         result.get("advancedImage", {})["editRequest"] = any(request["path"].endswith("/images/edits") for request in MockHandler.requests)
         print(json.dumps({"mockBase": mock_base, "foundry": result, "requests": MockHandler.requests}, indent=2))
         await browser_context.close()

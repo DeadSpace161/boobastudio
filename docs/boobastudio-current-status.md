@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.119**. The public test server has now cleanly reinstalled and live-verified 2.2.119.
+This status reflects the locally built package prepared as version **2.2.120**. The public test server has now cleanly reinstalled and live-verified 2.2.120.
 
 ## Verified
 
@@ -80,6 +80,7 @@ This status reflects the locally built package prepared as version **2.2.119**. 
 - Release 2.2.117 makes local-provider mode suppress the legacy account/provider panel in the existing image and vector applications, so configured local users see the working local UI instead of a hosted-account prompt.
 - The clean 2.2.117 v14 run confirms the module is active after uninstall/reinstall, image application succeeds, local music/packs/vectors succeed, hosted-request capture is empty, and smoke warnings are empty.
 - Release 2.2.119 republishes the corrected versioned entry bundle. Its public compatibility API now includes the existing Image Tools application and Name Generator class, and the build fails if the manifest-loaded versioned bundle is not patched.
+- Release 2.2.120 initializes the existing lazy Name Generator class before exposing it through the compatibility API; the live harness now requires both the API and its window to initialize.
 
 ## Intentionally not hosted by this fork
 

@@ -29,7 +29,7 @@ for (const entry of entries) {
 const entryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v250.js");
 const entrySource = await readFile(entryPath, "utf8");
 const privateApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us}";
-const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke,CibolaNames:Fa}";
+const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke,CibolaNames:(pd(),Fa)}";
 if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio entry API signature was not found");
 const hostedAppOpen = 'window.open("https://app.cibola.world","_blank")';
 const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")');
@@ -242,7 +242,7 @@ if (!versionedEntryAsset || !versionedProviderAsset) throw new Error("Versioned 
 const versionedEntryPath = path.join(output, versionedEntryAsset.split("?", 1)[0]);
 await cp(entryPath, versionedEntryPath);
 const versionedEntrySource = await readFile(versionedEntryPath, "utf8");
-if (!versionedEntrySource.includes("ImageGenerator:Ke") || !versionedEntrySource.includes("CibolaNames:Fa")) {
+if (!versionedEntrySource.includes("ImageGenerator:Ke") || !versionedEntrySource.includes("CibolaNames:(pd(),Fa)")) {
   throw new Error("Versioned entry bundle was not patched with the public compatibility API");
 }
 await rm(entryPath, { force: true });
