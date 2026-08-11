@@ -1,6 +1,6 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.120**. The public test world has been cleanly reinstalled and live-verified against 2.2.120.
+The current locally packaged release is **2.2.121**. The public test world has been cleanly reinstalled and live-verified against 2.2.121.
 
 ## Build checks
 
