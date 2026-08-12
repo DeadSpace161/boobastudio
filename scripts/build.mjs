@@ -34,10 +34,14 @@ if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio ent
 const hostedAppOpen = 'window.open("https://app.cibola.world","_blank")';
 const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")');
 if (brandedEntry.includes(hostedAppOpen)) throw new Error("Hosted onboarding app link was not rebranded");
+const hiddenProviderKeyRegistration = 'game.settings.register("boobastudio","openaiApiKey",{name:"boobastudio.clientOnly.settings.openaiKey",hint:"boobastudio.clientOnly.settings.openaiKeyHint",scope:"client",config:!1,default:"",type:String})';
+const visibleProviderKeyRegistration = 'game.settings.register("boobastudio","openaiApiKey",{name:"BoobaStudio: Provider API key",hint:"Client-scoped key for OpenAI-compatible providers, OpenRouter, and compatible endpoints.",scope:"client",config:!0,default:"",type:String})';
+if (!brandedEntry.includes(hiddenProviderKeyRegistration)) throw new Error("Expected legacy provider key registration was not found");
+const keyVisibleEntry = brandedEntry.replace(hiddenProviderKeyRegistration, visibleProviderKeyRegistration);
 const clientChatModelGate = 'if(!this.isAllowedChatModel(i))return{status:"error",errors:[(game.i18n?.localize?.("boobastudio.clientOnly.modelNotAllowed")??"Client-only OpenAI mode only supports ChatGPT 5 or higher.")+` (model: ${i||"unset"})`]};';
 const localChatModelGate = 'if(!(typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured())&&!this.isAllowedChatModel(i))return{status:"error",errors:[(game.i18n?.localize?.("boobastudio.clientOnly.modelNotAllowed")??"Client-only OpenAI mode only supports ChatGPT 5 or higher.")+` (model: ${i||"unset"})`]};';
 if (!brandedEntry.includes(clientChatModelGate)) throw new Error("Expected direct-chat model gate was not found");
-const modelPatchedEntry = brandedEntry.replace(clientChatModelGate, localChatModelGate);
+const modelPatchedEntry = keyVisibleEntry.replace(clientChatModelGate, localChatModelGate);
 const localChatString = "return r?{status:\"done\",message:r}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
 const localChatObject = "return r?{status:\"done\",message:{role:\"assistant\",content:r}}:{status:\"error\",errors:[\"OpenAI response missing output text.\"]}";
 if (!brandedEntry.includes(localChatString)) throw new Error("Expected local chat response signature was not found");
