@@ -9,13 +9,13 @@ In Foundry's setup screen:
 1. Open **Add-on Modules** and choose **Install Module**.
 2. Paste the current manifest URL:
 
-   `https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.127-manifest.json`
+   `https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.128-manifest.json`
 
 3. Install **BoobaStudio**, enable it in the world, and restart or reload the world.
 
 The release archive is also available at:
 
-`https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.127.zip`
+`https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.128.zip`
 
 ## Configure a text provider
 

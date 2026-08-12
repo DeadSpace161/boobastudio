@@ -1,6 +1,7 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.127**. The public test server is being updated and live-verified against 2.2.127.
+This status reflects the locally built package prepared as version **2.2.128**. The public test server is being updated and live-verified against 2.2.128.
+- Release 2.2.128 registers the shared client-scoped Provider API key field in Foundry's visible module settings.
 - Release 2.2.127 adds OpenRouter's browser-CORS-compatible multi-model Image API to the existing provider layer.
 
 ## Verified
