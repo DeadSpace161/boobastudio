@@ -34,10 +34,14 @@ if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio ent
 const hostedAppOpen = 'window.open("https://app.cibola.world","_blank")';
 const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")');
 if (brandedEntry.includes(hostedAppOpen)) throw new Error("Hosted onboarding app link was not rebranded");
+const narrationHookRegistration = 'Hooks.on("renderJournalPageSheet",(t,e,i)=>{Le.prepareNarration(t.object,"text.content",e)}),Hooks.on("renderJournalEntryPageSheet",(t,e,i)=>{e instanceof jQuery||(e=$(e)),Le.prepareNarration(t.document,"text.content",e)}),';
+const chatNarrationHookRegistration = 'Hooks.on("renderChatMessage",(t,e,i)=>{e instanceof jQuery||(e=$(e));let a=e.find(".message-content");a.length||(a=e);if(!a.find(".boobastudio-narrationbox").length)return;let s={text:{content:t.content},update:async o=>t.update(o)};Le.prepareNarration(s,"content",a)}),';
+if (!brandedEntry.includes(narrationHookRegistration)) throw new Error("Expected narration hook registration was not found");
+const chatNarrationEntry = brandedEntry.replace(narrationHookRegistration, narrationHookRegistration + chatNarrationHookRegistration);
 const hiddenProviderKeyRegistration = 'game.settings.register("boobastudio","openaiApiKey",{name:"boobastudio.clientOnly.settings.openaiKey",hint:"boobastudio.clientOnly.settings.openaiKeyHint",scope:"client",config:!1,default:"",type:String})';
 const visibleProviderKeyRegistration = 'game.settings.register("boobastudio","openaiApiKey",{name:"BoobaStudio: Provider API key",hint:"Client-scoped key for OpenAI-compatible providers, OpenRouter, and compatible endpoints.",scope:"client",config:!0,default:"",type:String})';
-if (!brandedEntry.includes(hiddenProviderKeyRegistration)) throw new Error("Expected legacy provider key registration was not found");
-const keyVisibleEntry = brandedEntry.replace(hiddenProviderKeyRegistration, visibleProviderKeyRegistration);
+if (!chatNarrationEntry.includes(hiddenProviderKeyRegistration)) throw new Error("Expected legacy provider key registration was not found");
+const keyVisibleEntry = chatNarrationEntry.replace(hiddenProviderKeyRegistration, visibleProviderKeyRegistration);
 const clientChatModelGate = 'if(!this.isAllowedChatModel(i))return{status:"error",errors:[(game.i18n?.localize?.("boobastudio.clientOnly.modelNotAllowed")??"Client-only OpenAI mode only supports ChatGPT 5 or higher.")+` (model: ${i||"unset"})`]};';
 const localChatModelGate = 'if(!(typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured())&&!this.isAllowedChatModel(i))return{status:"error",errors:[(game.i18n?.localize?.("boobastudio.clientOnly.modelNotAllowed")??"Client-only OpenAI mode only supports ChatGPT 5 or higher.")+` (model: ${i||"unset"})`]};';
 if (!brandedEntry.includes(clientChatModelGate)) throw new Error("Expected direct-chat model gate was not found");
