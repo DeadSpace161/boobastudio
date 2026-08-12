@@ -9,13 +9,13 @@ In Foundry's setup screen:
 1. Open **Add-on Modules** and choose **Install Module**.
 2. Paste the current manifest URL:
 
-   `https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.126-manifest.json`
+   `https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.127-manifest.json`
 
 3. Install **BoobaStudio**, enable it in the world, and restart or reload the world.
 
 The release archive is also available at:
 
-`https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.126.zip`
+`https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.127.zip`
 
 ## Configure a text provider
 
@@ -33,6 +33,7 @@ The existing chat, prose generation, prompt builder, names, descriptions, docume
 Set **Image provider** and its corresponding settings:
 
 - **OpenAI-compatible**: image base URL/key/model. Image generation uses `/images/generations`; image edits and masks use `/images/edits`.
+- **OpenRouter**: set Provider base URL to `https://openrouter.ai/api/v1`, put the OpenRouter key in the existing OpenAI-compatible API key field, and choose an image model ID such as `openai/gpt-image-1` or another model from OpenRouter's image catalog. BoobaStudio uses OpenRouter's dedicated `/images` endpoint.
 - **Replicate**: Replicate base URL, client token, model in `owner/name` form, and optional input JSON. Input JSON supports `{{prompt}}`, `{{image}}`, `{{mask}}`, `{{factor}}`, `{{scale}}`, `{{width}}`, and `{{height}}`.
 
 Replicate's public API does not currently expose the browser CORS headers required for direct Foundry requests. If Image Generation reports a network/CORS error with the default base URL, set this field to a CORS-enabled compatible proxy endpoint that you control, or select an image provider that permits browser requests. BoobaStudio does not provide or require a proxy service.

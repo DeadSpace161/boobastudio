@@ -1,6 +1,7 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.126**. The public test server is being updated and live-verified against 2.2.126.
+This status reflects the locally built package prepared as version **2.2.127**. The public test server is being updated and live-verified against 2.2.127.
+- Release 2.2.127 adds OpenRouter's browser-CORS-compatible multi-model Image API to the existing provider layer.
 
 ## Verified
 
