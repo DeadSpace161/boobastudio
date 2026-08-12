@@ -1,6 +1,8 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.123**. The public test world is being updated and live-verified against 2.2.123.
+The current locally packaged release is **2.2.124**. The public test world is being updated and live-verified against 2.2.124.
+
+Replicate caveat: the public `api.replicate.com` endpoint does not provide the browser CORS headers needed for direct Foundry requests. Provider-level tests use an intercepted compatible endpoint; real browser use requires a CORS-enabled compatible proxy endpoint or another browser-accessible image provider.
 
 ## Build checks
 

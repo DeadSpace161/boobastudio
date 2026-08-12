@@ -9,13 +9,13 @@ In Foundry's setup screen:
 1. Open **Add-on Modules** and choose **Install Module**.
 2. Paste the current manifest URL:
 
-   `https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.123-manifest.json`
+   `https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.124-manifest.json`
 
 3. Install **BoobaStudio**, enable it in the world, and restart or reload the world.
 
 The release archive is also available at:
 
-`https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.123.zip`
+`https://raw.githubusercontent.com/DeadSpace161/boobastudio/main/releases/boobastudio-2.2.124.zip`
 
 ## Configure a text provider
 
@@ -34,6 +34,8 @@ Set **Image provider** and its corresponding settings:
 
 - **OpenAI-compatible**: image base URL/key/model. Image generation uses `/images/generations`; image edits and masks use `/images/edits`.
 - **Replicate**: Replicate base URL, client token, model in `owner/name` form, and optional input JSON. Input JSON supports `{{prompt}}`, `{{image}}`, `{{mask}}`, `{{factor}}`, `{{scale}}`, `{{width}}`, and `{{height}}`.
+
+Replicate's public API does not currently expose the browser CORS headers required for direct Foundry requests. If Image Generation reports a network/CORS error with the default base URL, set this field to a CORS-enabled compatible proxy endpoint that you control, or select an image provider that permits browser requests. BoobaStudio does not provide or require a proxy service.
 - **Stability AI**: Stability base URL, API key, and model path.
 - **ComfyUI**: reachable ComfyUI URL and an API-format workflow JSON. Put `{{prompt}}` in the workflow text field that should receive the generated prompt.
 

@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.123**. The public test server is being updated and live-verified against 2.2.123.
+This status reflects the locally built package prepared as version **2.2.124**. The public test server is being updated and live-verified against 2.2.124.
 
 ## Verified
 
@@ -85,6 +85,7 @@ This status reflects the locally built package prepared as version **2.2.123**. 
 - The 2.2.121 live harness now creates a temporary Scene token, opens the existing Name Generator, submits through the configured local text provider, verifies the generated name populates the token field, and removes the temporary documents.
 - Release 2.2.122 marks configured local Replicate image models with the existing `::client` model convention, restoring the Image Tools prompt and controls when no hosted Cibola catalog is available.
 - Release 2.2.123 removes the redundant Client-Only Mode setting gate from Image Tools; a configured local provider now makes the existing controls visible directly.
+- Direct Replicate requests from a Foundry browser are now reported with a provider-specific explanation when Replicate's missing CORS headers prevent the request. The supported remedy is a user-configured CORS-enabled compatible endpoint; no proxy is bundled.
 
 ## Intentionally not hosted by this fork
 
