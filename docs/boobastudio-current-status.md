@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.121**. The public test server has now cleanly reinstalled and live-verified 2.2.121.
+This status reflects the locally built package prepared as version **2.2.122**. The public test server has now cleanly reinstalled and live-verified 2.2.122.
 
 ## Verified
 
@@ -83,6 +83,7 @@ This status reflects the locally built package prepared as version **2.2.121**. 
 - Release 2.2.120 initializes the existing lazy Name Generator class before exposing it through the compatibility API; the live harness now requires both the API and its window to initialize.
 - Release 2.2.121 moves the corrected entry bundle to a fresh versioned filename so Foundry/browser caches cannot retain the prior entry asset.
 - The 2.2.121 live harness now creates a temporary Scene token, opens the existing Name Generator, submits through the configured local text provider, verifies the generated name populates the token field, and removes the temporary documents.
+- Release 2.2.122 marks configured local Replicate image models with the existing `::client` model convention, restoring the Image Tools prompt and controls when no hosted Cibola catalog is available.
 
 ## Intentionally not hosted by this fork
 
