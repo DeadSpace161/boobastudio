@@ -1,6 +1,6 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.124**. The public test server is being updated and live-verified against 2.2.124.
+This status reflects the locally built package prepared as version **2.2.126**. The public test server is being updated and live-verified against 2.2.126.
 
 ## Verified
 
@@ -86,6 +86,7 @@ This status reflects the locally built package prepared as version **2.2.124**. 
 - Release 2.2.122 marks configured local Replicate image models with the existing `::client` model convention, restoring the Image Tools prompt and controls when no hosted Cibola catalog is available.
 - Release 2.2.123 removes the redundant Client-Only Mode setting gate from Image Tools; a configured local provider now makes the existing controls visible directly.
 - Direct Replicate requests from a Foundry browser are now reported with a provider-specific explanation when Replicate's missing CORS headers prevent the request. The supported remedy is a user-configured CORS-enabled compatible endpoint; no proxy is bundled.
+- Cloudflare AI Gateway native Replicate routes are supported through the existing custom-headers setting, including the `cf-aig-authorization` header required by an authenticated gateway.
 
 ## Intentionally not hosted by this fork
 

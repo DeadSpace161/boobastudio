@@ -780,12 +780,16 @@ globalThis.__boobastudioLocalVectorContext = withLocalVectorContext;
 
 async function routeReplicateImages(body) {
   const model = replicateModel(body);
-  const endpoint = `${replicateBaseUrl()}/models/${model}/predictions`;
+  const base = replicateBaseUrl();
+  const cloudflareGateway = /(^|\.)gateway\.ai\.cloudflare\.com$/i.test(new URL(`${base}/`).hostname);
+  const endpoint = cloudflareGateway ? `${base}/predictions` : `${base}/models/${model}/predictions`;
   const controller = new AbortController();
   const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);
   const timer = setTimeout(() => controller.abort(), timeout);
   try {
-    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify({ input: replicateInput(body, model) }), signal: controller.signal });
+    const input = replicateInput(body, model);
+    const requestBody = cloudflareGateway ? { version: model, input } : { input };
+    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify(requestBody), signal: controller.signal });
     const prediction = await started.json().catch(() => null);
     if (!started.ok) {
       const detail = String(prediction?.error?.message || prediction?.error || prediction?.detail || "").trim();
@@ -795,7 +799,7 @@ async function routeReplicateImages(body) {
     const deadline = Date.now() + timeout;
     while (current?.status && !["succeeded", "failed", "canceled"].includes(current.status) && Date.now() < deadline) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const statusUrl = current.urls?.get || `${replicateBaseUrl()}/predictions/${current.id}`;
+      const statusUrl = current.urls?.get || `${base}/predictions/${current.id}`;
       const status = await fetch(statusUrl, { headers: replicateHeaders(), signal: controller.signal });
       current = await status.json().catch(() => null);
       if (!status.ok) return new Response(JSON.stringify(current || { error: { message: `Replicate status failed (${status.status})` } }), { status: status.status, headers: { "Content-Type": "application/json" } });
