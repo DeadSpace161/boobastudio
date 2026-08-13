@@ -6,7 +6,7 @@
             <span>{{localize 'boobastudio.musicgen.ttsdescription'}}</span>
         </div>
 
-        {{#unless userInfo.alive}}
+        {{#unless clientOnlyModeEnabled}}{{#unless userInfo.alive}}
             {{{patreon}}}
         {{else}}
 
@@ -60,6 +60,6 @@
                 <div class="boobastudio-history-grid"></div>
             </fieldset>
         </div>
-        {{/unless}}
+        {{/unless}}{{/unless}}
     </div>
 </section>
