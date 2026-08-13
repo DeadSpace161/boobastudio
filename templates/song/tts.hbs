@@ -6,9 +6,9 @@
             <span>{{localize 'boobastudio.musicgen.ttsdescription'}}</span>
         </div>
 
-        {{#unless clientOnlyModeEnabled}}{{#unless userInfo.alive}}
+        {{#unless userInfo.alive}}{{#unless clientOnlyModeEnabled}}
             {{{patreon}}}
-        {{else}}
+        {{/unless}}{{/unless}}
 
         <div class="flexrow align-child-top stretch" style="gap: 0.75rem;">
             <div class="flexcol stretch" style="flex: 1;">
@@ -60,6 +60,5 @@
                 <div class="boobastudio-history-grid"></div>
             </fieldset>
         </div>
-        {{/unless}}{{/unless}}
     </div>
 </section>
