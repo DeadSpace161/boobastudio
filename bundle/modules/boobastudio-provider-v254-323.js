@@ -1,5 +1,6 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", localTtsVoices: "localTtsVoices", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", replicateInput: "replicateImageInput", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const OPENROUTER_GEMINI_TTS_MODEL = "google/gemini-3.1-flash-tts-preview";
+const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", ttsFormat: "ttsFormat", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", localTtsVoices: "localTtsVoices", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", replicateInput: "replicateImageInput", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -43,17 +44,10 @@ async function post(endpoint, body, fetcher = fetch, kind = protocol()) {
 }
 
 function replicateHeaders() {
-  let custom = {};
-  try {
-    const parsed = JSON.parse(String(get(S.headers) || "{}"));
-    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) custom = parsed;
-  } catch {
-    console.warn(`${NAMESPACE} | providerHeaders is not valid JSON; ignoring custom headers`);
-  }
   const configured = String(get(S.replicateToken) || "").trim();
   const shared = String(get(S.apiKey) || "").trim();
   const token = configured || (shared.startsWith("r8_") ? shared : "");
-  return { ...custom, ...(token ? { Authorization: `Bearer ${token}` } : {}), "Content-Type": "application/json" };
+  return { ...(token ? { Authorization: `Bearer ${token}` } : {}), "Content-Type": "application/json" };
 }
 
 function replicateBaseUrl() {
@@ -181,7 +175,7 @@ async function routeTTS(body) {
     requestHeaders = { ...(key ? { "xi-api-key": key } : {}), "Content-Type": "application/json", Accept: "audio/mpeg" };
   } else {
     endpoint = `${String(get(S.ttsBaseUrl) || "https://api.openai.com/v1").trim().replace(/\/+$/, "")}/audio/speech`;
-    requestBody = { model: String(fields.model || get(S.ttsModel) || "tts-1"), voice: String(fields.voice || get(S.ttsVoice) || "onyx"), input: textInput, response_format: "mp3", speed: Number(fields.speed || 1) };
+    requestBody = { model: String(fields.model || get(S.ttsModel) || (kind === "openrouter" ? OPENROUTER_GEMINI_TTS_MODEL : "tts-1")), voice: String(fields.voice || fields.voice_id || get(S.ttsVoice) || (kind === "openrouter" ? "Enceladus" : "onyx")), input: textInput, response_format: String(fields.response_format || get(S.ttsFormat) || "mp3"), speed: Number(fields.speed || 1) };
     requestHeaders = { ...(key ? { Authorization: `Bearer ${key}` } : {}), "Content-Type": "application/json", Accept: "audio/mpeg" };
   }
   const response = await fetch(endpoint, { method: "POST", headers: requestHeaders, body: JSON.stringify(requestBody) });
@@ -217,7 +211,10 @@ const LOCAL_OPENAI_VOICES = [
 ].map(([voice_id, name]) => ({ voice_id, name, description: "OpenAI text-to-speech voice", preview_url: "", labels: {} }));
 
 function localVoiceCatalog() {
-  if (String(get(S.ttsProvider) || "openai").toLowerCase() === "openai") return LOCAL_OPENAI_VOICES;
+  if (["openai", "openrouter"].includes(String(get(S.ttsProvider) || "openai").toLowerCase())) {
+    if (String(get(S.ttsProvider) || "openai").toLowerCase() === "openrouter") return [{ voice_id: "Enceladus", name: "Enceladus", description: "Google Gemini TTS voice via OpenRouter", preview_url: "", labels: {} }];
+    return LOCAL_OPENAI_VOICES;
+  }
   try {
     const configured = JSON.parse(String(get(S.localTtsVoices) || "[]"));
     return Array.isArray(configured) ? configured.filter((voice) => voice && voice.voice_id).map((voice) => ({ description: "Locally configured voice", preview_url: "", labels: {}, ...voice })) : [];
@@ -385,7 +382,6 @@ function musicInput(data) {
 function providerError(error) {
   const message = String(error?.message || error || "Unknown provider error");
   if (error?.name === "AbortError" || /abort|timeout/i.test(message)) return `Timeout: provider request exceeded the configured timeout (${Number(get(S.timeout)) || 120000} ms)`;
-  if (/failed to fetch|network|cors|cross-origin/i.test(message) && String(get(S.imageProvider) || "").toLowerCase() === "replicate" && /^https:\/\/api\.replicate\.com(?:\/|$)/i.test(replicateBaseUrl())) return "Replicate does not expose the browser CORS headers required by Foundry. Set BoobaStudio: Replicate API base URL to a CORS-enabled compatible proxy or use a browser-CORS-capable image provider; direct https://api.replicate.com/v1 calls cannot complete from this Foundry client.";
   if (/failed to fetch|network|cors|cross-origin|dns|connection refused/i.test(message)) return `Network/CORS error: ${message}. Confirm the endpoint is reachable from the Foundry browser and permits this origin.`;
   return `Provider error: ${message}`;
 }
@@ -780,16 +776,12 @@ globalThis.__boobastudioLocalVectorContext = withLocalVectorContext;
 
 async function routeReplicateImages(body) {
   const model = replicateModel(body);
-  const base = replicateBaseUrl();
-  const cloudflareGateway = /(^|\.)gateway\.ai\.cloudflare\.com$/i.test(new URL(`${base}/`).hostname);
-  const endpoint = cloudflareGateway ? `${base}/predictions` : `${base}/models/${model}/predictions`;
+  const endpoint = `${replicateBaseUrl()}/models/${model}/predictions`;
   const controller = new AbortController();
   const timeout = Math.max(1000, Number(get(S.timeout)) || 120000);
   const timer = setTimeout(() => controller.abort(), timeout);
   try {
-    const input = replicateInput(body, model);
-    const requestBody = cloudflareGateway ? { version: model, input } : { input };
-    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify(requestBody), signal: controller.signal });
+    const started = await fetch(endpoint, { method: "POST", headers: replicateHeaders(), body: JSON.stringify({ input: replicateInput(body, model) }), signal: controller.signal });
     const prediction = await started.json().catch(() => null);
     if (!started.ok) {
       const detail = String(prediction?.error?.message || prediction?.error || prediction?.detail || "").trim();
@@ -799,7 +791,7 @@ async function routeReplicateImages(body) {
     const deadline = Date.now() + timeout;
     while (current?.status && !["succeeded", "failed", "canceled"].includes(current.status) && Date.now() < deadline) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const statusUrl = current.urls?.get || `${base}/predictions/${current.id}`;
+      const statusUrl = current.urls?.get || `${replicateBaseUrl()}/predictions/${current.id}`;
       const status = await fetch(statusUrl, { headers: replicateHeaders(), signal: controller.signal });
       current = await status.json().catch(() => null);
       if (!status.ok) return new Response(JSON.stringify(current || { error: { message: `Replicate status failed (${status.status})` } }), { status: status.status, headers: { "Content-Type": "application/json" } });
@@ -899,20 +891,6 @@ async function localBuildPrompts(input, callback) {
 
 globalThis.__boobastudioLocalBuildPrompts = localBuildPrompts;
 
-async function routeOpenRouterImages(body) {
-  const model = String(body.model || get(S.imageModel) || "openai/gpt-image-1").trim();
-  const requestBody = { ...body, model, output_format: body.output_format || "png" };
-  delete requestBody.image;
-  delete requestBody.mask;
-  if (body.image) requestBody.input_references = [{ type: "image_url", image_url: { url: String(body.image) } }];
-  const response = await fetch(`${baseUrl()}/images`, { method: "POST", headers: headers("openai"), body: JSON.stringify(requestBody) });
-  if (!response.ok) return providerResponse(response);
-  const payload = await response.json().catch(() => null);
-  const data = Array.isArray(payload?.data) ? payload.data.filter((item) => item?.b64_json || item?.url).map((item) => item.b64_json ? { b64_json: item.b64_json } : { url: item.url }) : [];
-  if (!data.length) return new Response(JSON.stringify({ error: { message: "OpenRouter response did not contain image data" } }), { status: 502, headers: { "Content-Type": "application/json" } });
-  return new Response(JSON.stringify({ data }), { status: 200, headers: { "Content-Type": "application/json" } });
-}
-
 async function routeImages(body, originalFetch = globalThis.__boobastudioOriginalFetch || fetch) {
   const promptValue = String(body?.prompt || "");
   const embeddedImage = !body?.image && /^data:image\//i.test(promptValue) ? promptValue : "";
@@ -922,7 +900,6 @@ async function routeImages(body, originalFetch = globalThis.__boobastudioOrigina
   if (String(get(S.imageProvider) || "openai") === "stability") response = await routeStabilityImages(requestBody);
   else if (String(get(S.imageProvider) || "openai") === "comfyui") response = await routeComfyUIImages(requestBody);
   else if (String(get(S.imageProvider) || "openai") === "replicate" || sharedKey.startsWith("r8_")) response = await routeReplicateImages(requestBody);
-  else if (String(get(S.imageProvider) || "openai") === "openrouter") response = await routeOpenRouterImages(requestBody);
   else if (requestBody.image || requestBody.mask) response = await routeOpenAIImageEdit(requestBody, originalFetch);
   else response = await providerResponse(await post(`${baseUrl()}/images/generations`, { ...requestBody, model: String(get(S.imageModel) || requestBody.model || "gpt-image-1").trim() }, originalFetch));
   return rememberLocalGallery(requestBody, response);
@@ -1002,16 +979,16 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.protocol, { name: "BoobaStudio: Text provider protocol", hint: "Use OpenAI-compatible for OpenAI, OpenRouter, Ollama, and LM Studio; select Anthropic or Gemini for their native APIs.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", anthropic: "Anthropic", gemini: "Google Gemini" } });
   game.settings.register(NAMESPACE, S.baseUrl, { name: "BoobaStudio: Provider base URL", hint: "For example https://api.openai.com/v1, http://localhost:11434/v1, or an OpenRouter-compatible URL.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
   game.settings.register(NAMESPACE, S.model, { name: "BoobaStudio: Provider model", scope: "client", config: true, type: String, default: "gpt-5-mini" });
-  game.settings.register(NAMESPACE, S.apiKey, { name: "BoobaStudio: Provider API key", hint: "Client-scoped key for OpenAI-compatible providers, OpenRouter, and compatible endpoints.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.jsonMode, { name: "BoobaStudio: JSON response mode", hint: "Request JSON object responses from OpenAI-compatible text providers when supported.", scope: "client", config: true, type: Boolean, default: false });
   game.settings.register(NAMESPACE, S.localVectorContext, { name: "BoobaStudio: Include local library context", hint: "Add relevant text from browser-local vector files to local provider prompts.", scope: "client", config: true, type: Boolean, default: true });
   game.settings.register(NAMESPACE, S.imageModel, { name: "BoobaStudio: Image model", hint: "Model used by OpenAI-compatible image endpoints. Replicate uses its separate image model setting.", scope: "client", config: true, type: String, default: "gpt-image-1" });
-  game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, openrouter for OpenRouter's multi-model Image API, replicate for Replicate predictions, stability for Stability AI, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", openrouter: "OpenRouter", replicate: "Replicate", stability: "Stability AI", comfyui: "ComfyUI" } });
-  game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", elevenlabs: "ElevenLabs" } });
+  game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, replicate for Replicate predictions, stability for Stability AI, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", replicate: "Replicate", stability: "Stability AI", comfyui: "ComfyUI" } });
+  game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", openrouter: "OpenRouter", elevenlabs: "ElevenLabs" } });
   game.settings.register(NAMESPACE, S.ttsApiKey, { name: "BoobaStudio: TTS API key", hint: "Client-scoped OpenAI TTS key; falls back to the shared OpenAI-compatible key.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.ttsModel, { name: "BoobaStudio: OpenAI TTS model", scope: "client", config: true, type: String, default: "tts-1" });
   game.settings.register(NAMESPACE, S.ttsVoice, { name: "BoobaStudio: TTS voice", scope: "client", config: true, type: String, default: "onyx" });
-  game.settings.register(NAMESPACE, S.ttsBaseUrl, { name: "BoobaStudio: OpenAI TTS base URL", hint: "Default: https://api.openai.com/v1.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
+  game.settings.register(NAMESPACE, S.ttsBaseUrl, { name: "BoobaStudio: TTS base URL", hint: "For OpenAI use https://api.openai.com/v1; for OpenRouter use https://openrouter.ai/api/v1.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
+  game.settings.register(NAMESPACE, S.ttsFormat, { name: "BoobaStudio: TTS output format", scope: "client", config: true, type: String, default: "mp3", choices: { mp3: "MP3", wav: "WAV", opus: "Opus", aac: "AAC", flac: "FLAC", pcm: "PCM" } });
   game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
   game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });
@@ -1038,11 +1015,12 @@ Hooks.once("ready", async () => {
   if (!game.settings.settings?.has?.(`${NAMESPACE}.${S.protocol}`)) game.settings.register(NAMESPACE, S.protocol, { name: "BoobaStudio: Text provider protocol", hint: "Use OpenAI-compatible for OpenAI, OpenRouter, Ollama, and LM Studio; select Anthropic or Gemini for their native APIs.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", anthropic: "Anthropic", gemini: "Google Gemini" } });
   if (!game.settings.settings?.has?.(`${NAMESPACE}.${S.imageProvider}`)) {
     game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, replicate for Replicate predictions, stability for Stability AI, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", replicate: "Replicate", stability: "Stability AI", comfyui: "ComfyUI" } });
-    game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", elevenlabs: "ElevenLabs" } });
+    game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", openrouter: "OpenRouter", elevenlabs: "ElevenLabs" } });
     game.settings.register(NAMESPACE, S.ttsApiKey, { name: "BoobaStudio: TTS API key", hint: "Client-scoped OpenAI TTS key; falls back to the shared OpenAI-compatible key.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.ttsModel, { name: "BoobaStudio: OpenAI TTS model", scope: "client", config: true, type: String, default: "tts-1" });
     game.settings.register(NAMESPACE, S.ttsVoice, { name: "BoobaStudio: TTS voice", scope: "client", config: true, type: String, default: "onyx" });
     game.settings.register(NAMESPACE, S.ttsBaseUrl, { name: "BoobaStudio: OpenAI TTS base URL", hint: "Default: https://api.openai.com/v1.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
+  game.settings.register(NAMESPACE, S.ttsFormat, { name: "BoobaStudio: TTS output format", scope: "client", config: true, type: String, default: "mp3", choices: { mp3: "MP3", wav: "WAV", opus: "Opus", aac: "AAC", flac: "FLAC", pcm: "PCM" } });
     game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
     game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });

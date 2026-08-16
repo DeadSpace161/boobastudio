@@ -1,5 +1,6 @@
 const NAMESPACE = "boobastudio";
-const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", localTtsVoices: "localTtsVoices", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", replicateInput: "replicateImageInput", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
+const OPENROUTER_GEMINI_TTS_MODEL = "google/gemini-3.1-flash-tts-preview";
+const S = { enabled: "providerEnabled", protocol: "providerProtocol", baseUrl: "providerBaseUrl", apiKey: "openaiApiKey", model: "providerModel", jsonMode: "providerJsonMode", localVectorContext: "localVectorContext", imageModel: "imageModel", imageProvider: "imageProvider", ttsProvider: "ttsProvider", ttsApiKey: "ttsApiKey", ttsModel: "ttsModel", ttsVoice: "ttsVoice", ttsBaseUrl: "ttsBaseUrl", ttsFormat: "ttsFormat", elevenlabsApiKey: "elevenlabsApiKey", elevenlabsModel: "elevenlabsModel", elevenlabsBaseUrl: "elevenlabsBaseUrl", localTtsVoices: "localTtsVoices", musicModel: "musicModel", musicBaseUrl: "musicBaseUrl", musicInput: "musicInput", replicateToken: "replicateApiToken", replicateModel: "replicateModel", replicateBaseUrl: "replicateBaseUrl", replicateInput: "replicateImageInput", stabilityApiKey: "stabilityApiKey", stabilityModel: "stabilityModel", stabilityBaseUrl: "stabilityBaseUrl", comfyuiBaseUrl: "comfyuiBaseUrl", comfyuiWorkflow: "comfyuiWorkflow", timeout: "providerTimeout", temperature: "providerTemperature", maxTokens: "providerMaxTokens", headers: "providerHeaders" };
 
 const get = (key) => game.settings.get(NAMESPACE, key);
 const isEnabled = () => get(S.enabled) === true;
@@ -174,7 +175,7 @@ async function routeTTS(body) {
     requestHeaders = { ...(key ? { "xi-api-key": key } : {}), "Content-Type": "application/json", Accept: "audio/mpeg" };
   } else {
     endpoint = `${String(get(S.ttsBaseUrl) || "https://api.openai.com/v1").trim().replace(/\/+$/, "")}/audio/speech`;
-    requestBody = { model: String(fields.model || get(S.ttsModel) || "tts-1"), voice: String(fields.voice || get(S.ttsVoice) || "onyx"), input: textInput, response_format: "mp3", speed: Number(fields.speed || 1) };
+    requestBody = { model: String(fields.model || get(S.ttsModel) || (kind === "openrouter" ? OPENROUTER_GEMINI_TTS_MODEL : "tts-1")), voice: String(fields.voice || fields.voice_id || get(S.ttsVoice) || (kind === "openrouter" ? "Enceladus" : "onyx")), input: textInput, response_format: String(fields.response_format || get(S.ttsFormat) || "mp3"), speed: Number(fields.speed || 1) };
     requestHeaders = { ...(key ? { Authorization: `Bearer ${key}` } : {}), "Content-Type": "application/json", Accept: "audio/mpeg" };
   }
   const response = await fetch(endpoint, { method: "POST", headers: requestHeaders, body: JSON.stringify(requestBody) });
@@ -210,7 +211,10 @@ const LOCAL_OPENAI_VOICES = [
 ].map(([voice_id, name]) => ({ voice_id, name, description: "OpenAI text-to-speech voice", preview_url: "", labels: {} }));
 
 function localVoiceCatalog() {
-  if (String(get(S.ttsProvider) || "openai").toLowerCase() === "openai") return LOCAL_OPENAI_VOICES;
+  if (["openai", "openrouter"].includes(String(get(S.ttsProvider) || "openai").toLowerCase())) {
+    if (String(get(S.ttsProvider) || "openai").toLowerCase() === "openrouter") return [{ voice_id: "Enceladus", name: "Enceladus", description: "Google Gemini TTS voice via OpenRouter", preview_url: "", labels: {} }];
+    return LOCAL_OPENAI_VOICES;
+  }
   try {
     const configured = JSON.parse(String(get(S.localTtsVoices) || "[]"));
     return Array.isArray(configured) ? configured.filter((voice) => voice && voice.voice_id).map((voice) => ({ description: "Locally configured voice", preview_url: "", labels: {}, ...voice })) : [];
@@ -979,11 +983,12 @@ Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.localVectorContext, { name: "BoobaStudio: Include local library context", hint: "Add relevant text from browser-local vector files to local provider prompts.", scope: "client", config: true, type: Boolean, default: true });
   game.settings.register(NAMESPACE, S.imageModel, { name: "BoobaStudio: Image model", hint: "Model used by OpenAI-compatible image endpoints. Replicate uses its separate image model setting.", scope: "client", config: true, type: String, default: "gpt-image-1" });
   game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, replicate for Replicate predictions, stability for Stability AI, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", replicate: "Replicate", stability: "Stability AI", comfyui: "ComfyUI" } });
-  game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", elevenlabs: "ElevenLabs" } });
+  game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", openrouter: "OpenRouter", elevenlabs: "ElevenLabs" } });
   game.settings.register(NAMESPACE, S.ttsApiKey, { name: "BoobaStudio: TTS API key", hint: "Client-scoped OpenAI TTS key; falls back to the shared OpenAI-compatible key.", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.ttsModel, { name: "BoobaStudio: OpenAI TTS model", scope: "client", config: true, type: String, default: "tts-1" });
   game.settings.register(NAMESPACE, S.ttsVoice, { name: "BoobaStudio: TTS voice", scope: "client", config: true, type: String, default: "onyx" });
-  game.settings.register(NAMESPACE, S.ttsBaseUrl, { name: "BoobaStudio: OpenAI TTS base URL", hint: "Default: https://api.openai.com/v1.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
+  game.settings.register(NAMESPACE, S.ttsBaseUrl, { name: "BoobaStudio: TTS base URL", hint: "For OpenAI use https://api.openai.com/v1; for OpenRouter use https://openrouter.ai/api/v1.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
+  game.settings.register(NAMESPACE, S.ttsFormat, { name: "BoobaStudio: TTS output format", scope: "client", config: true, type: String, default: "mp3", choices: { mp3: "MP3", wav: "WAV", opus: "Opus", aac: "AAC", flac: "FLAC", pcm: "PCM" } });
   game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
   game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
   game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });
@@ -1010,11 +1015,12 @@ Hooks.once("ready", async () => {
   if (!game.settings.settings?.has?.(`${NAMESPACE}.${S.protocol}`)) game.settings.register(NAMESPACE, S.protocol, { name: "BoobaStudio: Text provider protocol", hint: "Use OpenAI-compatible for OpenAI, OpenRouter, Ollama, and LM Studio; select Anthropic or Gemini for their native APIs.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", anthropic: "Anthropic", gemini: "Google Gemini" } });
   if (!game.settings.settings?.has?.(`${NAMESPACE}.${S.imageProvider}`)) {
     game.settings.register(NAMESPACE, S.imageProvider, { name: "BoobaStudio: Image provider", hint: "Enter openai for OpenAI-compatible Images, replicate for Replicate predictions, stability for Stability AI, or comfyui for a local ComfyUI server.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", replicate: "Replicate", stability: "Stability AI", comfyui: "ComfyUI" } });
-    game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", elevenlabs: "ElevenLabs" } });
+    game.settings.register(NAMESPACE, S.ttsProvider, { name: "BoobaStudio: TTS provider", hint: "Use OpenAI or ElevenLabs for the existing narration and audio workflow.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI", openrouter: "OpenRouter", elevenlabs: "ElevenLabs" } });
     game.settings.register(NAMESPACE, S.ttsApiKey, { name: "BoobaStudio: TTS API key", hint: "Client-scoped OpenAI TTS key; falls back to the shared OpenAI-compatible key.", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.ttsModel, { name: "BoobaStudio: OpenAI TTS model", scope: "client", config: true, type: String, default: "tts-1" });
     game.settings.register(NAMESPACE, S.ttsVoice, { name: "BoobaStudio: TTS voice", scope: "client", config: true, type: String, default: "onyx" });
     game.settings.register(NAMESPACE, S.ttsBaseUrl, { name: "BoobaStudio: OpenAI TTS base URL", hint: "Default: https://api.openai.com/v1.", scope: "client", config: true, type: String, default: "https://api.openai.com/v1" });
+  game.settings.register(NAMESPACE, S.ttsFormat, { name: "BoobaStudio: TTS output format", scope: "client", config: true, type: String, default: "mp3", choices: { mp3: "MP3", wav: "WAV", opus: "Opus", aac: "AAC", flac: "FLAC", pcm: "PCM" } });
     game.settings.register(NAMESPACE, S.elevenlabsApiKey, { name: "BoobaStudio: ElevenLabs API key", scope: "client", config: true, type: String, default: "" });
     game.settings.register(NAMESPACE, S.elevenlabsModel, { name: "BoobaStudio: ElevenLabs model", scope: "client", config: true, type: String, default: "eleven_multilingual_v2" });
     game.settings.register(NAMESPACE, S.elevenlabsBaseUrl, { name: "BoobaStudio: ElevenLabs base URL", hint: "Default: https://api.elevenlabs.io/v1.", scope: "client", config: true, type: String, default: "https://api.elevenlabs.io/v1" });

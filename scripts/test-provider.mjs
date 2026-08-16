@@ -189,6 +189,19 @@ assert.equal(openaiTTSBody.result, "data:audio/mpeg;base64,AQID");
 assert.equal(requests.at(-1).input, "https://tts.test/v1/audio/speech");
 assert.equal(requests.at(-1).init.headers.Authorization, "Bearer tts-key");
 
+values.set("boobastudio.ttsProvider", "openrouter");
+values.set("boobastudio.ttsBaseUrl", "https://openrouter.ai/api/v1");
+values.set("boobastudio.ttsModel", "google/gemini-3.1-flash-tts-preview");
+values.set("boobastudio.ttsVoice", "Enceladus");
+values.set("boobastudio.ttsFormat", "wav");
+const openrouterVoices = await globalThis.__boobastudioLocalVoices(false);
+assert.deepEqual(openrouterVoices.voices.map((voice) => voice.voice_id), ["Enceladus"]);
+const openrouterTTS = await fetch("https://app.cibola.world/api/v1/tts", { method: "POST", body: JSON.stringify({ prompt: JSON.stringify({ speechcontent: "Read this with Gemini", model: "google/gemini-3.1-flash-tts-preview", voice: "Enceladus", speed: "1.25", response_format: "wav" }) }) });
+const openrouterTTSBody = await openrouterTTS.json();
+assert.equal(openrouterTTSBody.success, true);
+assert.equal(requests.at(-1).input, "https://openrouter.ai/api/v1/audio/speech");
+assert.deepEqual(JSON.parse(requests.at(-1).init.body), { model: "google/gemini-3.1-flash-tts-preview", voice: "Enceladus", input: "Read this with Gemini", response_format: "wav", speed: 1.25 });
+
 values.set("boobastudio.ttsProvider", "elevenlabs");
 values.set("boobastudio.localTtsVoices", JSON.stringify([{ voice_id: "local-voice", name: "Local Voice" }]));
 assert.equal((await globalThis.__boobastudioLocalVoices(false)).voices[0].voice_id, "local-voice");

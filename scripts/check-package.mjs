@@ -1,10 +1,12 @@
 import { access, readFile } from "node:fs/promises";
+import fs from "node:fs";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import process from "node:process";
 
 const root = path.resolve(new URL("..", import.meta.url).pathname);
 const manifestPath = path.join(root, "module.json");
+const featureContractPath = path.join(root, "docs", "feature-contract.json");
 
 const required = [
   "bundle/modules/init.js",
@@ -49,6 +51,13 @@ for (const language of manifest.languages ?? []) {
   } catch (error) {
     fail(`invalid language file ${language.path}: ${error.message}`);
   }
+}
+
+const featureContract = JSON.parse(await readFile(featureContractPath, "utf8"));
+if (featureContract.schema !== "boobastudio.feature-contract.v1" || !Array.isArray(featureContract.features) || featureContract.features.length < 20) fail("feature contract is missing or incomplete");
+for (const feature of featureContract.features || []) {
+  if (!feature.id || !feature.entryPoint || !feature.template || !feature.test) fail("feature contract entry is incomplete: " + (feature.id || "unknown"));
+  if (!fs.existsSync(path.join(root, feature.template))) fail("feature contract template is missing: " + feature.template);
 }
 
 if (manifest.id !== "boobastudio") {

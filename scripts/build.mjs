@@ -251,8 +251,12 @@ const versionedEntryAsset = manifest.esmodules.find((file) => /boobastudio-entry
 const versionedProviderAsset = manifest.esmodules.find((file) => /boobastudio-provider-v254-\d+\.js$/.test(file.split("?", 1)[0]));
 if (!versionedEntryAsset || !versionedProviderAsset) throw new Error("Versioned runtime assets are missing from module.json");
 const versionedEntryPath = path.join(output, versionedEntryAsset.split("?", 1)[0]);
+const versionedProviderPath = path.join(output, versionedProviderAsset.split("?", 1)[0]);
 await cp(entryPath, versionedEntryPath);
+await cp(path.join(output, "bundle", "modules", "boobastudio-provider.js"), versionedProviderPath);
 const versionedEntrySource = await readFile(versionedEntryPath, "utf8");
+const versionedProviderSource = await readFile(versionedProviderPath, "utf8");
+if (!versionedProviderSource.includes("google/gemini-3.1-flash-tts-preview") || !versionedProviderSource.includes("Enceladus") || !versionedProviderSource.includes("response_format: String")) throw new Error("Versioned provider bundle was not copied from the canonical provider source");
 if (!versionedEntrySource.includes("ImageGenerator:Ke") || !versionedEntrySource.includes("CibolaNames:(pd(),Fa)")) {
   throw new Error("Versioned entry bundle was not patched with the public compatibility API");
 }

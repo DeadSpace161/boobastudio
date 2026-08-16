@@ -1,0 +1,31 @@
+{
+  "schema": "boobastudio.feature-contract.v1",
+  "module": "boobastudio",
+  "foundry": { "minimum": 12, "verified": 14, "maximum": 14 },
+  "statuses": ["passing", "intentionally-unavailable", "blocked"],
+  "features": [
+    { "id": "actor", "entryPoint": "Actor sheet > Cibola", "template": "templates/token/tab_cibola.hbs", "capabilities": ["text", "image", "audio"], "documents": ["Actor", "Token"], "permission": "document ownership", "test": "ui.actor" },
+    { "id": "item", "entryPoint": "Item sheet > Cibola", "template": "templates/token/tab_cibola.hbs", "capabilities": ["text", "image"], "documents": ["Item"], "permission": "document ownership", "test": "ui.item" },
+    { "id": "journal", "entryPoint": "Journal sheet > Cibola", "template": "templates/prose_generate.hbs", "capabilities": ["text", "translation", "audio"], "documents": ["JournalEntry", "JournalEntryPage"], "permission": "document ownership", "test": "ui.journal" },
+    { "id": "scene", "entryPoint": "Scene controls > Cibola", "template": "templates/scenegen/generator.hbs", "capabilities": ["image", "scene"], "documents": ["Scene"], "permission": "GM", "test": "ui.scene" },
+    { "id": "token", "entryPoint": "Token HUD > Cibola", "template": "templates/tokenspeaks/list.hbs", "capabilities": ["audio"], "documents": ["Token", "Actor"], "permission": "GM", "test": "ui.token" },
+    { "id": "chat", "entryPoint": "Chat input / Cibola button", "template": "templates/completion/chat.hbs", "capabilities": ["text"], "documents": ["ChatMessage"], "permission": "user", "test": "ui.chat" },
+    { "id": "thread", "entryPoint": "Journal thread page", "template": "templates/thread/threadgpt-viewv2.hbs", "capabilities": ["text", "vector"], "documents": ["JournalEntryPage"], "permission": "document ownership", "test": "ui.thread" },
+    { "id": "prosemirror", "entryPoint": "ProseMirror toolbar/context menu", "template": "templates/prose_generate.hbs", "capabilities": ["text", "translation", "audio"], "documents": ["JournalEntryPage", "Item", "Actor"], "permission": "document ownership", "test": "ui.prosemirror" },
+    { "id": "radial-menu", "entryPoint": "Cibola radial macro", "template": "templates/radial/menu.hbs", "capabilities": ["text", "image", "audio", "scene"], "documents": [], "permission": "user", "test": "ui.radial" },
+    { "id": "context-menu", "entryPoint": "Foundry context menus", "template": "templates/radial/submenu.hbs", "capabilities": ["text", "image"], "documents": [], "permission": "user", "test": "ui.context-menu" },
+    { "id": "settings", "entryPoint": "Module settings", "template": "templates/configuration/configuration.hbs", "capabilities": ["provider-config"], "documents": [], "permission": "GM", "test": "ui.settings" },
+    { "id": "gallery", "entryPoint": "Cibola gallery", "template": "templates/browser/browser.hbs", "capabilities": ["image", "audio"], "documents": ["JournalEntry"], "permission": "user", "test": "ui.gallery" },
+    { "id": "history", "entryPoint": "Generation history", "template": "templates/partials/history_item.hbs", "capabilities": ["text", "image", "audio"], "documents": [], "permission": "user", "test": "ui.history" },
+    { "id": "packs", "entryPoint": "Packs menu", "template": "templates/packs/pack_catalog.hbs", "capabilities": ["text", "image"], "documents": ["JournalEntry"], "permission": "user", "test": "ui.packs" },
+    { "id": "vectors", "entryPoint": "Vector store", "template": "templates/vector/vectorfiles.hbs", "capabilities": ["vector"], "documents": ["JournalEntry"], "permission": "user", "test": "ui.vectors" },
+    { "id": "image-tools", "entryPoint": "Cibola image dialogs", "template": "templates/bothgen/config.hbs", "capabilities": ["image"], "documents": ["Actor", "Item", "JournalEntry", "Scene", "Token"], "permission": "document ownership", "test": "ui.image-tools" },
+    { "id": "scene-tools", "entryPoint": "Scene generator", "template": "templates/scenegen/config.hbs", "capabilities": ["image", "scene"], "documents": ["Scene"], "permission": "GM", "test": "ui.scene-tools" },
+    { "id": "wall-detection", "entryPoint": "Scene > detect walls", "template": "templates/wall_detection/detect_walls.hbs", "capabilities": ["image", "scene"], "documents": ["Wall"], "permission": "GM", "test": "ui.wall-detection" },
+    { "id": "name-generation", "entryPoint": "Name generator", "template": "templates/namegen/namegen.hbs", "capabilities": ["text"], "documents": [], "permission": "user", "test": "ui.name-generation" },
+    { "id": "translation", "entryPoint": "Translator", "template": "templates/bothgen/translator.hbs", "capabilities": ["translation"], "documents": ["JournalEntryPage"], "permission": "document ownership", "test": "ui.translation" },
+    { "id": "music", "entryPoint": "Audio generation > song", "template": "templates/song/generator.hbs", "capabilities": ["music"], "documents": ["Playlist"], "permission": "GM", "test": "ui.music" },
+    { "id": "narration", "entryPoint": "Audio generation > narration", "template": "templates/song/tts.hbs", "capabilities": ["tts"], "documents": ["Playlist", "JournalEntryPage", "Actor", "Token"], "permission": "user/GM for playlist", "request": "POST /api/v1/audio/speech for OpenRouter direct mode", "test": "ui.narration" },
+    { "id": "audio", "entryPoint": "Narration/player controls", "template": "templates/song/tts.hbs", "capabilities": ["audio"], "documents": ["Playlist"], "permission": "user", "test": "ui.audio" }
+  ]
+}
