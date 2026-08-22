@@ -26,7 +26,10 @@ for (const entry of entries) {
 // Expose the existing generic image application to compatibility bridges.
 // The original bundle keeps this class private, although actor and item
 // workflows already use its implementation internally.
-const entryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v250.js");
+const outputManifest = JSON.parse(await readFile(path.join(output, "module.json"), "utf8"));
+const selectedEntryAsset = outputManifest.esmodules.find((file) => /boobastudio-entry-v250-[0-9]+[.]js$/.test(file.split("?", 1)[0]));
+if (!selectedEntryAsset) throw new Error("Manifest-selected BoobaStudio entry asset was not found");
+const entryPath = path.join(output, selectedEntryAsset.split("?", 1)[0]);
 const entrySource = await readFile(entryPath, "utf8");
 const privateApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us}";
 const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke,CibolaNames:(pd(),Fa)}";
@@ -99,6 +102,10 @@ const localImageModelConfigReplacement = 'l=M.getModelConfig(s)||{description:"L
 const localSelectedImageModelConfig = 'oe=M.getModelConfig(ae);';
 const localSelectedImageModelConfigReplacement = 'oe=M.getModelConfig(ae)||{description:"Local provider image model",maxSize:4194304,fields:[]};';
 const localTtsModelConfig = 'o=M.getModelConfig(a);for(let n of o.fields)';
+const localTtsProviderSelection = 'l=typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured(),u=String(game.settings.get("boobastudio","ttsModel")||"").trim();';
+const localTtsProviderSelectionReplacement = 'l=typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured(),u=String(game.settings.get("boobastudio","ttsModel")||"").trim(),v=String(game.settings.get("boobastudio","ttsProvider")||"openai").toLowerCase();u||(u=v==="openrouter"?"google/gemini-3.1-flash-tts-preview":"tts-1");';
+const localTtsVoiceChoices = 'choices:{Enceladus:"Enceladus",alloy:"alloy",nova:"nova",onyx:"onyx"}';
+const localTtsVoiceChoicesReplacement = 'choices:(String(game.settings.get("boobastudio","ttsProvider")||"openai").toLowerCase()==="openrouter"?{Enceladus:"Enceladus"}:{Enceladus:"Enceladus",alloy:"alloy",nova:"nova",onyx:"onyx"})';
 const localTtsModelConfigReplacement = 'o=M.getModelConfig(a)||{fields:[]};for(let n of o.fields)';
 const localImageFieldModelConfig = 'let a=M.getModelConfig(e);c.moreFields=';
 const localImageFieldModelConfigReplacement = 'let a=M.getModelConfig(e)||{fields:[]};c.moreFields=';
@@ -229,7 +236,7 @@ const threadDeleteMethod = "async deleteThread(){let t=this.document.system.thre
 const threadDeleteReplacement = "async deleteThread(){let t=this.document.system.thread_id,e=typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured();if((!t&&!e)||!await Y.confirm({content:`<p>${game.i18n.localize(\"boobastudio.AiThread.deleteThreadConfirm\")}</p>`,rejectClose:!1,modal:!0}))return;if(e){await this.document.update({\"system.thread_id\":\"\",\"system.messages\":[]},{render:!1});this.document.parent?.sheet?.render(!1,{pageId:this.document.id});ui.notifications.info(\"boobastudio.AiThread.threadDeleted\",{localize:!0});return}C.deleteThread(t,async i=>{!i?.success||(await this.document.update({\"system.thread_id\":\"\",\"system.messages\":[]},{render:!1}),this.document.parent?.sheet?.render(!1,{pageId:this.document.id}),ui.notifications.info(\"boobastudio.AiThread.threadDeleted\",{localize:!0}))})}";
 const threadResponseIdUpdate = "a.thread_id!=this.document.system.thread_id&&(n[\"system.thread_id\"]=a.thread_id)";
 const threadResponseIdUpdateReplacement = "a.thread_id!==void 0&&a.thread_id!==this.document.system.thread_id&&(n[\"system.thread_id\"]=a.thread_id)";
-let vectorEntry = localTokenHordeEntry.replace(enhanceMethod, enhanceReplacement).replace(describeMethod, describeReplacement).replace(buildPromptsMethod, buildPromptsReplacement).replace(generateTTSMethod, generateTTSReplacement).replace(generateSongMethod, generateSongReplacement).replace(voicesMethod, voicesReplacement).replace(voicePageMethod, voicePageReplacement).replace(apiConfigLoad, apiConfigLoadReplacement).replace(galleryPageMethod, galleryPageReplacement).replace(galleryDeleteMethod, galleryDeleteReplacement).replace(galleryShareMethod, galleryShareReplacement).replace(galleryToggleMethod, galleryToggleReplacement).replace(packActionMethod, packActionReplacement).replace(packCatalogMethod, packCatalogReplacement).replace(galleryAccess, galleryAccessReplacement).replaceAll(galleryContext, localGalleryContext).replace(imageNoAccountContext, localImageAccountContext).replace(vectorNoAccountContext, localVectorAccountContext);
+let vectorEntry = localTokenHordeEntry.replace(localTtsProviderSelection, localTtsProviderSelectionReplacement).replace(localTtsVoiceChoices, localTtsVoiceChoicesReplacement).replace(enhanceMethod, enhanceReplacement).replace(describeMethod, describeReplacement).replace(buildPromptsMethod, buildPromptsReplacement).replace(generateTTSMethod, generateTTSReplacement).replace(generateSongMethod, generateSongReplacement).replace(voicesMethod, voicesReplacement).replace(voicePageMethod, voicePageReplacement).replace(apiConfigLoad, apiConfigLoadReplacement).replace(galleryPageMethod, galleryPageReplacement).replace(galleryDeleteMethod, galleryDeleteReplacement).replace(galleryShareMethod, galleryShareReplacement).replace(galleryToggleMethod, galleryToggleReplacement).replace(packActionMethod, packActionReplacement).replace(packCatalogMethod, packCatalogReplacement).replace(galleryAccess, galleryAccessReplacement).replaceAll(galleryContext, localGalleryContext).replace(imageNoAccountContext, localImageAccountContext).replace(vectorNoAccountContext, localVectorAccountContext);
 for (const [original, replacement] of [[packMyPacksMethod, packMyPacksReplacement], [packAddImageMethod, packAddImageReplacement], [packCreateMethod, packCreateReplacement], [packDetailMethod, packDetailReplacement], [packPublicDetailMethod, packPublicDetailReplacement], [packImagesMethod, packImagesReplacement], [packUpdateMethod, packUpdateReplacement], [packDeleteMethod, packDeleteReplacement], [packRemoveImageMethod, packRemoveImageReplacement], [packUpdateImageMethod, packUpdateImageReplacement]]) {
   if (!vectorEntry.includes(original)) throw new Error("Expected local pack API signature was not found");
   vectorEntry = vectorEntry.replace(original, replacement);
@@ -252,7 +259,7 @@ const versionedProviderAsset = manifest.esmodules.find((file) => /boobastudio-pr
 if (!versionedEntryAsset || !versionedProviderAsset) throw new Error("Versioned runtime assets are missing from module.json");
 const versionedEntryPath = path.join(output, versionedEntryAsset.split("?", 1)[0]);
 const versionedProviderPath = path.join(output, versionedProviderAsset.split("?", 1)[0]);
-await cp(entryPath, versionedEntryPath);
+if (entryPath !== versionedEntryPath) await cp(entryPath, versionedEntryPath);
 await cp(path.join(output, "bundle", "modules", "boobastudio-provider.js"), versionedProviderPath);
 const versionedEntrySource = await readFile(versionedEntryPath, "utf8");
 const versionedProviderSource = await readFile(versionedProviderPath, "utf8");
@@ -260,7 +267,7 @@ if (!versionedProviderSource.includes("google/gemini-3.1-flash-tts-preview") || 
 if (!versionedEntrySource.includes("ImageGenerator:Ke") || !versionedEntrySource.includes("CibolaNames:(pd(),Fa)")) {
   throw new Error("Versioned entry bundle was not patched with the public compatibility API");
 }
-await rm(entryPath, { force: true });
+if (entryPath !== versionedEntryPath) await rm(entryPath, { force: true });
 await rm(path.join(output, "bundle", "modules", "boobastudio-provider-v254.js"), { force: true });
 await writeFile(path.join(output, "module.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Built package at ${output}`);

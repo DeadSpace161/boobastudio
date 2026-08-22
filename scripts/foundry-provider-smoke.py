@@ -114,6 +114,14 @@ async def main():
                     await game.settings.set('boobastudio', 'elevenlabsApiKey', 'mock-eleven-key');
                     let elevenTts;
                     await globalThis.__boobastudioLocalGenerateTTS('live ElevenLabs TTS probe', JSON.stringify({voice_id: 'voice-1'}), 'eleven_turbo_v2_5', result => { elevenTts = result; });
+                    await game.settings.set('boobastudio', 'ttsProvider', 'openrouter');
+                    await game.settings.set('boobastudio', 'ttsBaseUrl', base);
+                    await game.settings.set('boobastudio', 'ttsModel', 'google/gemini-3.1-flash-tts-preview');
+                    await game.settings.set('boobastudio', 'ttsVoice', 'Enceladus');
+                    await game.settings.set('boobastudio', 'ttsFormat', 'wav');
+                    let openrouterTts;
+                    await globalThis.__boobastudioLocalGenerateTTS('live OpenRouter Gemini TTS probe', JSON.stringify({model: 'google/gemini-3.1-flash-tts-preview', voice: 'Enceladus', response_format: 'wav', speed: '1.25'}), 'google/gemini-3.1-flash-tts-preview', result => { openrouterTts = result; });
+                    const openrouterVoices = await globalThis.__boobastudioLocalVoices();
                     await game.settings.set('boobastudio', 'ttsProvider', 'openai');
                     await game.settings.set('boobastudio', 'musicBaseUrl', `${base}/replicate/v1`);
                     await game.settings.set('boobastudio', 'musicModel', 'owner/mock-music');
@@ -615,7 +623,7 @@ async def main():
                         text,
                         query,
                         nativeProviders,
-                        tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}},
+                        tts: {openai: {status: openaiTts?.status || null, hasAudio: String(openaiTts?.result || '').startsWith('data:audio/')}, elevenlabs: {status: elevenTts?.status || null, hasAudio: String(elevenTts?.result || '').startsWith('data:audio/')}, openrouterGemini: {status: openrouterTts?.status || null, hasAudio: String(openrouterTts?.result || '').startsWith('data:audio/'), voice: openrouterVoices?.voices?.[0]?.voice_id || null}},
                         music,
                         imageProviders,
                         advancedImage,
