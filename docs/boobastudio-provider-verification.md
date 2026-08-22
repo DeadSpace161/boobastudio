@@ -1,6 +1,15 @@
 # BoobaStudio provider checkpoint verification
 
-The current locally packaged release is **2.2.132**. The public test world is being updated and live-verified against 2.2.132.
+## Verification status
+
+- **Adapter tested:** provider transformations, response normalization, migration, manifest, syntax, and package checks pass.
+- **UI tested:** deterministic Foundry harness covers the existing document, image, thread, pack, vector, token, wall, name, and audio workflows; the OpenRouter Gemini TTS probe now submits the configured model, Enceladus voice, WAV format, and speed.
+- **Live tested:** the public Foundry server is reachable on v14 Build 363, but this runner has no authenticated browser session or stored Foundry credentials, so installation/update and live UI confirmation are not claimed here.
+
+The narration contract is: provider **OpenRouter**, base URL `https://openrouter.ai/api/v1`, model `google/gemini-3.1-flash-tts-preview`, voice `Enceladus`, and `POST /audio/speech`. The provider-specific voice selector exposes Enceladus only for OpenRouter and preserves the existing OpenAI/ElevenLabs choices for their providers.
+
+
+The current locally packaged and published release is **2.2.134**. Local deterministic gates pass; remote Foundry UI verification remains credential-gated.
 
 Replicate caveat: the public `api.replicate.com` endpoint does not provide the browser CORS headers needed for direct Foundry requests. Provider-level tests use an intercepted compatible endpoint; real browser use requires a CORS-enabled compatible proxy endpoint or another browser-accessible image provider.
 
