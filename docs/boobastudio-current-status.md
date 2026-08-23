@@ -1,7 +1,7 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.139**. Adapter and deterministic package gates are complete; live Foundry installation verification remains pending because this shell has no credential environment variables.
-- Release 2.2.139 adds an explicit Replicate TTS provider, exposes the configured Replicate `owner/model` in Narration's Variant selector, preserves selected voice/text/speed/format through configurable input placeholders, polls Replicate audio predictions, and normalizes returned audio into the existing narration/player path.
+This status reflects the locally built package prepared as version **2.2.140**. Adapter and deterministic package gates are complete; live Foundry installation verification remains pending because this shell has no credential environment variables.
+- Release 2.2.140 completes Replicate TTS wiring by exposing the dedicated Replicate TTS model, the existing configured Replicate image model when applicable, and generic TTS overrides in Narration's Variant selector. It preserves selected voice/text/speed/format through configurable input placeholders, polls Replicate audio predictions, and normalizes returned audio into the existing narration/player path.
 - Release 2.2.132 fixes the legacy Cibola registration that kept the shared Provider API key hidden from Foundry's module settings.
 - Release 2.2.128 registers the shared client-scoped Provider API key field in Foundry's visible module settings.
 - Release 2.2.127 adds OpenRouter's browser-CORS-compatible multi-model Image API to the existing provider layer.

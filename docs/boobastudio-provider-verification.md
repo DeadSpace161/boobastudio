@@ -93,7 +93,7 @@ The existing TTS and narration workflow now supports direct OpenAI, OpenRouter, 
 - **UI tested:** a real Foundry entry point opens the dialog, DOM controls are filled and submitted, and the visible result or actionable error is asserted.
 - **Live tested:** the same UI path runs against the public Foundry test world with a controlled provider or browser-intercepted request. A missing credential environment means this status must not be claimed.
 
-Release 2.2.139 is adapter-tested for Replicate TTS and package-tested for the manifest-selected runtime. The Foundry UI/live status is intentionally left separate until the updated package is installed in the test world.
+Release 2.2.140 is adapter-tested for Replicate TTS and package-tested for the manifest-selected runtime. The Foundry UI/live status is intentionally left separate until the updated package is installed in the test world.
 
 OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied through the existing custom-headers JSON setting. Local endpoints must be reachable from the browser running Foundry and must allow the Foundry origin through CORS.
 

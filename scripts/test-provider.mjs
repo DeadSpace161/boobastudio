@@ -205,14 +205,15 @@ assert.equal(requests.at(-1).input, "https://openrouter.ai/api/v1/audio/speech")
 assert.deepEqual(JSON.parse(requests.at(-1).init.body), { model: "google/gemini-3.1-flash-tts-preview", voice: "Enceladus", input: "Read this with Gemini", response_format: "wav", speed: 1.25 });
 
 values.set("boobastudio.ttsProvider", "replicate");
-values.set("boobastudio.ttsModel", "owner/replicate-tts");
+values.set("boobastudio.ttsModel", "tts-1");
+values.set("boobastudio.ttsReplicateModel", "owner/replicate-tts");
 values.set("boobastudio.ttsVoice", "explorer");
 values.set("boobastudio.ttsFormat", "mp3");
 values.set("boobastudio.replicateApiToken", "replicate-tts-token");
 values.set("boobastudio.replicateBaseUrl", "https://api.replicate.com/v1");
 values.set("boobastudio.ttsReplicateInput", JSON.stringify({ text: "{{text}}", speaker: "{{voice}}", speed: "{{speed}}", format: "{{response_format}}" }));
 assert.deepEqual((await globalThis.__boobastudioLocalVoices(false)).voices.map((voice) => voice.voice_id), ["explorer"]);
-const replicateTTS = await fetch("https://app.cibola.world/api/v1/tts", { method: "POST", body: JSON.stringify({ prompt: JSON.stringify({ speechcontent: "Read this with Replicate", model: "owner/replicate-tts", voice: "explorer", speed: "1.4", response_format: "mp3" }) }) });
+const replicateTTS = await fetch("https://app.cibola.world/api/v1/tts", { method: "POST", body: JSON.stringify({ prompt: JSON.stringify({ speechcontent: "Read this with Replicate", voice: "explorer", speed: "1.4", response_format: "mp3" }) }) });
 const replicateTTSBody = await replicateTTS.json();
 assert.equal(replicateTTSBody.success, true);
 assert.equal(replicateTTSBody.result, "data:audio/mpeg;base64,BwgJ");
