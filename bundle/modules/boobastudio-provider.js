@@ -980,6 +980,11 @@ function ensureTtsFormatSetting() {
 }
 
 ensureTtsFormatSetting();
+const lateTtsFormatRegistration = setInterval(() => {
+  if (!globalThis.game?.ready) return;
+  ensureTtsFormatSetting();
+  clearInterval(lateTtsFormatRegistration);
+}, 50);
 
 Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.enabled, { name: "BoobaStudio: Enable OpenAI-compatible provider", hint: "Routes the existing client-only text and image workflows to your configured OpenAI-compatible endpoint.", scope: "client", config: true, type: Boolean, default: false });
