@@ -85,7 +85,15 @@ For images, the adapter also supports ComfyUI with a client-configured base URL 
 
 Stability AI image generation is also available through the existing image provider selector. Configure the Stability API key, base URL, and model path (`core` by default); binary or JSON image responses are normalized to the existing `{data:[{b64_json}]}` shape.
 
-The existing TTS and narration workflow now supports direct OpenAI TTS and ElevenLabs requests. BoobaStudio intercepts the original Cibola `/tts` operation, sends the configured provider request, and returns a client-local `data:audio/mpeg` result so the existing history, Foundry upload, playlist, and narration UI remain unchanged.
+The existing TTS and narration workflow now supports direct OpenAI, OpenRouter, Replicate, and ElevenLabs requests. BoobaStudio intercepts the original Cibola `/tts` operation, sends the configured provider request, and returns a client-local audio data URL so the existing history, Foundry upload, playlist, and narration UI remain unchanged. Replicate uses the configured `ttsModel` in `owner/model` form, optional `ttsReplicateInput` JSON with `{{text}}`, `{{voice}}`, `{{speed}}`, `{{response_format}}`, and `{{model}}` placeholders, prediction polling, and browser-side audio download. Replicate model schemas are not uniform; the input JSON is therefore intentionally configurable.
+
+## Verification status vocabulary
+
+- **Adapter tested:** deterministic provider tests intercept the request, assert the exact payload, and normalize the response without paid provider calls.
+- **UI tested:** a real Foundry entry point opens the dialog, DOM controls are filled and submitted, and the visible result or actionable error is asserted.
+- **Live tested:** the same UI path runs against the public Foundry test world with a controlled provider or browser-intercepted request. A missing credential environment means this status must not be claimed.
+
+Release 2.2.139 is adapter-tested for Replicate TTS and package-tested for the manifest-selected runtime. The Foundry UI/live status is intentionally left separate until the updated package is installed in the test world.
 
 OpenRouter-specific headers such as `HTTP-Referer` and `X-Title` can be supplied through the existing custom-headers JSON setting. Local endpoints must be reachable from the browser running Foundry and must allow the Foundry origin through CORS.
 

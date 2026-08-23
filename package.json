@@ -6,6 +6,7 @@
     "check": "node scripts/check-package.mjs",
     "build": "node scripts/build.mjs",
     "test:provider": "node scripts/test-provider.mjs",
-    "test:migration": "node scripts/test-migration.mjs"
+    "test:migration": "node scripts/test-migration.mjs",
+    "delegate:qwen": "node scripts/qwen-delegate.mjs"
   }
 }

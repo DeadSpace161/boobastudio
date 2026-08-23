@@ -27,10 +27,12 @@ globalThis.fetch = async (input, init) => {
   if (String(input).endsWith("/generate/core")) return new Response(JSON.stringify({ image: "c3RhYmlsaXR5" }), { status: 200, headers: { "Content-Type": "application/json" } });
   if (String(input).endsWith("/audio/speech")) return new Response(new Uint8Array([1, 2, 3]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
   if (String(input).includes("/text-to-speech/voice-1")) return new Response(new Uint8Array([4, 5, 6]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
+  if (String(input) === "https://cdn.test/generated.mp3") return new Response(new Uint8Array([7, 8, 9]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
   if (String(input).includes("/models/") && String(input).endsWith("/predictions") || String(input).endsWith("/predictions/prediction-1")) {
-    if (init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
-    return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: ["https://cdn.test/generated.png"] }), { status: 200 });
+    if (init?.method === "POST") return new Response(JSON.stringify({ id: String(input).includes("/models/owner/replicate-tts/") ? "tts-prediction-1" : "prediction-1", status: "starting", urls: { get: String(input).includes("/models/owner/replicate-tts/") ? "https://api.replicate.com/v1/predictions/tts-prediction-1" : "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
+    return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: [String(input).includes("/models/owner/replicate-tts/") ? "https://cdn.test/generated.mp3" : "https://cdn.test/generated.png"] }), { status: 200 });
   }
+  if (String(input).endsWith("/predictions/tts-prediction-1")) return new Response(JSON.stringify({ id: "tts-prediction-1", status: "succeeded", output: ["https://cdn.test/generated.mp3"] }), { status: 200 });
   if (String(input).endsWith("/chat/completions")) {
     const requestBody = JSON.parse(init?.body || "{}");
     const messageContent = Array.isArray(requestBody.messages?.[0]?.content) ? requestBody.messages[0].content.map((part) => part?.text || "").join(" ") : requestBody.messages?.[0]?.content;
@@ -201,6 +203,23 @@ const openrouterTTSBody = await openrouterTTS.json();
 assert.equal(openrouterTTSBody.success, true);
 assert.equal(requests.at(-1).input, "https://openrouter.ai/api/v1/audio/speech");
 assert.deepEqual(JSON.parse(requests.at(-1).init.body), { model: "google/gemini-3.1-flash-tts-preview", voice: "Enceladus", input: "Read this with Gemini", response_format: "wav", speed: 1.25 });
+
+values.set("boobastudio.ttsProvider", "replicate");
+values.set("boobastudio.ttsModel", "owner/replicate-tts");
+values.set("boobastudio.ttsVoice", "explorer");
+values.set("boobastudio.ttsFormat", "mp3");
+values.set("boobastudio.replicateApiToken", "replicate-tts-token");
+values.set("boobastudio.replicateBaseUrl", "https://api.replicate.com/v1");
+values.set("boobastudio.ttsReplicateInput", JSON.stringify({ text: "{{text}}", speaker: "{{voice}}", speed: "{{speed}}", format: "{{response_format}}" }));
+assert.deepEqual((await globalThis.__boobastudioLocalVoices(false)).voices.map((voice) => voice.voice_id), ["explorer"]);
+const replicateTTS = await fetch("https://app.cibola.world/api/v1/tts", { method: "POST", body: JSON.stringify({ prompt: JSON.stringify({ speechcontent: "Read this with Replicate", model: "owner/replicate-tts", voice: "explorer", speed: "1.4", response_format: "mp3" }) }) });
+const replicateTTSBody = await replicateTTS.json();
+assert.equal(replicateTTSBody.success, true);
+assert.equal(replicateTTSBody.result, "data:audio/mpeg;base64,BwgJ");
+const replicateTTSStart = requests.at(-3);
+assert.equal(replicateTTSStart.input, "https://api.replicate.com/v1/models/owner/replicate-tts/predictions");
+assert.equal(replicateTTSStart.init.headers.Authorization, "Bearer replicate-tts-token");
+assert.deepEqual(JSON.parse(replicateTTSStart.init.body).input, { text: "Read this with Replicate", voice: "explorer", speed: "1.4", response_format: "mp3", speaker: "explorer", format: "mp3" });
 
 values.set("boobastudio.ttsProvider", "elevenlabs");
 values.set("boobastudio.localTtsVoices", JSON.stringify([{ voice_id: "local-voice", name: "Local Voice" }]));

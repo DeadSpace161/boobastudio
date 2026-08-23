@@ -1,6 +1,7 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.132**. The public test server is being updated and live-verified against 2.2.132.
+This status reflects the locally built package prepared as version **2.2.139**. Adapter and deterministic package gates are complete; live Foundry installation verification remains pending because this shell has no credential environment variables.
+- Release 2.2.139 adds an explicit Replicate TTS provider, exposes the configured Replicate `owner/model` in Narration's Variant selector, preserves selected voice/text/speed/format through configurable input placeholders, polls Replicate audio predictions, and normalizes returned audio into the existing narration/player path.
 - Release 2.2.132 fixes the legacy Cibola registration that kept the shared Provider API key hidden from Foundry's module settings.
 - Release 2.2.128 registers the shared client-scoped Provider API key field in Foundry's visible module settings.
 - Release 2.2.127 adds OpenRouter's browser-CORS-compatible multi-model Image API to the existing provider layer.
@@ -33,7 +34,7 @@ This status reflects the locally built package prepared as version **2.2.132**. 
 - Existing Scene Upscale payloads that carry the source image in the prompt now normalize that image into the provider input and preserve scale/factor controls for Replicate-compatible upscalers.
 - Replicate image workflows now support optional client-scoped input JSON with placeholders for prompt, image, mask, factor, scale, width, and height, allowing model-specific controls without modifying the module.
 - Existing image prompt-builder action now routes `{command, amount}` through the local text provider, validates the returned JSON array, and preserves the original prompt-tab population flow.
-- Existing narration/TTS generation now routes through the configured OpenAI or ElevenLabs adapter and preserves the existing audio preview, Foundry upload, and playlist flow.
+- Existing narration/TTS generation now routes through the configured OpenAI, OpenRouter, Replicate, or ElevenLabs adapter and preserves the existing audio preview, Foundry upload, and playlist flow.
 - Local TTS voice-catalog requests no longer contact Cibola; hosted voice search remains unchanged when local mode is disabled.
 - Local OpenAI TTS voice-catalog requests now return an offline catalog with search and pagination; ElevenLabs remains empty locally unless a compatible voice catalog is added without contacting a hosted service.
 - ElevenLabs users can now provide a client-scoped local voice catalog JSON array, preserving voice selection and search without contacting ElevenLabs voice-list endpoints.

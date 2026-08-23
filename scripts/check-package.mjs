@@ -80,9 +80,16 @@ for (const relativePath of new Set(jsFiles)) {
   });
 }
 
-const entryBundle = await readFile(path.join(root, "bundle/modules/boobastudio-entry-v250-317.js"), "utf8");
+const selectedEntry = manifest.esmodules.find((file) => /boobastudio-entry-v250-\d+[.]js$/.test(file.split("?", 1)[0]));
+const selectedProvider = manifest.esmodules.find((file) => /boobastudio-provider-v254-\d+[.]js$/.test(file.split("?", 1)[0]));
+if (!selectedEntry || !selectedProvider) fail("manifest does not select versioned BoobaStudio entry and provider bundles");
+const entryBundle = await readFile(path.join(root, selectedEntry.split("?", 1)[0]), "utf8");
+const providerBundle = await readFile(path.join(root, selectedProvider.split("?", 1)[0]), "utf8");
 for (const marker of ["FoundryV12Shims", "FoundryV13Shims", "FoundryV14Shims", "foundry.applications?.ux?.DragDrop", "foundry.applications.handlebars.renderTemplate", "foundry.applications.api.DialogV2"]) {
   if (!entryBundle.includes(marker)) fail(`compatibility marker missing from shipped entry bundle: ${marker}`);
+}
+for (const marker of ["ttsReplicateInput", "Replicate", "google/gemini-3.1-flash-tts-preview", "Enceladus"]) {
+  if (!providerBundle.includes(marker)) fail(`provider runtime marker missing from shipped provider bundle: ${marker}`);
 }
 
 if (process.exitCode) process.exit(process.exitCode);
