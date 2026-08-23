@@ -1038,6 +1038,9 @@ Hooks.once("ready", async () => {
     game.settings.register(NAMESPACE, S.comfyuiBaseUrl, { name: "BoobaStudio: ComfyUI base URL", hint: "For example http://127.0.0.1:8188. The Foundry browser must be able to reach this endpoint and CORS must permit the Foundry origin.", scope: "client", config: true, type: String, default: "http://127.0.0.1:8188" });
     game.settings.register(NAMESPACE, S.comfyuiWorkflow, { name: "BoobaStudio: ComfyUI workflow JSON", hint: "Paste an API-format workflow JSON. Use {{prompt}} in a text field where the image prompt should be inserted.", scope: "client", config: true, type: String, default: "{}" });
   }
+  if (!game.settings.settings?.has?.(`${NAMESPACE}.${S.ttsFormat}`)) {
+    game.settings.register(NAMESPACE, S.ttsFormat, { name: "BoobaStudio: TTS output format", scope: "client", config: true, type: String, default: "mp3", choices: { mp3: "MP3", wav: "WAV", opus: "Opus", aac: "AAC", flac: "FLAC", pcm: "PCM" } });
+  }
   if (isEnabled() && baseUrl()) {
     await game.settings.set(NAMESPACE, "clientOnlyMode", true);
   }

@@ -11,9 +11,24 @@ class MockHandler:
     requests = []
 
 
-async def join_game(page, base_url, password):
+async def join_game(page, base_url, password, admin_password=None):
     await page.goto(f"{base_url}/join", wait_until="domcontentloaded", timeout=30_000)
     await page.wait_for_timeout(2_000)
+    if not await page.locator('select[name="userid"]').count():
+        if not admin_password:
+            raise RuntimeError("The test world is not joinable")
+        await page.goto(f"{base_url}/auth", wait_until="domcontentloaded", timeout=30_000)
+        await page.wait_for_timeout(1_500)
+        await page.locator("#key").fill(admin_password)
+        await page.locator('button[name="action"]').dispatch_event("click")
+        await page.wait_for_timeout(2_500)
+        launch = page.locator('[data-action="worldLaunch"]')
+        if not await launch.count():
+            raise RuntimeError("Foundry administrator authentication did not reach the setup world list")
+        await launch.first.dispatch_event("click")
+        await page.wait_for_timeout(10_000)
+        await page.goto(f"{base_url}/join", wait_until="domcontentloaded", timeout=30_000)
+        await page.wait_for_timeout(2_000)
     if not await page.locator('select[name="userid"]').count():
         raise RuntimeError("The test world is not joinable")
     await page.locator('select[name="userid"]').select_option(label="Gamemaster")
@@ -27,6 +42,7 @@ async def join_game(page, base_url, password):
 async def main():
     base_url = os.getenv("BOOBA_FOUNDRY_URL", "https://vtt.hiddenbunker.org").rstrip("/")
     password = os.getenv("BOOBA_FOUNDRY_GM_PASSWORD") or os.getenv("BOOBA_FOUNDRY_ADMIN_PASSWORD")
+    admin_password = os.getenv("BOOBA_FOUNDRY_ADMIN_PASSWORD")
     if not password:
         raise SystemExit("Set BOOBA_FOUNDRY_GM_PASSWORD or BOOBA_FOUNDRY_ADMIN_PASSWORD")
 
@@ -86,7 +102,7 @@ async def main():
 
         await page.route("https://mock.boobastudio.test/v1/**", mock_route)
         await page.route("https://*.cibola.world/**", block_hosted_route)
-        await join_game(page, base_url, password)
+        await join_game(page, base_url, password, admin_password)
         await page.evaluate("""() => {
             const onboarding = document.querySelector('.boobastudio-onboarding');
             const close = onboarding?.querySelector('[data-action="close"], [data-action="exit"], [data-action="getStarted"]');
@@ -118,7 +134,7 @@ async def main():
                     await game.settings.set('boobastudio', 'ttsBaseUrl', base);
                     await game.settings.set('boobastudio', 'ttsModel', 'google/gemini-3.1-flash-tts-preview');
                     await game.settings.set('boobastudio', 'ttsVoice', 'Enceladus');
-                    await game.settings.set('boobastudio', 'ttsFormat', 'wav');
+                    if (game.settings.settings.has('boobastudio.ttsFormat')) await game.settings.set('boobastudio', 'ttsFormat', 'wav');
                     let openrouterTts;
                     await globalThis.__boobastudioLocalGenerateTTS('live OpenRouter Gemini TTS probe', JSON.stringify({model: 'google/gemini-3.1-flash-tts-preview', voice: 'Enceladus', response_format: 'wav', speed: '1.25'}), 'google/gemini-3.1-flash-tts-preview', result => { openrouterTts = result; });
                     const openrouterVoices = await globalThis.__boobastudioLocalVoices();
