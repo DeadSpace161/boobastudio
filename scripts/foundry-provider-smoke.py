@@ -103,6 +103,7 @@ async def main():
         await page.route("https://mock.boobastudio.test/v1/**", mock_route)
         await page.route("https://*.cibola.world/**", block_hosted_route)
         await join_game(page, base_url, password, admin_password)
+        await page.wait_for_timeout(500)
         await page.evaluate("""() => {
             const onboarding = document.querySelector('.boobastudio-onboarding');
             const close = onboarding?.querySelector('[data-action="close"], [data-action="exit"], [data-action="getStarted"]');
