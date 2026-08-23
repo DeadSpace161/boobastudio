@@ -974,6 +974,13 @@ function install() {
   globalThis.__boobastudioOpenAICompatibleInstalled = true;
 }
 
+function ensureTtsFormatSetting() {
+  if (globalThis.game?.settings?.settings?.has?.(`${NAMESPACE}.${S.ttsFormat}`)) return;
+  if (globalThis.game?.settings?.register) game.settings.register(NAMESPACE, S.ttsFormat, { name: "BoobaStudio: TTS output format", scope: "client", config: true, type: String, default: "mp3", choices: { mp3: "MP3", wav: "WAV", opus: "Opus", aac: "AAC", flac: "FLAC", pcm: "PCM" } });
+}
+
+ensureTtsFormatSetting();
+
 Hooks.once("init", () => {
   game.settings.register(NAMESPACE, S.enabled, { name: "BoobaStudio: Enable OpenAI-compatible provider", hint: "Routes the existing client-only text and image workflows to your configured OpenAI-compatible endpoint.", scope: "client", config: true, type: Boolean, default: false });
   game.settings.register(NAMESPACE, S.protocol, { name: "BoobaStudio: Text provider protocol", hint: "Use OpenAI-compatible for OpenAI, OpenRouter, Ollama, and LM Studio; select Anthropic or Gemini for their native APIs.", scope: "client", config: true, type: String, default: "openai", choices: { openai: "OpenAI-compatible", anthropic: "Anthropic", gemini: "Google Gemini" } });
