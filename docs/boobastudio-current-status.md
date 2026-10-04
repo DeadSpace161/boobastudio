@@ -1,6 +1,7 @@
 # BoobaStudio current implementation status
 
-This status reflects the locally built package prepared as version **2.2.140**. Adapter and deterministic package gates are complete; live Foundry installation verification remains pending because this shell has no credential environment variables.
+This status reflects the locally built package prepared as version **2.2.141**. Adapter and deterministic package gates are complete; live Foundry installation verification remains pending because this shell has no credential environment variables.
+- Release 2.2.141 makes Replicate usable from a normal browser through a same-origin proxy (`infra/cloudflare/replicate-proxy.js`, routed at `vtt.hiddenbunker.org/replicate/*`). Prediction status polling now uses the configured Replicate base URL instead of Replicate's absolute `urls.get`, and output files (images, narration audio, music) are fetched through the proxy's `/_file` route when the base URL is same-origin, because Replicate's output hosts send no CORS headers.
 - Release 2.2.140 completes Replicate TTS wiring by exposing the dedicated Replicate TTS model, the existing configured Replicate image model when applicable, and generic TTS overrides in Narration's Variant selector. It preserves selected voice/text/speed/format through configurable input placeholders, polls Replicate audio predictions, and normalizes returned audio into the existing narration/player path.
 - Release 2.2.132 fixes the legacy Cibola registration that kept the shared Provider API key hidden from Foundry's module settings.
 - Release 2.2.128 registers the shared client-scoped Provider API key field in Foundry's visible module settings.
