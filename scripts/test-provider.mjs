@@ -387,6 +387,13 @@ await globalThis.__boobastudioLocalGalleryPage(1, (page) => { localSongGallery =
 assert.equal(localSongGallery.data.length, 1);
 assert.equal(localSongGallery.data[0].attributes.type, "song");
 assert.equal(localSongGallery.data[0].attributes.audio_url, "https://cdn.test/generated.png");
+// Once the song window uploads the file into Foundry storage, the gallery must
+// point at that copy instead of the expiring provider link.
+assert.equal(globalThis.__boobastudioLocalSongStored(song.id, "boobastudio/Song/tavern-song.ogg"), true);
+assert.equal(globalThis.__boobastudioLocalSongStored("unknown-song", "boobastudio/Song/other.ogg"), false);
+await globalThis.__boobastudioLocalGalleryPage(1, (page) => { localSongGallery = page; }, { filter: "song" });
+assert.equal(localSongGallery.data[0].attributes.audio_url, "boobastudio/Song/tavern-song.ogg");
+assert.equal(JSON.parse(localSongGallery.data[0].attributes.result)[0].audio_url, "boobastudio/Song/tavern-song.ogg");
 assert.equal(localSongGallery.data[0].attributes.publicstate, "self_only");
 assert.equal(localSongGallery.data[0].attributes.llmjobid, localSongGallery.data[0].id);
 

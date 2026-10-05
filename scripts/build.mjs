@@ -30,7 +30,12 @@ const outputManifest = JSON.parse(await readFile(path.join(output, "module.json"
 const selectedEntryAsset = outputManifest.esmodules.find((file) => /boobastudio-entry-v250-[0-9]+[.]js$/.test(file.split("?", 1)[0]));
 if (!selectedEntryAsset) throw new Error("Manifest-selected BoobaStudio entry asset was not found");
 const entryPath = path.join(output, selectedEntryAsset.split("?", 1)[0]);
-const entrySource = await readFile(entryPath, "utf8");
+// Always patch the pristine upstream bundle. The versioned entry named in
+// module.json is a build OUTPUT: patching it again would fail because the
+// original signatures have already been replaced. Never copy it back into
+// bundle/modules/ as a build input.
+const pristineEntryPath = path.join(output, "bundle", "modules", "boobastudio-entry-v250.js");
+const entrySource = await readFile(pristineEntryPath, "utf8");
 const privateApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us}";
 const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke,CibolaNames:(pd(),Fa)}";
 if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio entry API signature was not found");
@@ -151,7 +156,10 @@ const localSongCopy = 'if(a[0].dataset.type=="music"){await Et(a.find("img").att
 const hostedSongPlayback = 'i.find("audio source").attr("src",`https://cdn1.suno.ai/${a.dataset.origin}.mp3`),s.load()';
 const localSongPlayback = 'i.find("audio source").attr("src",a.dataset.audioUrl||`https://cdn1.suno.ai/${a.dataset.origin}.mp3`),s.load()';
 if (!localImageConfigEntry.includes(hostedSongCopy) || !localImageConfigEntry.includes(hostedSongPlayback)) throw new Error("Expected gallery song URL handlers were not found");
-const songPatchedEntry = localImageConfigEntry.replace(hostedSongCopy, localSongCopy).replace(hostedSongPlayback, localSongPlayback);
+const hostedSongUploaded = 'l.uploadedPath=m.path,u.attr("data-url",m.path)';
+const localSongUploaded = 'l.uploadedPath=m.path,globalThis.__boobastudioLocalSongStored?.(l.audio.id,m.path),u.attr("data-url",m.path)';
+if (!localImageConfigEntry.includes(hostedSongUploaded)) throw new Error("Expected song upload completion signature was not found");
+const songPatchedEntry = localImageConfigEntry.replace(hostedSongCopy, localSongCopy).replace(hostedSongPlayback, localSongPlayback).replace(hostedSongUploaded, localSongUploaded);
 const imageModelListInsertion = 'u&&!l[m]&&(l[`${m}::client`]=g)}return l}';
 const localImageModelListInsertion = 'u&&!l[m]&&(l[`${m}::client`]=g)}if(typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured()){let m=String(game.settings.get("boobastudio",game.settings.get("boobastudio","imageProvider")==="replicate"?"replicateModel":"imageModel")||"").trim();m&&(l[`${m}::client`]??=m)}return l}';
 const sceneModelListInsertion = 'l?(r[`${h}::client`]=m,delete r[h]):void 0}return r}';
