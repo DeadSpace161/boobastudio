@@ -29,7 +29,7 @@
       },
       "validateHint": "Comprueba si tu clave API es válida y consulta el estado de tu cuenta.",
       "configureAccess": "Configurar acceso a la API",
-      "configureAccessDesc": "Introduce tu clave API de Cibola o de OpenAI para usar las funciones de IA.",
+      "configureAccessDesc": "Configura un proveedor local o introduce una clave API compatible para usar las funciones de IA.",
       "getKeyPatreon": "Obtener clave API (Patreon)",
       "getKeyApp": "Obtener clave API (aplicación web)"
     },
@@ -294,7 +294,7 @@
       "placeholdercharacter": "Aquí hay algunos puntos a considerar:\nApariencia: color de piel, color de cabello, peinado, color de ojos, rasgos faciales, complexión\nRopa: estilo (casual, formal, futurista), colores, accesorios (sombrero, gafas, joyas)\nExpresión: emociones (sonriente, serio, pensativo), postura, dirección de la mirada\nEjemplo: \"Una joven con cabello largo y rubio, ojos azul-verde y una sonrisa amigable. Ella lleva una chaqueta de cuero roja.\"",
       "placeholderobject": "Aquí hay algunos puntos a considerar:\nTipo de objeto: ¿Qué es? (por ejemplo, espada, libro, reloj, joya)\nMaterial: ¿De qué material está hecho? (por ejemplo, madera, metal, vidrio, cuero)\nColor y patrón: ¿Qué colores y patrones tiene el objeto?\nTamaño y forma: ¿Qué tan grande es el objeto y qué forma tiene?\nDecoraciones y detalles: ¿Hay decoraciones especiales, grabados o adornos?\nUso: ¿Para qué se utiliza el objeto? (por ejemplo, decoración, herramienta, arma)\nEjemplo: \"Una navaja antigua de plata con un patrón de flores grabado delicadamente. Es pequeña y compacta, con una hoja brillante y un mango de ébano liso. La navaja es funcional y puede usarse como herramienta.\"",
       "placeholdersymbol": "Aquí hay algunos puntos a considerar:\nTipo de símbolo: ¿Qué representa el símbolo? (por ejemplo, un corazón, una estrella, un árbol)\nForma: ¿Qué forma básica tiene el símbolo? (por ejemplo, redonda, cuadrada, abstracta)\nColores: ¿Qué colores se deben utilizar en el símbolo?\nDecoraciones y detalles: ¿Hay detalles o patrones especiales que debe tener el símbolo?\nSignificado: ¿Qué significado simbólico o mensaje debe transmitir el símbolo?\nEjemplo: \"Un símbolo de corazón minimalista dorado con esquinas ligeramente redondeadas. El corazón es de un solo color y simple, sin decoraciones, para simbolizar amor y sencillez.\"",
-      "descriptionImage": "Genera una imagen de fondo con Cibola 8 para esta escena.",
+      "descriptionImage": "Genera una imagen de fondo con BoobaStudio para esta escena.",
       "autodownscaler": "¿Deseas reducir automáticamente la imagen (disminuir la resolución) y continuar? Puedes volver a aumentar la imagen más tarde."
     },
     "AiTranslator": {
@@ -379,7 +379,7 @@
     "vector": {
       "uploadToStore": "Cargar archivo en el Vector Store",
       "notForThisModel": "Este modelo no soporta Vector Stores.",
-      "uploadFile": "<p>Agrega un archivo de texto o PDF a tu Vector Store para usarlo en conversaciones y acceder a él en el marco de una búsqueda semántica.</p><h3>¿Qué significa eso?</h3><p>La ventaja esencial de una Búsqueda Semántica es que el sistema entiende tu pregunta en contexto y puede responderla basándose en la información existente. Así puedes encontrar contenido específico sin conocer los términos exactos, hacer que te expliquen de manera simple asuntos complejos y discutir incluso estrategias complejas, mecánicas y comportamientos con la IA.</p><h3>¿Cómo funciona?</h3><p>El Vector Store es un almacenamiento en la nube personal para tus documentos que se crea por separado para cada uno de tus mundos de juego y está directamente conectado a la integración de Journal de Cibola 8. Al agregar un documento, se eliminan automáticamente todas las imágenes y los contenidos están disponibles como referencia para tus hilos.</p><p>Esta función requiere, dependiendo del tamaño del archivo y la cantidad de vectores generados cada mes, una pequeña cantidad de Mana. Asegúrate de subir solo contenidos para los que poseas los derechos necesarios y ten en cuenta las normas de privacidad de ChatGPT.</p>",
+      "uploadFile": "<p>Agrega un archivo de texto o PDF a tu biblioteca local para usarlo en conversaciones.</p><h3>¿Cómo funciona?</h3><p>Los archivos se guardan en este navegador para el mundo de juego actual. El texto extraído puede clasificarse y añadirse a los prompts de proveedores locales sin un servicio vectorial alojado.</p><p>Asegúrate de subir solo contenido sobre el que tengas los derechos necesarios.</p>",
       "selectFile": "Selecciona un archivo de texto (por ejemplo, txt o pdf)",
       "uploadTitle": "Almacén vectorial",
       "invalidFileType": "Tipo de archivo no válido. Por favor, sube un archivo de texto.",
@@ -555,7 +555,7 @@
     },
     "radialMenu": {
       "back": "Regresar",
-      "description": "Ajusta el menú radial de Cibola. Arrastra macros o documentos al menú para poder usarlos con acceso rápido.",
+      "description": "Ajusta el menú radial de BoobaStudio. Arrastra macros o documentos al menú para acceder a ellos rápidamente.",
       "placeholderContent": "Nombre",
       "test": "Prueba",
       "editImage": "Editar imagen",
@@ -604,7 +604,7 @@
       "SongPathHint": "Los archivos de música y audio generados se guardarán en esta carpeta.",
       "SpeechPath": "Ruta estándar para el idioma",
       "SpeechPathHint": "Los archivos de voz generados se guardarán en esta carpeta.",
-      "chatButton": "Botón de Chat de Cibola",
+      "chatButton": "Botón de chat de BoobaStudio",
       "chatButtonHint": "Muestra el botón de chat en la barra lateral de la ventana de chat. Nota: El botón también se puede arrastrar y soltar en la barra de macros.",
       "apikey": "Clave API",
       "chatModel": "Modelo de chat",
@@ -616,32 +616,32 @@
       "browser": "Galería",
       "browserHint": "Muestra todo tu contenido generado. Este se guarda en el directorio 'storage' de este módulo.",
       "welcome": "Bienvenida e introducción",
-      "welcomeHint": "Abre la pantalla de bienvenida con un resumen de las funciones de Cibola 8 y opciones rápidas de configuración."
+      "welcomeHint": "Abre la pantalla de bienvenida con un resumen de las funciones de BoobaStudio y opciones de configuración del proveedor."
     },
     "clientOnly": {
       "settings": {
         "enabled": "Modo OpenAI solo-cliente",
         "enabledHint": "Activa el modo solo-cliente. Requiere confirmación por sesión y una clave de OpenAI guardada localmente.",
         "openaiKey": "Clave API de OpenAI (local)",
-        "openaiKeyHint": "Se guarda localmente en este cliente de Foundry. Esta clave nunca se envía a Cibola.",
+        "openaiKeyHint": "Tu clave API del proveedor se guarda localmente y solo se envía al endpoint que configures.",
         "openaiKeyPlaceholder": "Introduce aquí tu clave API de OpenAI",
-        "limitedWarning": "El modo solo-cliente solo admite un subconjunto de funciones de Cibola: chat de texto genérico vía OpenAI (GPT-5+) y generación de imágenes con gpt-image-1.5 / gpt-image-2 (prompt de texto). Las rutas de chat/hilos avanzados, la galería, TTS, traducción y otras funciones del servidor requieren clave API/suscripción de Cibola.",
+        "limitedWarning": "El modo solo-cliente usa directamente el proveedor configurado. La galería, los paquetes y los servicios vectoriales alojados no están disponibles a menos que configures reemplazos compatibles.",
         "getOpenAIKey": "Obtén tu clave API en platform.openai.com"
       },
       "title": "Modo solo-cliente",
-      "warning": "El modo solo-cliente usa tu clave API de OpenAI guardada localmente y envía solicitudes directamente a OpenAI. Esta clave nunca se envía a Cibola. ¿Activar para esta sesión?",
+      "warning": "El modo solo-cliente envía las solicitudes directamente al endpoint del proveedor que configuraste. ¿Activar para esta sesión?",
       "enableForSession": "Activar para esta sesión",
       "cancel": "Cancelar",
       "noOpenAIKey": "Falta la clave API de OpenAI.",
       "modelNotAllowed": "El modo solo-cliente de OpenAI solo admite ChatGPT 5 o superior.",
       "imageRequiresTextPrompt": "La generación de imágenes en modo solo-cliente requiere un prompt de texto.",
-      "description": "Usa tu propia clave API de OpenAI en lugar de créditos de Cibola para las funciones solo-cliente compatibles. Tu clave permanece local."
+      "description": "Usa un proveedor configurado por ti en lugar de créditos alojados para el chat y la generación de imágenes compatibles. Tu clave permanece local."
     },
     "changelog": "Si quieres saber más sobre nuevas funciones, también echa un vistazo al <a href=\"https://github.com/BoobaStudio/boobastudio/releases\" target=\"_blank\">Changelog</a>.",
     "QueueViewer": {
       "title": "Cola",
       "elementStatus": "En cola/Éxito/Error/Esperado",
-      "description": "Aquí ves todos los elementos en curso y completados en la cola permanente de Cibola. Puedes ver su estado aquí. Los elementos también se procesarán cuando Foundry no esté abierto. Una vez que inicies el mundo, todos los elementos se reanudarán. Normalmente, no debería durar ningún elemento más de 24 horas.",
+      "description": "Supervisa las operaciones de BoobaStudio en curso y completadas. Las solicitudes a proveedores locales se ejecutan en el cliente de Foundry actual.",
       "start": "Inicio",
       "end": "Fin",
       "success": "Exitoso",
@@ -698,12 +698,12 @@
       "songGenerationFailed": "La generación de canciones ha fallado",
       "randomContentGenerationFailed": "No se pudo generar una descripción",
       "enhanceFailed": "La mejora del prompt ha fallado",
-      "noApiKey": "Falta la clave API de Cibola 8. Por favor, configúralo en la configuración.",
+      "noApiKey": "No hay ninguna clave API de proveedor configurada. Configura un proveedor en los ajustes.",
       "noConnection": "No se puede acceder. ¿Cuenta ya configurada?",
       "createAccount": "Crear cuenta",
       "noOriginApp": "El elemento original ya no está disponible. No se puede guardar la imagen.",
-      "ApiConnection": "La conexión al servicio Cibola 8 ha fallado. Por favor, verifica tu configuración.",
-      "ApiConnectionSuccess": "Conexión al servicio Cibola 8 exitosa.",
+      "ApiConnection": "La conexión con el proveedor configurado ha fallado. Por favor, verifica tu configuración.",
+      "ApiConnectionSuccess": "Conexión con el proveedor configurado exitosa.",
       "invalidJson": "Estructura JSON no válida, guardado fallido.",
       "nothingToTranslate": "Todas las claves JSON ya han sido traducidas.",
       "imageTooLarge": "La resolución de la imagen ya es demasiado alta para un procesamiento posterior.",
@@ -789,8 +789,8 @@
       "costsTime": "Este proceso requiere {cost} tiempo.",
       "translate": "Traducción",
       "generateImage": "Generación de imagen",
-      "randomContent": "Iniciar Cibola 8",
-      "generator": "Cibola 8",
+      "randomContent": "Iniciar BoobaStudio",
+      "generator": "BoobaStudio",
       "togglePublic": "Compartir con otros",
       "featured": "Recomendado",
       "pickFromGallery": "Seleccionar de la galería",
@@ -865,8 +865,8 @@
       "seed": "Seed",
       "seedhint": "Opcional: reutiliza un número para reproducir un resultado",
       "playlistSaved": "La canción {name} ha sido añadida a la lista de reproducción {playlist}.",
-        "selectPlaylist": "Seleccionar una lista de reproducción",
-        "savePlaylistConfirm": "Agregar a la lista de reproducción",
+      "selectPlaylist": "Seleccionar una lista de reproducción",
+      "savePlaylistConfirm": "Agregar a la lista de reproducción",
       "ttsLongHint": "Consejo: Para narraciones largas, divide en varios textos cortos para editar mejor y reducir costos al rehacer."
     },
     "chatbubble": "Burbuja de chat",
@@ -1029,14 +1029,14 @@
     },
     "drawingStyleHint": "El estilo de dibujo determina la forma en que se dibuja la imagen.",
     "health": "Tu Mana restante para la generación.",
-      "estimate": {
-        "title": "Confirmar generación",
-        "cost": "Costo estimado",
-        "percentOfRemaining": "Aproximadamente {percent}% de tu Mana restante",
-        "remaining": "Mana restante",
-        "confirm": "Generar",
-        "cancel": "Cancelar"
-      },
+    "estimate": {
+      "title": "Confirmar generación",
+      "cost": "Costo estimado",
+      "percentOfRemaining": "Aproximadamente {percent}% de tu Mana restante",
+      "remaining": "Mana restante",
+      "confirm": "Generar",
+      "cancel": "Cancelar"
+    },
     "loading": "En proceso... Por favor espera...",
     "NoUploadPermission": "No tienes permiso para subir imágenes o editar el elemento. Por favor contacta al director del juego para obtener permiso.",
     "showArtwork": "Mostrar gráficos",
@@ -1076,8 +1076,8 @@
       "mystery": "Crimen"
     },
     "onboarding": {
-      "title": "Bienvenido a Cibola 8",
-      "intro": "Cibola 8 añade herramientas de IA a Foundry. Aquí tienes una vista rápida de lo que puedes hacer.",
+      "title": "Bienvenido a BoobaStudio",
+      "intro": "BoobaStudio añade herramientas de IA a Foundry. Aquí tienes una vista rápida de lo que puedes hacer.",
       "featuresTitle": "Funciones",
       "features": {
         "text": "Generación de texto (PNJs, descripciones, handouts)",
@@ -1092,8 +1092,8 @@
       },
       "modesTitle": "Modos de conexión",
       "modes": {
-        "demonaiTitle": "Backend DemonAI / Cibola:",
-        "demonaiBody": "Inicia sesión con un token de Cibola para usar funciones del servidor.",
+        "demonaiTitle": "Proveedor configurado:",
+        "demonaiBody": "Usa un endpoint de proveedor y credenciales bajo tu control.",
         "clientOnlyTitle": "Modo client-only:",
         "clientOnlyBody": "Usa una clave de OpenAI almacenada localmente y envía peticiones directamente desde tu cliente de Foundry."
       },
@@ -1105,29 +1105,29 @@
       "welcome": {
         "findCibola": {
           "title": "Busca este icono",
-          "desc": "Donde veas el icono de Cibola, las funciones de IA están a un solo clic. Aparece en muchos lugares de Foundry VTT para darte acceso rápido a las herramientas de generación.",
+          "desc": "Donde veas el icono de BoobaStudio, las funciones de IA están a un solo clic. Aparece en muchos lugares de Foundry VTT para darte acceso rápido a las herramientas de generación.",
           "contextMenu": "La barra de encabezado de objetos, diarios, actores y escenas incluye opciones de IA",
-          "editorToolbar": "Las barras de herramientas del editor de texto incluyen herramientas de escritura IA de Cibola",
+          "editorToolbar": "Las barras de herramientas del editor de texto incluyen herramientas de escritura IA de BoobaStudio",
           "sceneControls": "Los controles de escena ofrecen detección de muros por IA y más"
         },
         "hints": {
-          "text": "Usa el icono de Cibola en la barra del editor para generar texto con IA. También puedes hacer clic derecho sobre texto seleccionado para ver más opciones de IA.",
+          "text": "Usa el icono de BoobaStudio en la barra del editor para generar texto con IA. También puedes hacer clic derecho sobre el texto seleccionado para ver más opciones de IA.",
           "threads": "Los hilos son conversaciones de IA persistentes guardadas en diarios. Crea páginas adicionales de hilo en cualquier entrada de diario usando el selector de tipo de página.",
           "scenesNoScene": "Activa primero una escena para usar el generador de escenas. Abre la barra lateral de Escenas y haz clic en una escena para activarla.",
           "wallsNoScene": "Activa una escena para usar la detección de muros en vivo. La documentación se muestra como referencia.",
-          "speakingTokens": "Selecciona un token en el lienzo y luego usa el icono de Cibola en su HUD para configurar voces de IA y activar la locución.",
+          "speakingTokens": "Selecciona un token en el lienzo y luego usa el icono de BoobaStudio en su HUD para configurar voces de IA y activar la locución.",
           "tokensPick": "Selecciona un actor para abrir el generador de IA para:",
           "tokensNew": "O crea un actor nuevo con contenido generado por IA.",
           "tokensOpen": "Abrir generador",
           "tokensCreate": "Crear actor nuevo"
         },
-        "title": "Bienvenido a Cibola 8",
+        "title": "Bienvenido a BoobaStudio",
         "tagline": "Herramientas con IA para tus aventuras de rol de mesa",
         "disclaimer": {
           "title": "Aviso importante",
           "ai": "Este módulo utiliza <strong>Inteligencia Artificial</strong> (IA) para generar contenido.",
           "external": "Las funciones se comunican con <strong>servidores API externos</strong> fuera de Foundry VTT.",
-          "subscription": "La mayoría de funciones requieren una <strong>suscripción de Patreon</strong> para acceder al backend de Cibola."
+          "subscription": "No se necesita ninguna suscripción alojada. Configura un endpoint de proveedor bajo tu control."
         },
         "dragToHotbar": "Arrastrar a la barra de macros",
         "openSettings": "Configuración",
@@ -1183,11 +1183,8 @@
           }
         },
         "modes": {
-          "backendTitle": "Backend de Cibola",
-          "backendDesc": "Conéctate con un token de Cibola para acceder a todas las funciones, incluida la generación de imágenes, la galería y más.",
           "backendAction": "Configurar token",
           "clientTitle": "Modo solo cliente",
-          "clientDesc": "Modo limitado: usa tu clave API local de OpenAI solo para chat de texto genérico y generación de texto a imagen con gpt-image-1.5 / gpt-image-2. Los hilos, la galería, TTS, la traducción y otras funciones del backend siguen requiriendo acceso al backend de Cibola.",
           "clientAction": "Configurar",
           "connected": "Conectado"
         },
@@ -1204,22 +1201,22 @@
         "dontShowAgain": "No volver a mostrar",
         "getStarted": "Empezar",
         "wallsHint": "La detección de muros está disponible en el menú contextual de la escena. Haz clic derecho en una escena para abrirla.",
-        "dragToHotbarHint": "Arrastra esto a tu barra de macros para crear una macro que abra el menú radial de Cibola 8. Haz clic en la macro para acceder rápidamente a todas las funciones de IA.",
+        "dragToHotbarHint": "Arrastra esto a tu barra de macros para crear una macro que abra el menú radial de BoobaStudio. Haz clic en la macro para acceder rápidamente a las funciones de IA.",
         "openApp": "Aplicación web",
-        "openAppHint": "Abre app.cibola.world para gestionar tu cuenta, ver tu uso y acceder a funciones adicionales."
+        "openAppHint": "Abre el repositorio de BoobaStudio con documentación y notas de versión."
       }
     },
     "config": {
       "connected": "Conectado",
       "notConnected": "No conectado",
       "apiAccess": "Acceso a la API",
-      "apiAccessHint": "Configura tus claves API para conectarte a los servicios de Cibola o usar OpenAI directamente.",
+      "apiAccessHint": "Configura un endpoint de proveedor bajo tu control y claves API del cliente.",
       "quickActions": "Acciones rápidas",
       "quickActionsHint": "Abre herramientas y visores especializados para funciones avanzadas.",
       "generalSettings": "Ajustes generales",
-      "generalSettingsHint": "Configura el comportamiento general y las rutas de archivo de Cibola 8.",
+      "generalSettingsHint": "Configura el comportamiento general y las rutas de archivo de BoobaStudio.",
       "helpResources": "Ayuda y recursos",
-      "homepage": "Inicio de Cibola",
+      "homepage": "Inicio de BoobaStudio",
       "faq": "FAQ y documentación",
       "discord": "Comunidad de Discord",
       "patreon": "Apóyanos en Patreon"

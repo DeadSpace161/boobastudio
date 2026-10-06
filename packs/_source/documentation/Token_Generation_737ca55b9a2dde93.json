@@ -1,0 +1,64 @@
+{
+  "_id": "737ca55b9a2dde93",
+  "name": "Token Generation",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Token Generation",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Token Generation</h1>\n<p>BoobaStudio's <strong>Token Generation</strong> feature creates AI-generated portraits and token images for your actors and NPCs. Generate character art that matches your game system's visual style and apply it directly to actor sheets and tokens. </p>\n<h2>Overview</h2>\n<p>Token Generation creates portrait and token artwork for actors using AI image generation. It uses the actor's description, name, and game system context to produce fitting character art. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Select an Actor</strong> — open an actor sheet or select a token on the canvas</li> <li><strong>Open the Generator</strong> — use the BoobaStudio icon on the actor sheet</li> <li><strong>Review the Prompt</strong> — BoobaStudio auto-generates a prompt from the actor's description</li> <li><strong>Choose a Model</strong> — pick an image generation model</li> <li><strong>Generate</strong> — the AI creates character artwork</li> <li><strong>Apply</strong> — set the result as the actor's portrait and/or token image</li> </ul>\n<h2>Accessing Token Generation</h2>\n<h3>From the Actor Sheet</h3>\n<ul> <li>Open any actor sheet</li> <li>Click the <strong>BoobaStudio icon</strong> in the sheet header</li> <li>Select <strong>Generate Image</strong> to create a portrait</li> </ul>\n<h3>From the Sidebar Context Menu</h3>\n<ul> <li>In the <strong>Actors</strong> sidebar tab, right-click on an actor</li> <li>Select the BoobaStudio AI option from the context menu</li> </ul>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu</li> <li>Choose to generate for an existing actor or create a new one</li> </ul>\n<h3>From the Token HUD</h3>\n<ul> <li>Select a token on the canvas</li> <li>Open the Token HUD</li> <li>Click the BoobaStudio icon for generation options</li> </ul>\n<h2>Auto-Prompt Generation</h2>\n<p>BoobaStudio reads the actor's data to create a fitting prompt: </p>\n<ul> <li><strong>Name</strong> — the character's name influences the style</li> <li><strong>Description/Biography</strong> — physical appearance details are extracted</li> <li><strong>Type</strong> — NPC, character, creature, vehicle, etc. adjusts the prompt</li> <li><strong>Game System</strong> — fantasy, sci-fi, modern, etc. determines the art style</li> </ul>\n<h2>Portrait vs Token</h2>\n<p>The generator can produce: </p>\n<ul> <li><strong>Portrait</strong> — larger, detailed character artwork for the actor sheet</li> <li><strong>Token</strong> — circular or square image optimized for the canvas token</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Fill in the actor's description first</strong> — the more detail, the better the AI prompt</li> <li><strong>Use image-to-image</strong> for consistent styles — generate a base image, then use it as reference for variants</li> <li><strong>Try \"Both\" mode</strong> — generates portrait and token art in one step</li> <li><strong>Batch generate</strong> — right-click a folder of actors to generate images for multiple characters</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>At least one actor in your world</li> <li>A configured provider (Module Settings → BoobaStudio)</li> <li>Credit with your configured provider</li> </ul></div>"
+      },
+      "_id": "1dffc7804cd71715",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521143177,
+        "modifiedTime": 1772521143177,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!737ca55b9a2dde93.1dffc7804cd71715"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521143177,
+    "modifiedTime": 1772521143177,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!737ca55b9a2dde93"
+}

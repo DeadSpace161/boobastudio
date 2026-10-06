@@ -1,0 +1,64 @@
+{
+  "_id": "222df200bf23e2f2",
+  "name": "AI Threads",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "AI Threads",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>AI Threads</h1>\n<p>BoobaStudio's <strong>AI Threads</strong> feature provides a persistent chat conversation with AI, embedded directly in your Foundry VTT journals. Use threads to brainstorm ideas, get rules clarifications, plan encounters, or role-play with an AI-powered NPC. </p>\n<h2>Overview</h2>\n<p>AI Threads are a special journal page type that maintains a conversation history with the AI. Unlike one-off prompts, threads remember context from previous messages, making them ideal for extended creative collaborations. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Create a Thread</strong> — add a new journal page of type \"Thread (GPT Chat)\"</li> <li><strong>Choose a Model</strong> — select an AI chat model (GPT, Replicate models)</li> <li><strong>Start Chatting</strong> — type messages and the AI responds in context</li> <li><strong>Persistent History</strong> — the conversation is saved with the journal entry</li> <li><strong>Share</strong> — other players can view (but not edit) the thread</li> </ul>\n<h2>Creating a Thread</h2>\n<h3>From a Journal Entry</h3>\n<ul> <li>Open or create a journal entry</li> <li>Click the <strong>+</strong> button to add a new page</li> <li>Select <strong>Thread (GPT Chat)</strong> as the page type</li> <li>The thread interface appears with a chat input at the bottom</li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>AI Threads</strong> card</li> <li>A journal with a thread page is automatically created</li> </ul>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu</li> <li>Select the thread/chat option</li> </ul>\n<h2>Thread Features</h2>\n<h3>Model Selection</h3>\n<p>Choose between different AI models in the thread settings: </p>\n<ul> <li><strong>GPT models</strong> — threads keep their history in the journal page</li> <li><strong>Replicate models</strong> — local history, good for open-source model access</li> </ul>\n<h3>Conversation Controls</h3>\n<ul> <li><strong>Edit Messages</strong> — click on a previous message to edit it (local threads only)</li> <li><strong>Delete Messages</strong> — remove messages from the conversation</li> <li><strong>Max History</strong> — set how many messages the AI remembers for context</li> <li><strong>Max Messages</strong> — limit total messages stored in the thread</li> </ul>\n<h3>File Attachments</h3>\n<p>Upload files to provide context to the AI: </p>\n<ul> <li><strong>PDF documents</strong> — upload rules references or adventure modules</li> <li><strong>Images</strong> — share maps or character art for the AI to describe</li> <li><strong>Text files</strong> — provide background lore or session notes</li> </ul>\n<h3>Streaming</h3>\n<p>When available, responses stream in real-time so you can read the AI's answer as it's being generated. </p>\n<h2>Use Cases</h2>\n<ul> <li><strong>Session Planning</strong> — brainstorm encounter ideas, plot hooks, NPC motivations</li> <li><strong>Rules Questions</strong> — ask about game mechanics with system-aware context</li> <li><strong>Roleplay Partner</strong> — have the AI play an NPC for practice or solo play</li> <li><strong>World Building</strong> — develop lore, history, and setting details collaboratively</li> <li><strong>Name Generation</strong> — get names for characters, places, and organizations in a conversational flow</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Set the tone</strong> in your first message — \"You are a tavern keeper in a medieval fantasy world\" gives the AI a role</li> <li><strong>Be specific</strong> about your game system — the AI adapts its knowledge accordingly</li> <li><strong>Use threads per topic</strong> — create separate threads for different aspects of your campaign</li> <li><strong>The jump-to-bottom button</strong> appears when you scroll up — click it to return to the latest messages</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A configured provider (Module Settings → BoobaStudio)</li> <li>Credit with your configured provider</li> </ul></div>"
+      },
+      "_id": "c39a4f95041573b3",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521142655,
+        "modifiedTime": 1772521142655,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!222df200bf23e2f2.c39a4f95041573b3"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521142655,
+    "modifiedTime": 1772521142655,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!222df200bf23e2f2"
+}

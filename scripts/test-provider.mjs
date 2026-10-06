@@ -28,6 +28,9 @@ globalThis.fetch = async (input, init) => {
   if (String(input).endsWith("/audio/speech")) return new Response(new Uint8Array([1, 2, 3]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
   if (String(input).includes("/text-to-speech/voice-1")) return new Response(new Uint8Array([4, 5, 6]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
   if (String(input) === "https://cdn.test/generated.mp3") return new Response(new Uint8Array([7, 8, 9]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
+  if (String(input).endsWith("/models/community/unpinned/predictions")) return new Response(JSON.stringify({ detail: "The requested resource could not be found.", status: 404 }), { status: 404 });
+  if (String(input).endsWith("/models/community/unpinned")) return new Response(JSON.stringify({ latest_version: { id: "c".repeat(64) } }), { status: 200 });
+  if (String(input).endsWith("/v1/predictions") && init?.method === "POST") return new Response(JSON.stringify({ id: "prediction-1", status: "starting", urls: { get: "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
   if (String(input).includes("/models/") && String(input).endsWith("/predictions") || String(input).endsWith("/predictions/prediction-1")) {
     if (init?.method === "POST") return new Response(JSON.stringify({ id: String(input).includes("/models/owner/replicate-tts/") ? "tts-prediction-1" : "prediction-1", status: "starting", urls: { get: String(input).includes("/models/owner/replicate-tts/") ? "https://api.replicate.com/v1/predictions/tts-prediction-1" : "https://api.replicate.com/v1/predictions/prediction-1" } }), { status: 201 });
     return new Response(JSON.stringify({ id: "prediction-1", status: "succeeded", output: [String(input).includes("/models/owner/replicate-tts/") ? "https://cdn.test/generated.mp3" : "https://cdn.test/generated.png"] }), { status: 200 });
@@ -353,6 +356,9 @@ await globalThis.__boobastudioLocalEnhance("tavern lore prompt", JSON.stringify(
 assert.equal(enhanced.status, "done");
 assert.equal(enhanced.result, "provider response");
 assert.match(String(requests.at(-1).init.body), /tavern lore local context/);
+await globalThis.__boobastudioLocalEnhance("raider with a bone axe", JSON.stringify({ style: "fantasy", type: "character", targetModel: "flux", item: { name: "NPC", type: "foe" } }), () => {});
+assert.match(String(requests.at(-1).init.body), /prompt for an AI image generator/);
+assert.doesNotMatch(String(requests.at(-1).init.body), /targetModel/);
 
 let promptBuilderResult;
 await globalThis.__boobastudioLocalBuildPrompts({ command: "fantasy tavern", amount: 2 }, (result) => { promptBuilderResult = result; });
@@ -426,9 +432,29 @@ assert.equal((await upscaleResponse.json()).data[0].url, "https://cdn.test/gener
 const upscaleRequest = requests.at(-2);
 assert.equal(upscaleRequest.input, "https://replicate-upscale.test/v1/models/nightmareai/real-esrgan/predictions");
 assert.equal(JSON.parse(upscaleRequest.init.body).input.image, "data:image/png;base64,abc");
-assert.equal(JSON.parse(upscaleRequest.init.body).input.prompt, "upscale this map");
-assert.equal(JSON.parse(upscaleRequest.init.body).input.factor, 2);
+// real-esrgan's schema is image/scale/face_enhance: factor maps to scale.
+assert.equal(JSON.parse(upscaleRequest.init.body).input.scale, 2);
+assert.equal(Object.hasOwn(JSON.parse(upscaleRequest.init.body).input, "factor"), false);
 assert.equal(JSON.parse(upscaleRequest.init.body).input.num_inference_steps, 12);
 values.set("boobastudio.replicateImageInput", "{}");
+
+// The built-in Stability upscale id runs real-esrgan on Replicate, even with a custom generation model.
+values.set("boobastudio.replicateModel", "black-forest-labs/flux-dev");
+await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "stability-ai/fast::client", prompt: "data:image/png;base64,abc", factor: 3 }) });
+assert.match(String(requests.find((request) => /real-esrgan\/predictions$/.test(String(request.input)) && JSON.parse(request.init.body).input.scale === 3)?.input), /nightmareai\/real-esrgan/);
+
+// Edit models get the source image under their own input name.
+values.set("boobastudio.replicateModel", "black-forest-labs/flux-schnell");
+await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "google/nano-banana-2", image: "data:image/png;base64,src", prompt: "add a cloak" }) });
+const nanoStart = requests.find((request) => /nano-banana-2\/predictions$/.test(String(request.input)));
+assert.deepEqual(JSON.parse(nanoStart.init.body).input.image_input, ["data:image/png;base64,src"]);
+assert.equal(Object.hasOwn(JSON.parse(nanoStart.init.body).input, "image"), false);
+
+// Unpinned community model: 404 on the model route falls back to its latest version.
+values.set("boobastudio.replicateModel", "community/unpinned");
+const unpinnedResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "community/unpinned", prompt: "data:image/png;base64,abc" }) });
+assert.equal((await unpinnedResponse.json()).data[0].url, "https://cdn.test/generated.png");
+const versionedStart = requests.find((request) => String(request.input).endsWith("/v1/predictions") && request.init?.method === "POST");
+assert.equal(JSON.parse(versionedStart.init.body).version, "c".repeat(64));
 
 console.log("BoobaStudio provider smoke test passed");

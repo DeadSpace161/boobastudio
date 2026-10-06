@@ -1,0 +1,64 @@
+{
+  "_id": "317517724bbc44da",
+  "name": "Image Gallery",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Image Gallery",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Image Gallery</h1>\n<p>BoobaStudio's <strong>Image Gallery</strong> lets you browse, search, and manage all AI-generated images you have generated. View your creations, reuse images across documents. </p>\n<h2>Overview</h2>\n<p>The Gallery is a visual browser that displays all images generated through BoobaStudio. It keeps your generation history in this browser, letting you find and reuse previous creations. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Open the Gallery</strong> — from the BoobaStudio menu or welcome screen</li> <li><strong>Browse Images</strong> — scroll through your generated images</li> <li><strong>Filter & Search</strong> — narrow results by type or ownership</li> <li><strong>Select an Image</strong> — click to view full size</li> <li><strong>Apply</strong> — use the image in your current document or download it</li> </ul>\n<h2>Accessing the Gallery</h2>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu</li> <li>Select the Gallery/Browser option</li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>Gallery</strong> card in the features grid</li> <li>Or click <strong>View Gallery</strong> in the gallery preview section</li> </ul>\n<h3>From Document Sheets</h3>\n<p>When generating images for actors, items, or scenes, the gallery is accessible as an alternative to generating new images. </p>\n<h2>Gallery Features</h2>\n<h3>Image Filters</h3>\n<ul> <li><strong>All</strong> — show all images from the community</li> <li><strong>Own</strong> — show only your generated images</li> </ul>\n<h3>Image Details</h3>\n<p>Click on any image to see: </p>\n<ul> <li>The original <strong>prompt</strong> used to generate it</li> <li>The <strong>model</strong> that was used</li> <li>The <strong>generation date</strong></li> <li>Full-resolution view</li> </ul>\n<h3>Pagination</h3>\n<p>Images are loaded in pages as you scroll. The gallery loads more images automatically when you reach the bottom. </p>\n<h3>Download</h3>\n<p>Right-click or use the download button to save any image to your local machine. </p>\n<h2>Tips</h2>\n<ul> <li><strong>Browse for inspiration</strong> — see what prompts and models other users are using</li> <li><strong>Reuse existing images</strong> — instead of generating new ones, check if you already have something suitable</li> <li><strong>Gallery entries are stored in this browser</strong> — they persist across sessions and worlds</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A configured image provider</li> </ul></div>"
+      },
+      "_id": "1a941fffa21703b4",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521142755,
+        "modifiedTime": 1772521142755,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!317517724bbc44da.1a941fffa21703b4"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521142755,
+    "modifiedTime": 1772521142755,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!317517724bbc44da"
+}

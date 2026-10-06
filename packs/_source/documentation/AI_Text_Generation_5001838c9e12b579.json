@@ -1,0 +1,64 @@
+{
+  "_id": "5001838c9e12b579",
+  "name": "AI Text Generation",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "AI Text Generation",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>AI Text Generation</h1>\n<p>BoobaStudio's <strong>AI Text Generation</strong> feature adds an AI-powered toolbar to Foundry VTT's journal editor, letting you generate, expand, and refine text content directly inside your journals and item descriptions. </p>\n<h2>Overview</h2>\n<p>When you open any journal entry or item sheet in edit mode, the BoobaStudio toolbar appears in the ProseMirror text editor. You can highlight text and use AI to rewrite it, or place your cursor and generate new content from a prompt. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Open a Journal or Item</strong> in edit mode</li> <li><strong>Use the BoobaStudio Toolbar</strong> buttons or the right-click context menu</li> <li><strong>Enter a Prompt</strong> describing what you want</li> <li><strong>AI Generates Text</strong> directly into the editor</li> <li><strong>Edit and Refine</strong> the result as needed</li> </ul>\n<h2>Features</h2>\n<h3>Generate Text</h3>\n<p>Click the BoobaStudio icon in the editor toolbar and enter a prompt. The AI will generate text and insert it at your cursor position. </p>\n<ul> <li>Write NPC backstories, item descriptions, location lore</li> <li>Generate quest hooks, rumors, and world-building content</li> <li>Create stat blocks descriptions and flavor text</li> </ul>\n<h3>Expand Text</h3>\n<p>Select existing text and ask the AI to expand it. Useful for turning brief notes into full paragraphs. </p>\n<h3>Rewrite Text</h3>\n<p>Highlight a passage and have the AI rewrite it in a different style—more dramatic, more concise, in-character, or in a different language. </p>\n<h3>Continue Writing</h3>\n<p>Place your cursor at the end of existing text and let the AI continue the narrative in the same style and tone. </p>\n<h2>How to Access</h2>\n<h3>From the Editor Toolbar</h3>\n<ul> <li>Open any journal entry or item description in <strong>edit mode</strong></li> <li>Look for the <strong>BoobaStudio icon</strong> in the ProseMirror toolbar</li> <li>Click it to open the AI text prompt</li> </ul>\n<h3>From the Context Menu</h3>\n<ul> <li>Select text in the editor</li> <li>Right-click to open the context menu</li> <li>Choose a BoobaStudio AI option (rewrite, expand, etc.)</li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>AI Text</strong> card in the features grid</li> <li>A demo journal will be created for you to try</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Be specific in prompts</strong> — \"Write a tavern description with a mysterious atmosphere\" works better than \"Write something\"</li> <li><strong>Use system context</strong> — BoobaStudio knows your game system and adapts its writing style</li> <li><strong>Iterate</strong> — Generate text, then select parts to rewrite or expand further</li> <li><strong>Undo works</strong> — If you don't like a result, use Ctrl+Z to undo the AI insertion</li> <li>Requires an active <strong>A configured provider</strong> or a configured client-only API key</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A journal entry or item sheet open in edit mode</li> <li>A configured provider (Module Settings → BoobaStudio)</li> </ul></div>"
+      },
+      "_id": "fc28f54834fcb1d0",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521143068,
+        "modifiedTime": 1772521143068,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!5001838c9e12b579.fc28f54834fcb1d0"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521143068,
+    "modifiedTime": 1772521143068,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!5001838c9e12b579"
+}

@@ -6,7 +6,7 @@
             <span>{{localize 'boobastudio.musicgen.description'}}</span>
         </div>
 
-        {{#unless userInfo.alive}}
+        {{#unless (or userInfo.alive clientOnlyModeEnabled)}}
             {{{patreon}}}
         {{else}}
         <div class="flexrow align-child-top stretch" style="gap: 0.75rem;">

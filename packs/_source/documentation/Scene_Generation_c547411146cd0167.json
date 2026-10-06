@@ -1,0 +1,64 @@
+{
+  "_id": "c547411146cd0167",
+  "name": "Scene Generation",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Scene Generation",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Scene Generation</h1>\n<p>BoobaStudio's <strong>Scene Generation</strong> feature creates AI-generated background images for your battle maps and scenes. Generate complete scene backgrounds from text prompts, tailored to your game system's visual style. </p>\n<h2>Overview</h2>\n<p>Scene Generation creates a background image for your Foundry VTT scene using AI image generation. It takes into account your scene's dimensions, grid settings, and game system to produce an appropriate battle map or environment image. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Open a Scene</strong> — activate the scene you want to generate a background for</li> <li><strong>Open the Scene Generator</strong> — from the context menu or BoobaStudio menu</li> <li><strong>Enter a Prompt</strong> — describe the scene (e.g., \"tavern interior with fireplace\" or \"forest clearing at night\")</li> <li><strong>Choose a Model</strong> — select an image generation model</li> <li><strong>Generate</strong> — the AI creates a background image</li> <li><strong>Apply</strong> — set the result as the scene's background image</li> </ul>\n<h2>Accessing Scene Generation</h2>\n<h3>From the Scene Context Menu</h3>\n<ul> <li>In the <strong>Scenes</strong> sidebar tab, right-click on a scene</li> <li>Select the BoobaStudio AI option to generate a scene background</li> </ul>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu while a scene is active</li> <li>Navigate to the scene generation option</li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>Scene AI</strong> card</li> <li>The scene generator opens for the currently active scene</li> </ul>\n<h2>Scene-Aware Generation</h2>\n<p>BoobaStudio adapts the generation based on your scene settings: </p>\n<ul> <li><strong>Scene Dimensions</strong> — the image aspect ratio matches your scene proportions</li> <li><strong>Grid Type</strong> — optimized for gridded or gridless scenes</li> <li><strong>Game System</strong> — prompt style adapts (fantasy, sci-fi, modern, etc.)</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Be descriptive</strong> — \"damp stone dungeon corridor with torchlight and mossy walls\" produces better results than \"dungeon\"</li> <li><strong>Consider the perspective</strong> — specify \"top-down\" or \"overhead view\" for battle maps</li> <li><strong>Use image-to-image</strong> — upload a rough sketch and let AI enhance it</li> <li><strong>Match your style</strong> — try different models until you find one that matches your campaign's art style</li> <li><strong>Combine with Wall Detection</strong> — after generating a scene, use Wall Detection to automatically add walls</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>An existing scene in your world (the generator applies the background to it)</li> <li>A configured provider (Module Settings → BoobaStudio)</li> <li>Credit with your configured provider</li> </ul></div>"
+      },
+      "_id": "2c09e3da3446a94d",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521142960,
+        "modifiedTime": 1772521142960,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!c547411146cd0167.2c09e3da3446a94d"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521142960,
+    "modifiedTime": 1772521142960,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!c547411146cd0167"
+}

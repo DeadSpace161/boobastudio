@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import fs from "node:fs";
 import { spawn } from "node:child_process";
 import path from "node:path";
@@ -12,7 +12,8 @@ const required = [
   "bundle/modules/init.js",
   "styles/css/css.css",
   "lang/en.json",
-  "packs/documentation/MANIFEST-000063",
+  // LevelDB names its manifest after a counter; CURRENT says which one is live.
+  "packs/documentation/CURRENT",
 ];
 
 const fail = (message) => {
@@ -34,6 +35,14 @@ for (const relativePath of required) {
   } catch {
     fail(`missing required file: ${relativePath}`);
   }
+}
+
+try {
+  const current = (await readFile(path.join(root, "packs/documentation/CURRENT"), "utf8")).trim();
+  await access(path.join(root, "packs/documentation", current));
+  if (!(await readdir(path.join(root, "packs/documentation"))).some((file) => file.endsWith(".ldb"))) fail("documentation pack has no .ldb data file");
+} catch {
+  fail("documentation pack manifest named in CURRENT is missing");
 }
 
 for (const relativePath of [...(manifest.esmodules ?? []), ...(manifest.styles ?? [])]) {

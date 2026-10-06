@@ -1,0 +1,64 @@
+{
+  "_id": "2a52a3c921896e20",
+  "name": "Module Localization",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Module Localization",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Module Localization</h1>\n<p>BoobaStudio's <strong>Module Localization</strong> feature translates the user interface text of Foundry VTT modules and systems into different languages using AI. This is different from content translation — it translates the <strong>UI labels, buttons, and menus</strong> rather than game content. </p>\n<h2>Overview</h2>\n<p>Module Localization reads the translation files (JSON language files) of installed Foundry VTT modules and systems, then uses AI to translate untranslated strings or entire language files into your target language. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Open the Localizer</strong> — from the BoobaStudio menu or welcome screen</li> <li><strong>Select a Module or System</strong> — choose what to translate</li> <li><strong>Choose Target Language</strong> — pick the language to translate into</li> <li><strong>Review Strings</strong> — see which strings need translation</li> <li><strong>Translate</strong> — the AI translates all untranslated strings</li> <li><strong>Export</strong> — save the translated language file</li> </ul>\n<h2>Accessing the Localizer</h2>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu</li> <li>Navigate to the localization/translation tools</li> <li>Select <strong>Module Localization</strong></li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>Localization</strong> card in the features grid</li> </ul>\n<h2>How It Differs from Content Translation</h2>\n<table border=\"1\"> <thead><tr><th>Feature</th><th>Content Translation</th><th>Module Localization</th></tr></thead> <tbody> <tr><td><strong>Translates</strong></td><td>In-game text (descriptions, journals)</td><td>UI text (labels, buttons, menus)</td></tr> <tr><td><strong>Input</strong></td><td>Document fields</td><td>JSON language files</td></tr> <tr><td><strong>Output</strong></td><td>Updated documents</td><td>New language file</td></tr> <tr><td><strong>Use Case</strong></td><td>Playing modules in another language</td><td>Making modules accessible in new languages</td></tr> </tbody> </table>\n<h2>Localization Features</h2>\n<h3>Module Selection</h3>\n<p>Browse all installed modules and systems. The localizer shows: </p>\n<ul> <li>Module name and version</li> <li>Available language files</li> <li>Translation completeness (percentage of translated strings)</li> </ul>\n<h3>String Preview</h3>\n<p>Before translating, review the source strings and any existing translations. This helps you understand what will be translated. </p>\n<h3>Batch Translation</h3>\n<p>Translate entire language files at once — the AI processes all untranslated strings while preserving: </p>\n<ul> <li><strong>Placeholders</strong> — <code>{name}</code>, <code>{{count}}</code>, etc. remain untouched</li> <li><strong>HTML tags</strong> — formatting within strings is preserved</li> <li><strong>Key structure</strong> — the JSON nesting is maintained exactly</li> </ul>\n<h3>Export Options</h3>\n<p>Save the translated file for distribution: </p>\n<ul> <li>Download as a JSON file for inclusion in a module</li> <li>Copy to clipboard for manual integration</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Start with small modules</strong> to test the translation quality</li> <li><strong>Review technical terms</strong> — some game-specific UI terms may need manual adjustment</li> <li><strong>Contribute back</strong> — share your translations with module authors</li> <li><strong>Re-run after updates</strong> — when a module adds new strings, re-run the localizer to catch them</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A configured provider (Module Settings → BoobaStudio)</li> <li>Credit with your configured provider</li> </ul></div>"
+      },
+      "_id": "4729e67303888c4f",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521142857,
+        "modifiedTime": 1772521142857,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!2a52a3c921896e20.4729e67303888c4f"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521142857,
+    "modifiedTime": 1772521142857,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!2a52a3c921896e20"
+}

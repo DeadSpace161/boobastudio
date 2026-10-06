@@ -1,0 +1,64 @@
+{
+  "_id": "fc62e9cef9649945",
+  "name": "Content Translation",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Content Translation",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Content Translation</h1>\n<p>BoobaStudio's <strong>Content Translation</strong> feature translates your game content—item descriptions, journal entries, actor biographies—between languages using AI. Perfect for playing modules in a different language or sharing content internationally. </p>\n<h2>Overview</h2>\n<p>Content Translation uses AI language models to translate in-game text while preserving RPG-specific terminology, formatting, and game mechanics references. It works with any content that has text fields in Foundry VTT. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Select Content</strong> — choose items, actors, journals, or entire compendium packs</li> <li><strong>Choose Languages</strong> — select the source and target languages</li> <li><strong>Translate</strong> — the AI translates all text fields while keeping game terms intact</li> <li><strong>Review</strong> — check the translations and make adjustments if needed</li> <li><strong>Apply</strong> — save the translated content</li> </ul>\n<h2>Accessing Translation</h2>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu</li> <li>Navigate to the translation/localization tools</li> <li>Select the content you want to translate</li> </ul>\n<h3>From the Context Menu</h3>\n<ul> <li>Right-click on any document (actor, item, journal) in the sidebar</li> <li>Select the BoobaStudio AI translation option</li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>Translation</strong> card in the features grid</li> </ul>\n<h2>Supported Languages</h2>\n<p>Translation supports all major languages including: </p>\n<ul> <li>English, German, French, Spanish, Portuguese</li> <li>Italian, Polish, Czech, Japanese, Korean</li> <li>And many more — any language supported by the AI model</li> </ul>\n<h2>Translation Features</h2>\n<h3>Smart Context</h3>\n<p>The translator understands RPG context: </p>\n<ul> <li><strong>Spell names</strong> and <strong>ability names</strong> are handled appropriately</li> <li><strong>Game mechanics</strong> (dice rolls, modifiers) are preserved unchanged</li> <li><strong>Proper nouns</strong> and <strong>setting-specific terms</strong> are kept or adapted contextually</li> </ul>\n<h3>Batch Translation</h3>\n<p>Translate multiple documents at once: </p>\n<ul> <li>Select an entire folder of items or actors</li> <li>Translate a full compendium pack</li> <li>Queue translations for processing in the background</li> </ul>\n<h3>Format Preservation</h3>\n<ul> <li><strong>HTML formatting</strong> (bold, italic, lists) is preserved</li> <li><strong>Links</strong> and <strong>references</strong> to other documents remain intact</li> <li><strong>Tables</strong> and <strong>structured data</strong> keep their layout</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Review proper nouns</strong> — the AI may attempt to translate character or place names</li> <li><strong>Translate by category</strong> — do items, then actors, then journals for consistency</li> <li><strong>Use batch mode</strong> for large modules to save time and mana</li> <li><strong>Keep originals</strong> — make a copy before translating in case you want to revert</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A configured provider (Module Settings → BoobaStudio)</li> <li>Credit with your configured provider</li> </ul></div>"
+      },
+      "_id": "2469d01492df1214",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521142707,
+        "modifiedTime": 1772521142707,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!fc62e9cef9649945.2469d01492df1214"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521142707,
+    "modifiedTime": 1772521142707,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!fc62e9cef9649945"
+}

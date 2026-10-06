@@ -1,0 +1,64 @@
+{
+  "_id": "a9aaa00f303033fc",
+  "name": "Speaking Tokens",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Speaking Tokens",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Speaking Tokens</h1>\n<p>BoobaStudio's <strong>Speaking Tokens</strong> feature lets you give voices to your tokens using AI-powered text-to-speech. When configured, tokens can speak with unique voices during gameplay, adding immersion to your sessions. </p>\n<h2>Overview</h2>\n<p>Speaking Tokens uses <strong>ElevenLabs</strong> text-to-speech technology to generate speech audio for your tokens. Each token can have its own voice configured, allowing NPCs, monsters, and characters to sound distinct. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Configure Voice</strong>: Select a token on the canvas and open its Token HUD</li> <li><strong>Record Samples</strong>: Use the BoobaStudio icon on the Token HUD to assign a voice or record voice samples</li> <li><strong>Trigger Speech</strong>: During gameplay, use the Token HUD to make the token speak with the configured voice</li> <li><strong>Playback</strong>: The generated audio plays for all connected players</li> </ul>\n<h2>Setting Up a Speaking Token</h2>\n<h3>Step 1: Place a Token</h3>\n<p>Make sure you have a scene with at least one token placed on the canvas. The token should be linked to an actor. </p>\n<h3>Step 2: Open the Token HUD</h3>\n<ul> <li>Select the token on the canvas by clicking it</li> <li>Right-click the token (or double-click, depending on your settings) to open the <strong>Token HUD</strong></li> <li>Look for the <strong>BoobaStudio icon</strong> on the right side of the HUD</li> </ul>\n<h3>Step 3: Configure Voice</h3>\n<ul> <li>Click the BoobaStudio icon on the Token HUD</li> <li>If no voice samples are configured yet, the <strong>TTS Voice Configuration</strong> panel opens</li> <li>Choose a voice from the available ElevenLabs voices or record/upload voice samples</li> <li>Save the configuration</li> </ul>\n<h3>Step 4: Use Speaking Tokens</h3>\n<p>Once configured: </p>\n<ul> <li>Select the token on the canvas</li> <li>Open the Token HUD</li> <li>Click the BoobaStudio icon</li> <li>The <strong>Speaking Tokens</strong> panel shows your configured voice samples</li> <li>Type text and click to generate speech, or use predefined phrases</li> </ul>\n<h2>Voice Configuration</h2>\n<h3>Voice Samples</h3>\n<p>Voice samples are stored as flags on the token document. They can be configured per-token or inherited from the linked actor: </p>\n<ul> <li><strong>Token-specific voices</strong>: Set directly on the token, useful for unique NPCs</li> <li><strong>Actor-linked voices</strong>: Set on the actor, shared across all linked tokens of that actor</li> </ul>\n<h3>ElevenLabs Voices</h3>\n<p>The TTS system uses ElevenLabs for high-quality voice generation. You can: </p>\n<ul> <li>Browse available voices by category (e.g., male, female, fantasy, etc.)</li> <li>Preview voices before assigning them</li> <li>Adjust voice settings like stability and similarity</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Link tokens to actors</strong> so voice configuration persists across scenes</li> <li><strong>Use different voices</strong> for different NPC types to help players distinguish characters</li> <li><strong>Keep phrases short</strong> for faster generation and more natural-sounding speech</li> <li>Voice generation requires an active <strong>A configured provider</strong></li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A configured narration (TTS) provider</li> <li>A scene with tokens placed on the canvas</li> <li>GM permissions (Speaking Tokens configuration is GM-only)</li> </ul></div>"
+      },
+      "_id": "cadc78bbef0379eb",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521143017,
+        "modifiedTime": 1772521143017,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!a9aaa00f303033fc.cadc78bbef0379eb"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521143017,
+    "modifiedTime": 1772521143017,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!a9aaa00f303033fc"
+}

@@ -1,0 +1,64 @@
+{
+  "_id": "d60fc031df5319d9",
+  "name": "Name Generator",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Name Generator",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Name Generator</h1>\n<p>BoobaStudio's <strong>Name Generator</strong> creates AI-powered names for characters, places, items, and more. Generate names that fit your game system, setting, and cultural context. </p>\n<h2>Overview</h2>\n<p>The Name Generator uses AI to produce thematically appropriate names. It considers your game system (fantasy, sci-fi, modern) and any specific context you provide to generate fitting names. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Open the Name Generator</strong> — from the BoobaStudio menu or welcome screen</li> <li><strong>Choose a Category</strong> — character, place, tavern, organization, etc.</li> <li><strong>Set Context</strong> — optionally specify culture, genre, or style</li> <li><strong>Generate</strong> — the AI produces a list of name suggestions</li> <li><strong>Pick and Use</strong> — select a name and apply it to your document</li> </ul>\n<h2>Accessing the Name Generator</h2>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu</li> <li>Select the Name Generator option</li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>Name Generator</strong> card</li> </ul>\n<h3>From Document Creation</h3>\n<p>When creating new actors or items through BoobaStudio, name generation is integrated into the creation flow. </p>\n<h2>Name Categories</h2>\n<p>The generator can create names for: </p>\n<ul> <li><strong>Characters</strong> — NPCs, PCs, villains, henchmen</li> <li><strong>Places</strong> — towns, cities, dungeons, taverns, shops</li> <li><strong>Organizations</strong> — guilds, factions, cults, noble houses</li> <li><strong>Items</strong> — magical weapons, artifacts, potions, spell names</li> <li><strong>Creatures</strong> — monsters, beasts, familiars</li> </ul>\n<h2>Customization</h2>\n<h3>Cultural Context</h3>\n<p>Specify a cultural influence for the generated names: </p>\n<ul> <li>Medieval European, Norse, Celtic, Arabic, Asian</li> <li>Elvish, Dwarven, Orcish (for fantasy settings)</li> <li>Corporate, Military, Scientific (for modern/sci-fi settings)</li> </ul>\n<h3>Style Options</h3>\n<ul> <li><strong>Simple</strong> — short, easy-to-pronounce names</li> <li><strong>Complex</strong> — longer, more elaborate names</li> <li><strong>Exotic</strong> — unusual, otherworldly-sounding names</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Generate in batches</strong> — create a list of names to keep on hand during sessions</li> <li><strong>Mix and match</strong> — combine generated first names with different surnames</li> <li><strong>Use for improvisation</strong> — when players ask an NPC's name, have a list ready</li> <li><strong>System-aware</strong> — BoobaStudio adapts names to your game system automatically</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A configured provider (Module Settings → BoobaStudio)</li> <li>Low provider cost per generation</li> </ul></div>"
+      },
+      "_id": "6878d07c8ef4bfa7",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521142911,
+        "modifiedTime": 1772521142911,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!d60fc031df5319d9.6878d07c8ef4bfa7"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521142911,
+    "modifiedTime": 1772521142911,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!d60fc031df5319d9"
+}

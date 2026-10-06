@@ -1,0 +1,64 @@
+{
+  "_id": "03d1974ec21653d8",
+  "name": "BoobaStudio Documentation",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "BoobaStudio Documentation",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>BoobaStudio Documentation</h1> <p>Welcome to the BoobaStudio documentation. Select a topic below to learn more.</p> <h2>Topics</h2> <ul> <li>@Compendium[boobastudio.documentation.AI Text Generation]</li> <li>@Compendium[boobastudio.documentation.AI Threads]</li> <li>@Compendium[boobastudio.documentation.Content Translation]</li> <li>@Compendium[boobastudio.documentation.Image Gallery]</li> <li>@Compendium[boobastudio.documentation.Image Generation]</li> <li>@Compendium[boobastudio.documentation.Module Localization]</li> <li>@Compendium[boobastudio.documentation.Name Generator]</li> <li>@Compendium[boobastudio.documentation.Scene Generation]</li> <li>@Compendium[boobastudio.documentation.Speaking Tokens]</li> <li>@Compendium[boobastudio.documentation.Text-to-Speech]</li> <li>@Compendium[boobastudio.documentation.Token Generation]</li> <li>@Compendium[boobastudio.documentation.Wall Detection]</li> </ul></div>"
+      },
+      "_id": "9c8dcbdacaac3546",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521143256,
+        "modifiedTime": 1772521143256,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!03d1974ec21653d8.9c8dcbdacaac3546"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521143256,
+    "modifiedTime": 1772521143256,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!03d1974ec21653d8"
+}

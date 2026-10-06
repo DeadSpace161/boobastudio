@@ -1,0 +1,64 @@
+{
+  "_id": "751ac540673e3e11",
+  "name": "Text-to-Speech",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Text-to-Speech",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Text-to-Speech</h1>\n<p>BoobaStudio's <strong>Text-to-Speech (TTS)</strong> feature generates spoken audio from text using AI voices. Create narration, ambient dialogue, or character voices that play directly in Foundry VTT for all connected players. </p>\n<h2>Overview</h2>\n<p>TTS uses <strong>ElevenLabs</strong> AI voice technology to convert text into high-quality speech audio. You can choose from hundreds of voices, adjust voice settings, and generate audio clips that enhance your game sessions. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Open the TTS Tool</strong> — from the BoobaStudio menu or sound generator</li> <li><strong>Choose a Voice</strong> — browse and preview available voices</li> <li><strong>Enter Text</strong> — type or paste the text you want spoken</li> <li><strong>Generate</strong> — the AI converts text to speech</li> <li><strong>Playback</strong> — the audio plays for all connected players</li> </ul>\n<h2>Accessing TTS</h2>\n<h3>From the BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu</li> <li>Navigate to the sound/TTS section</li> <li>The TTS panel opens ready for input</li> </ul>\n<h3>From the Sound Generator</h3>\n<ul> <li>Open the Sound Generator (<i class=\"fa-solid fa-music\"></i> icon in the BoobaStudio menu)</li> <li>Switch to the <strong>TTS</strong> tab</li> <li>Configure voice and text</li> </ul>\n<h3>From the Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome screen</li> <li>Click the <strong>Text-to-Speech</strong> card</li> </ul>\n<h2>Voice Selection</h2>\n<h3>Browsing Voices</h3>\n<p>Voices are organized by category: </p>\n<ul> <li><strong>Male/Female</strong> — filter by gender</li> <li><strong>Fantasy/Sci-Fi</strong> — genre-appropriate voices</li> <li><strong>Narration/Character</strong> — style of delivery</li> <li><strong>Language</strong> — filter by spoken language</li> </ul>\n<h3>Voice Preview</h3>\n<p>Click the <strong>play</strong> button next to any voice to hear a preview sample before selecting it. </p>\n<h3>Voice Settings</h3>\n<p>Fine-tune your selected voice: </p>\n<ul> <li><strong>Stability</strong> — higher values produce more consistent delivery, lower values add variation</li> <li><strong>Similarity</strong> — how closely the output matches the original voice profile</li> </ul>\n<h3>Favorites</h3>\n<p>Mark frequently used voices as <strong>favorites</strong> (<i class=\"fa-solid fa-star\"></i>) for quick access. Favorites appear at the top of the voice browser. </p>\n<h2>Voice Comparison</h2>\n<p>Select multiple voices and use the <strong>Compare</strong> feature to hear them side-by-side with the same text. This helps you find the perfect voice for each character. </p>\n<h2>TTS Models</h2>\n<p>Different ElevenLabs models offer varying quality and speed: </p>\n<ul> <li><strong>Multilingual V2</strong> — best quality, supports many languages</li> <li><strong>Turbo V2.5</strong> — faster generation with good quality</li> <li><strong>Flash V2.5</strong> — fastest, good for real-time narration</li> <li><strong>V3</strong> — latest model with improved expressiveness</li> </ul>\n<h2>Tips</h2>\n<ul> <li><strong>Keep text short</strong> — 1-3 sentences generates faster and sounds more natural</li> <li><strong>Use punctuation</strong> — commas and periods control pacing and pauses</li> <li><strong>Match voice to character</strong> — assign consistent voices to recurring NPCs</li> <li><strong>Combine with Speaking Tokens</strong> — configure voices directly on tokens for in-character speech</li> <li><strong>Preview before playing</strong> — generate and listen before broadcasting to all players</li> </ul>\n<h2>Requirements</h2>\n<ul> <li>BoobaStudio module installed and configured</li> <li>A configured narration (TTS) provider</li> <li>Credit with your configured provider</li> </ul></div>"
+      },
+      "_id": "f69d3a087ef245ac",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521143123,
+        "modifiedTime": 1772521143123,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!751ac540673e3e11.f69d3a087ef245ac"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521143123,
+    "modifiedTime": 1772521143123,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!751ac540673e3e11"
+}

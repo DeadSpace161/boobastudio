@@ -40,7 +40,61 @@ const privateApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!
 const publicApi = "api={DirectChat:new Ms,menu:ct.render,experimentalFeatures:!1,RadialWidget:us,ImageGenerator:Ke,CibolaNames:(pd(),Fa)}";
 if (!entrySource.includes(privateApi)) throw new Error("Expected BoobaStudio entry API signature was not found");
 const hostedAppOpen = 'window.open("https://app.cibola.world","_blank")';
-const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")');
+// Game systems may override createDialog with a dialog that resolves before the
+// document exists (Ironsworn returns undefined), so the generator never opened
+// after "Generate". Fall back to the user's next create hook for that type.
+const createDialogCall = "let o=await getDocumentClass(t).createDialog(a);o&&(setTimeout(";
+const createDialogCallReplacement = "let o=await new Promise(R=>{let D=!1,K=`create${t}`,F=v=>{D||(D=!0,Hooks.off(K,H),R(v))},H=Hooks.on(K,(d,x,u)=>{u===game.user.id&&F(d)});getDocumentClass(t).createDialog(a).then(v=>{v!==void 0&&F(v)},()=>F(null)),setTimeout(()=>F(null),6e5)});o&&(setTimeout(";
+// Hosted model configs are not loaded in local mode, and the upscale models
+// have no built-in config, so the upscale dialog crashed reading .price.
+const prepareModelsLoop = "prepareModels(t,e=4){for(let i of Object.keys(t)){let a=M.getModelPrice(i)??t[i].price;";
+const prepareModelsLoopReplacement = "prepareModels(t,e=4){for(let i of Object.keys(t)){t[i]=t[i]||{price:1,fields:[{id:\"prompt\",type:\"textarea\",minLimit:1,maxLimit:1e4}]};let a=M.getModelPrice(i)??t[i].price;";
+// In local mode the hosted upscaler configs (with their resolution choices)
+// are absent; offer one upscaler, which the provider runs as real-esrgan.
+const upscaleModelsInit = 'let e=M.getModelsAsHash(ee.UPSCALE_MODELS),i=$(this.element),a=this,s=ee.DEFAULTS.upscale,o=i.find(".behavior").val();';
+const upscaleModelsInitReplacement = upscaleModelsInit + 'if(typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured()&&!e[s]){e={upscale:{price:1,fields:[],upscaleResolutions:{2048:"2048 px",4096:"4096 px"}}};s="upscale"}';
+// With a local provider configured, every image model must take the local
+// path; the allow-list missed the generic "upscale" id and community models,
+// which then fell through to the hosted service ("Not Connected").
+const localImageModelAllowList = '&&globalThis.__boobastudioLocalProviderConfigured()&&(/^(gpt-image-|black-forest-labs\\/|stability-ai\\/|bria\\/|cjwbw\\/|lucataco\\/|men1scus\\/)/i.test(n)))';
+const localImageModelAllowListReplacement = '&&globalThis.__boobastudioLocalProviderConfigured())';
+// Several edit models (Flux 2) only carry field overlays in the bundle; the
+// hosted config supplied the prompt field. Make sure every model dialog has one.
+const checkMaskModel = "async checkMask(e,i){i||(i=this.currentModel());let a=this.options.validator.models[i],s=C.userInfo().nsfw;";
+const checkMaskModelReplacement = checkMaskModel + "a&&(a.fields=Array.isArray(a.fields)?a.fields:[],a.fields.some(h=>h?.id===\"prompt\")||a.fields.unshift({id:\"prompt\",type:\"textarea\",minLimit:1,maxLimit:1e4}));";
+// Local image requests only forwarded behavior.moreFields, dropping the
+// top-level source image, mask, upscale factor and base prompt that the edit,
+// inpaint and upscale tools set. Forward them too (generateImage allow-lists keys).
+const localImageOperation = "let I=S?.moreFields||{},{OpenAIClientService:x}";
+const localImageOperationReplacement = "let I={...(S&&typeof S===\"object\"?S:{}),...(S?.moreFields||{})},{OpenAIClientService:x}";
+// The narration price estimate threw for any voice model outside its fixed
+// table (e.g. a Replicate TTS model), breaking the estimate on every keypress.
+const ttsManaGuess = "return r>.5?Math.ceil(r*25/1e3*25/2):Math.round(100/1e3*25/2)}}[e](),n=Math.round(o*s)";
+const ttsManaGuessReplacement = "return r>.5?Math.ceil(r*25/1e3*25/2):Math.round(100/1e3*25/2)}}[e]?.()??0,n=Math.round(o*s)";
+// DialogV2 passes (event, button, dialog) to button callbacks, so the
+// "Create New Pack" prompt crashed reading the form from the click event.
+const createPackPromptCallback = `callback:a=>(a instanceof HTMLElement?a:a[0]).querySelector('[name="packName"]')?.value?.trim()}`;
+const createPackPromptCallbackReplacement = `callback:(a,b,d)=>(b?.form??d?.element??(a instanceof HTMLElement?a:a?.[0]))?.querySelector('[name="packName"]')?.value?.trim()}`;
+// The token-horde window reads Tokenizer's upload folder whenever token
+// framing is available, but local framing works without Tokenizer installed,
+// so the window failed to render. Fall back to the actor image folder.
+const tokenHordeOutFolder = 'e.tokenizeractive&&(e.outFolder=game.settings.get("vtta-tokenizer","npc-image-upload-directory"),';
+const tokenHordeOutFolderReplacement = 'e.tokenizeractive&&(e.outFolder=game.modules.get("vtta-tokenizer")?.active?game.settings.get("vtta-tokenizer","npc-image-upload-directory"):game.settings.get("boobastudio","ActorPath"),';
+// Public help links shown in onboarding and help buttons. The hosted `app`
+// URL stays: it is the upstream backend origin, not a user-facing link.
+const upstreamPublicUrls = 'patreon:"https://patreon.com/Cibola",homepage:"https://cibola.world",app:"https://app.cibola.world",faq:"https://cibola.world/faq",discord:"https://discord.gg/TYbUBfzzqN"';
+const boobaPublicUrls = 'patreon:"https://github.com/DeadSpace161/boobastudio",homepage:"https://github.com/DeadSpace161/boobastudio",app:"https://app.cibola.world",faq:"https://github.com/DeadSpace161/boobastudio/issues",discord:"https://github.com/DeadSpace161/boobastudio/discussions"';
+const upstreamHelpUrl = 'b(P,"helpURL","https://cibola.world/faq")';
+const boobaHelpUrl = 'b(P,"helpURL","https://github.com/DeadSpace161/boobastudio/issues")';
+// The radial centre image is consumed through a CSS variable inside
+// styles/css/css.css, where a relative URL resolves against the stylesheet
+// (404). Pass an absolute URL instead.
+const radialCenterImage = 'i.setProperty("--radial-center-image",`url(\'${e.centerImage}\')`)';
+const radialCenterImageCss = 'i.setProperty("--radial-center-image",`url(\'${new URL(e.centerImage,document.baseURI).href}\')`)';
+for (const signature of [upstreamPublicUrls, upstreamHelpUrl, radialCenterImage, createDialogCall, prepareModelsLoop, upscaleModelsInit, localImageModelAllowList, checkMaskModel, localImageOperation, ttsManaGuess, createPackPromptCallback, tokenHordeOutFolder]) {
+  if (!entrySource.includes(signature)) throw new Error(`Expected public URL signature was not found: ${signature.slice(0, 40)}`);
+}
+const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replaceAll("never sent to Cibola", "only sent to your configured provider").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")').replace(upstreamPublicUrls, boobaPublicUrls).replace(upstreamHelpUrl, boobaHelpUrl).replace(radialCenterImage, radialCenterImageCss).replace(createDialogCall, createDialogCallReplacement).replace(prepareModelsLoop, prepareModelsLoopReplacement).replace(upscaleModelsInit, upscaleModelsInitReplacement).replace(localImageModelAllowList, localImageModelAllowListReplacement).replace(checkMaskModel, checkMaskModelReplacement).replace(localImageOperation, localImageOperationReplacement).replace(ttsManaGuess, ttsManaGuessReplacement).replace(createPackPromptCallback, createPackPromptCallbackReplacement).replace(tokenHordeOutFolder, tokenHordeOutFolderReplacement);
 if (brandedEntry.includes(hostedAppOpen)) throw new Error("Hosted onboarding app link was not rebranded");
 const narrationHookRegistration = 'Hooks.on("renderJournalPageSheet",(t,e,i)=>{Le.prepareNarration(t.object,"text.content",e)}),Hooks.on("renderJournalEntryPageSheet",(t,e,i)=>{e instanceof jQuery||(e=$(e)),Le.prepareNarration(t.document,"text.content",e)}),';
 const chatNarrationHookRegistration = 'Hooks.on("renderChatMessage",(t,e,i)=>{e instanceof jQuery||(e=$(e));let a=e.find(".message-content");a.length||(a=e);if(!a.find(".boobastudio-narrationbox").length)return;let s={text:{content:t.content},update:async o=>t.update(o)};Le.prepareNarration(s,"content",a)}),';
@@ -64,7 +118,7 @@ if (!localChatEntry.includes(localChatGate)) throw new Error("Expected local cha
 const directChatGate = "async chat(t){let e=await C.isConnected(!1,!1);";
 const directChatGateReplacement = "async chat(t){let e=typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()?false:await C.isConnected(!1,!1);";
 const localThreadChatMethod = 'static async chat(t,e,i,a={}){var g,w;let{AuthService:s}=await Promise.resolve().then(()=>(B(),H));';
-const localThreadChatReplacement = 'static async chat(t,e,i,a={}){if(typeof globalThis.__boobastudioLocalThreadChat==="function"&&typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured())return await globalThis.__boobastudioLocalThreadChat(t,e,a);var g,w;let{AuthService:s}=await Promise.resolve().then(()=>(B(),H));';
+const localThreadChatReplacement = 'static async chat(t,e,i,a={}){if(typeof globalThis.__boobastudioLocalThreadChat==="function"&&typeof globalThis.__boobastudioLocalProviderConfigured==="function"&&globalThis.__boobastudioLocalProviderConfigured())return await globalThis.__boobastudioLocalThreadChat(t,e,{...a,preset:i});var g,w;let{AuthService:s}=await Promise.resolve().then(()=>(B(),H));';
 const localImageSessionGate = "if(!await m.ensureEnabledForSession())return a(!1);";
 const localImageSessionGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&!await m.ensureEnabledForSession())return a(!1);";
 const patchedChatEntry = localChatEntry.replace(localChatGate, localChatGateReplacement);
@@ -72,7 +126,7 @@ if (!patchedChatEntry.includes(directChatGate)) throw new Error("Expected direct
 const noPromptGate = "if(!await r.ensureEnabledForSession()){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
 const noPromptGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&!await r.ensureEnabledForSession()){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
 const directConfirmationGate = "if(!e&&!await Ii.ensureEnabledForSession())return ui.notifications.error(_.localize(\"boobastudio.error.noConnection\"));";
-const directConfirmationReplacement = "if(!e&&!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&!await Ii.ensureEnabledForSession())return ui.notifications.error(_.localize(\"boobastudio.error.noConnection\"));";
+const directConfirmationReplacement = "if(!e&&!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&!await Ii.ensureEnabledForSession())return ui.notifications.error(game.i18n.localize(\"boobastudio.error.noConnection\"));";
 const clientOnlyGate = "if(!!!game.settings.get(\"boobastudio\",\"clientOnlyMode\")){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
 const clientOnlyGateReplacement = "if(!(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&!game.settings.get(\"boobastudio\",\"clientOnlyMode\")){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
 const chatModeGate = "if(String(i||\"\")!==\"chat\"){e({status:\"error\",errors:[game.i18n?.localize?.(\"boobastudio.error.noConnection\")??\"No connection.\"]});return}";
@@ -224,7 +278,13 @@ const imageNoAccountContext = "e.userInfo.alive||await tr.noAccountContext(e)";
 const localImageAccountContext = "(e.userInfo.alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())||await tr.noAccountContext(e)";
 const vectorNoAccountContext = "i.userInfo.alive||await V.noAccountContext(i)";
 const localVectorAccountContext = "(i.userInfo.alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())||await V.noAccountContext(i)";
-const galleryEntry = directPatchedEntry.replace(directConfirmationGate, directConfirmationReplacement).replace(chatModeGate, chatModeGateReplacement).replace(clientOnlyGate, clientOnlyGateReplacement).replace(noPromptGate, noPromptGateReplacement);
+// Apply the local-provider session gates to the full patch chain. These used to
+// be applied to an earlier intermediate string that was never written, so the
+// shipped bundle kept the hosted-session gates (e.g. /c8 direct chat failed).
+for (const gate of [directConfirmationGate, chatModeGate, clientOnlyGate, noPromptGate]) {
+  if (!localTokenHordeEntry.includes(gate)) throw new Error(`Expected local session gate was not found: ${gate.slice(0, 40)}`);
+}
+const galleryEntry = localTokenHordeEntry.replace(directConfirmationGate, directConfirmationReplacement).replace(chatModeGate, chatModeGateReplacement).replace(clientOnlyGate, clientOnlyGateReplacement).replace(noPromptGate, noPromptGateReplacement);
 if (!galleryEntry.includes(galleryPageMethod) || !galleryEntry.includes(galleryDeleteMethod) || !galleryEntry.includes(galleryShareMethod) || !galleryEntry.includes(galleryToggleMethod) || !galleryEntry.includes(packActionMethod) || !galleryEntry.includes(packCatalogMethod) || !galleryEntry.includes(galleryAccess) || !galleryEntry.includes(galleryContext) || !galleryEntry.includes(imageNoAccountContext) || !galleryEntry.includes(vectorNoAccountContext)) throw new Error("Expected local gallery/account integration signatures were not found");
 const vectorizeMethod = "static async vectorize(t,e,i=void 0){let{AuthService:a}=await Promise.resolve().then(()=>(B(),H));await a.executeOperation(e,async()=>{t.append(\"metadata\",JSON.stringify(a.buildMetadata({})));let s=new URL(a.route(\"vector/vectorize\"));await f(this,il,sf).call(this,t,s,e,i)})}";
 const vectorizeReplacement = "static async vectorize(t,e,i=void 0){if(typeof globalThis.__boobastudioLocalVectorize===\"function\"&&await globalThis.__boobastudioLocalVectorize(t,e,i))return;let{AuthService:a}=await Promise.resolve().then(()=>(B(),H));await a.executeOperation(e,async()=>{t.append(\"metadata\",JSON.stringify(a.buildMetadata({})));let s=new URL(a.route(\"vector/vectorize\"));await f(this,il,sf).call(this,t,s,e,i)})}";
@@ -235,7 +295,9 @@ const listAllVectorsReplacement = "static async listAllVectors(t){if(typeof glob
 const removeVectorMethod = "static async removeVectorFile(t,e){let{AuthService:i}=await Promise.resolve().then(()=>(B(),H));await i.executeOperation(e,async()=>{let a=`vector/deleteVector?id=${t}`,s=await i.fetchJsonWithTimeout(i.route(a),i.deleteRequestObject());e(s)})}";
 const removeVectorReplacement = "static async removeVectorFile(t,e){if(typeof globalThis.__boobastudioLocalVectorDelete===\"function\"&&await globalThis.__boobastudioLocalVectorDelete(t,e))return;let{AuthService:i}=await Promise.resolve().then(()=>(B(),H));await i.executeOperation(e,async()=>{let a=`vector/deleteVector?id=${t}`,s=await i.fetchJsonWithTimeout(i.route(a),i.deleteRequestObject());e(s)})}";
 const threadAccountGate = "if(t.userInfo=C.userInfo(),!t.userInfo.alive){";
-const threadAccountReplacement = "if(t.userInfo=C.userInfo(),!(t.userInfo.alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())){";
+// In local-provider mode, present the thread as usable: the view template only
+// renders the message input when userInfo.alive is true.
+const threadAccountReplacement = "if(t.userInfo=C.userInfo(),typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()&&(t.userInfo={...t.userInfo,alive:!0}),!t.userInfo.alive){";
 const threadDragDropGate = "return this.isEditable&&C.userInfo().alive&&C.userInfo().level>0";
 const threadDragDropReplacement = "return this.isEditable&&(C.userInfo().alive||typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured())&&(C.userInfo().level>0||game.user?.isGM)";
 const threadUploadGate = "return this.isWritable&&C.userInfo().level>0&&t.advanced";
@@ -246,7 +308,7 @@ const threadDeleteMethod = "async deleteThread(){let t=this.document.system.thre
 const threadDeleteReplacement = "async deleteThread(){let t=this.document.system.thread_id,e=typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured();if((!t&&!e)||!await Y.confirm({content:`<p>${game.i18n.localize(\"boobastudio.AiThread.deleteThreadConfirm\")}</p>`,rejectClose:!1,modal:!0}))return;if(e){await this.document.update({\"system.thread_id\":\"\",\"system.messages\":[]},{render:!1});this.document.parent?.sheet?.render(!1,{pageId:this.document.id});ui.notifications.info(\"boobastudio.AiThread.threadDeleted\",{localize:!0});return}C.deleteThread(t,async i=>{!i?.success||(await this.document.update({\"system.thread_id\":\"\",\"system.messages\":[]},{render:!1}),this.document.parent?.sheet?.render(!1,{pageId:this.document.id}),ui.notifications.info(\"boobastudio.AiThread.threadDeleted\",{localize:!0}))})}";
 const threadResponseIdUpdate = "a.thread_id!=this.document.system.thread_id&&(n[\"system.thread_id\"]=a.thread_id)";
 const threadResponseIdUpdateReplacement = "a.thread_id!==void 0&&a.thread_id!==this.document.system.thread_id&&(n[\"system.thread_id\"]=a.thread_id)";
-let vectorEntry = localTokenHordeEntry.replace(ttsDataMethodPattern, ttsDataMethodReplacement).replace(localTtsProviderSelection, localTtsProviderSelectionReplacement).replace(localTtsVoiceChoices, localTtsVoiceChoicesReplacement).replace(enhanceMethod, enhanceReplacement).replace(describeMethod, describeReplacement).replace(buildPromptsMethod, buildPromptsReplacement).replace(generateTTSMethod, generateTTSReplacement).replace(generateSongMethod, generateSongReplacement).replace(voicesMethod, voicesReplacement).replace(voicePageMethod, voicePageReplacement).replace(apiConfigLoad, apiConfigLoadReplacement).replace(galleryPageMethod, galleryPageReplacement).replace(galleryDeleteMethod, galleryDeleteReplacement).replace(galleryShareMethod, galleryShareReplacement).replace(galleryToggleMethod, galleryToggleReplacement).replace(packActionMethod, packActionReplacement).replace(packCatalogMethod, packCatalogReplacement).replace(galleryAccess, galleryAccessReplacement).replaceAll(galleryContext, localGalleryContext).replace(imageNoAccountContext, localImageAccountContext).replace(vectorNoAccountContext, localVectorAccountContext);
+let vectorEntry = galleryEntry.replace(ttsDataMethodPattern, ttsDataMethodReplacement).replace(localTtsProviderSelection, localTtsProviderSelectionReplacement).replace(localTtsVoiceChoices, localTtsVoiceChoicesReplacement).replace(enhanceMethod, enhanceReplacement).replace(describeMethod, describeReplacement).replace(buildPromptsMethod, buildPromptsReplacement).replace(generateTTSMethod, generateTTSReplacement).replace(generateSongMethod, generateSongReplacement).replace(voicesMethod, voicesReplacement).replace(voicePageMethod, voicePageReplacement).replace(apiConfigLoad, apiConfigLoadReplacement).replace(galleryPageMethod, galleryPageReplacement).replace(galleryDeleteMethod, galleryDeleteReplacement).replace(galleryShareMethod, galleryShareReplacement).replace(galleryToggleMethod, galleryToggleReplacement).replace(packActionMethod, packActionReplacement).replace(packCatalogMethod, packCatalogReplacement).replace(galleryAccess, galleryAccessReplacement).replaceAll(galleryContext, localGalleryContext).replace(imageNoAccountContext, localImageAccountContext).replace(vectorNoAccountContext, localVectorAccountContext);
 for (const [original, replacement] of [[packMyPacksMethod, packMyPacksReplacement], [packAddImageMethod, packAddImageReplacement], [packCreateMethod, packCreateReplacement], [packDetailMethod, packDetailReplacement], [packPublicDetailMethod, packPublicDetailReplacement], [packImagesMethod, packImagesReplacement], [packUpdateMethod, packUpdateReplacement], [packDeleteMethod, packDeleteReplacement], [packRemoveImageMethod, packRemoveImageReplacement], [packUpdateImageMethod, packUpdateImageReplacement]]) {
   if (!vectorEntry.includes(original)) throw new Error("Expected local pack API signature was not found");
   vectorEntry = vectorEntry.replace(original, replacement);

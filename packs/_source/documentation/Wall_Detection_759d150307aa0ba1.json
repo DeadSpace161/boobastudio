@@ -1,0 +1,64 @@
+{
+  "_id": "759d150307aa0ba1",
+  "name": "Wall Detection",
+  "folder": null,
+  "sort": 0,
+  "pages": [
+    {
+      "name": "Wall Detection",
+      "type": "text",
+      "title": {
+        "show": false,
+        "level": 1
+      },
+      "text": {
+        "format": 1,
+        "content": "<div class=\"cibola8 cibola8-docs\"><h1>Wall Detection</h1>\n<p>BoobaStudio's <strong>Wall Detection</strong> feature uses computer vision to automatically detect and place walls on your battle maps. This tool analyzes the scene background image to find edges—like walls, doors, and obstacles—and converts them into Foundry VTT wall segments. </p>\n<h2>Overview</h2>\n<p>Wall Detection uses <strong>OpenCV.js</strong>, a powerful computer vision library, to process your map image and extract edge information. The detected edges are converted into wall segments that you can preview, edit, and then apply to your scene. </p>\n<h3>How It Works</h3>\n<ul> <li><strong>Image Analysis</strong>: The scene background is loaded and preprocessed</li> <li><strong>Edge Detection</strong>: OpenCV's Canny edge detection finds boundaries in the image</li> <li><strong>Contour Extraction</strong>: Edges are converted to polygon contours</li> <li><strong>Wall Generation</strong>: Contours are simplified into straight line segments</li> <li><strong>Preview & Edit</strong>: You can review and modify detected walls before applying</li> <li><strong>Apply to Scene</strong>: Confirmed walls are created as Foundry Wall documents</li> </ul>\n<h2>Opening Wall Detection</h2>\n<p>There are several ways to access the Wall Detection tool: </p>\n<h3>From Canvas Controls (Recommended)</h3>\n<ul> <li>Open your scene in the canvas</li> <li>Click the <strong>Walls Layer</strong> icon in the left toolbar (the wall/brick icon)</li> <li>In the wall tools that appear, look for the <strong>BoobaStudio Wall Detection</strong> button</li> <li>Click it to open the Wall Detection panel</li> </ul>\n<h3>From Scene Context Menu</h3>\n<ul> <li>In the Scenes sidebar, right-click on any scene</li> <li>Select <strong>Detect Walls</strong> from the context menu</li> <li>The scene will activate and the Wall Detection panel will open</li> </ul>\n<h3>From BoobaStudio menu</h3>\n<ul> <li>Open the BoobaStudio radial menu (click the BoobaStudio coin or use your configured hotkey)</li> <li>Navigate to the utility/tools section</li> <li>Select the wall detection option</li> </ul>\n<h3>From Welcome Screen</h3>\n<ul> <li>Open the BoobaStudio welcome/onboarding screen</li> <li>Click the <strong>Wall Detection</strong> card in the features grid</li> </ul>\n<h2>Detection Parameters</h2>\n<p>The sliders in the <strong>Options</strong> panel control how edges are detected: </p>\n<h3>Blur Kernel (1-21)</h3>\n<p>Controls the amount of Gaussian blur applied before edge detection. </p>\n<ul> <li><strong>Lower values (1-5)</strong>: Preserve fine details, detect more edges including noise</li> <li><strong>Higher values (9-21)</strong>: Smooth out noise, detect only prominent edges</li> <li><strong>Recommended</strong>: 5 for most maps, 3 for high-detail maps, 9+ for noisy images</li> </ul>\n<h3>Close Kernel (1-15)</h3>\n<p>Morphological closing operation that connects nearby edges. </p>\n<ul> <li><strong>Lower values (1-3)</strong>: Keep edges separate, more segments</li> <li><strong>Higher values (5-15)</strong>: Merge gaps, create continuous walls</li> <li><strong>Recommended</strong>: 3 for clean maps, 5+ for maps with broken lines</li> </ul>\n<h3>Canny Threshold 1 (0-255)</h3>\n<p>Lower threshold for the Canny edge detector's hysteresis procedure. </p>\n<ul> <li><strong>Lower values (20-50)</strong>: More sensitive, detects faint edges</li> <li><strong>Higher values (80-150)</strong>: Less sensitive, only strong edges</li> <li><strong>Recommended</strong>: 50 for standard maps, lower for faded/light maps</li> </ul>\n<h3>Canny Threshold 2 (0-255)</h3>\n<p>Upper threshold for the Canny edge detector. </p>\n<ul> <li>Should be <strong>higher than Threshold 1</strong></li> <li>Controls which edges are considered \"strong\"</li> <li><strong>Recommended</strong>: 150 (about 3x Threshold 1)</li> </ul>\n<h3>Min Contour Area (0-5000)</h3>\n<p>Minimum pixel area for a detected contour to be kept. </p>\n<ul> <li><strong>Lower values (20-50)</strong>: Keep small shapes (furniture, details)</li> <li><strong>Higher values (200-1000)</strong>: Only keep large structures (rooms, walls)</li> <li><strong>Recommended</strong>: 50 for detailed maps, 200+ to reduce clutter</li> </ul>\n<h3>Min Segment Length (0-100)</h3>\n<p>Minimum length in pixels for a wall segment. </p>\n<ul> <li><strong>Lower values (3-6)</strong>: Keep short segments (corners, details)</li> <li><strong>Higher values (15-30)</strong>: Only keep longer wall sections</li> <li><strong>Recommended</strong>: 6 for accuracy, 15+ for simpler wall layouts</li> </ul>\n<h2>Presets</h2>\n<p>Quick-access presets for common map types: </p>\n<table border=\"1\"> <thead><tr><th>Preset</th><th>Best For</th><th>Settings</th></tr></thead> <tbody> <tr><td><strong>Default</strong></td><td>General purpose maps</td><td>Balanced settings</td></tr> <tr><td><strong>High Detail</strong></td><td>Maps with fine details, furniture</td><td>Low blur, sensitive detection</td></tr> <tr><td><strong>Simple/Clean</strong></td><td>Clean digital maps, vector art</td><td>High blur, strong edges only</td></tr> <tr><td><strong>Dungeon Map</strong></td><td>Classic dungeon crawls</td><td>Optimized for stone corridors</td></tr> </tbody> </table>\n<p>You can also <strong>save your own presets</strong> using the save button in the toolbar. </p>\n<h2>Wall Types</h2>\n<p>When walls are detected, you can assign them different types: </p>\n<table border=\"1\"> <thead><tr><th>Type</th><th>Icon</th><th>Movement</th><th>Vision</th><th>Light</th><th>Sound</th><th>Use Case</th></tr></thead> <tbody> <tr><td><strong>Normal</strong></td><td><i class=\"fa-solid fa-square\"></i> (Red)</td><td>Blocked</td><td>Blocked</td><td>Blocked</td><td>Blocked</td><td>Standard walls</td></tr> <tr><td><strong>Terrain</strong></td><td><i class=\"fa-solid fa-mountain\"></i> (Green)</td><td>Blocked</td><td>Limited</td><td>Pass</td><td>Pass</td><td>Low walls, hedges</td></tr> <tr><td><strong>Invisible</strong></td><td><i class=\"fa-solid fa-eye-slash\"></i> (Blue)</td><td>Pass</td><td>Blocked</td><td>Blocked</td><td>Blocked</td><td>Glass, force fields</td></tr> <tr><td><strong>Ethereal</strong></td><td><i class=\"fa-solid fa-ghost\"></i> (Yellow)</td><td>Pass</td><td>Pass</td><td>Pass</td><td>Pass</td><td>Markers only</td></tr> </tbody> </table>\n<h2>Tools</h2>\n<h3>Select Tool (<i class=\"fa-solid fa-mouse-pointer\"></i>)</h3> <p>Click on detected wall segments to select them. Selected segments can be deleted or have their type changed. </p>\n<h3>Eraser Tool (<i class=\"fa-solid fa-eraser\"></i>)</h3> <p>Click and drag to remove wall segments in an area. Adjust the eraser brush size with the slider. </p>\n<h3>Brush Tool (<i class=\"fa-solid fa-paint-brush\"></i>)</h3> <p>Draw new wall segments manually by clicking and dragging on the canvas. </p>\n<h3>Area Select Tool (<i class=\"fa-solid fa-vector-square\"></i>)</h3> <p>Draw rectangular regions to restrict detection to specific areas of the map. </p>\n<h2>Color Detection</h2>\n<p>Enable <strong>Color Detection</strong> to detect walls based on specific colors in your map: </p>\n<ul> <li>Toggle \"Enable Color Detection\"</li> <li>Add colors using the color picker or eyedropper tool (<i class=\"fa-solid fa-eye-dropper\"></i>)</li> <li>Adjust the color threshold (how similar colors must be to match)</li> <li>Only edges matching these colors will be detected</li> </ul>\n<p>Useful for maps where walls are drawn in a specific color. </p>\n<h2>Image Source Options</h2>\n<h3>Use Texture</h3> <p>When enabled, uses the scene's foreground texture instead of the background image. Useful for maps with separate wall/floor layers. </p>\n<h3>Enable Downscaling</h3> <p>Automatically reduces large images for faster processing. Recommended for maps over 4000px. Disable only if you need maximum precision on detailed maps. </p>\n<h2>Live Preview</h2>\n<p>When enabled, detected walls are shown as colored overlays on the canvas before you apply them. This lets you adjust parameters and see results in real-time. </p>\n<h2>Workflow Tips</h2>\n<ul> <li><strong>Start with a preset</strong> that matches your map type</li> <li><strong>Adjust Canny thresholds</strong> first—they have the biggest impact</li> <li><strong>Use Min Segment Length</strong> to filter out noise</li> <li><strong>Preview before applying</strong> to catch unwanted walls</li> <li><strong>Use the eraser</strong> to clean up false positives</li> <li><strong>Apply in stages</strong> for complex maps—detect rooms, then furniture</li> </ul>\n<h2>Troubleshooting</h2>\n<h3>Too many walls detected</h3> <ul> <li>Increase Blur Kernel</li> <li>Increase Canny thresholds</li> <li>Increase Min Contour Area and Min Segment Length</li> </ul>\n<h3>Missing walls</h3> <ul> <li>Decrease Canny thresholds</li> <li>Decrease Blur Kernel</li> <li>Check if walls have enough contrast with the floor</li> </ul>\n<h3>Walls in wrong places</h3> <ul> <li>Try Color Detection to target specific colors</li> <li>Use Area Select to limit detection regions</li> <li>Manual cleanup with Eraser tool</li> </ul>\n<h3>Performance issues</h3> <ul> <li>Enable Downscaling for large images</li> <li>Reduce Max Segments in settings</li> <li>Close other applications</li> </ul></div>"
+      },
+      "_id": "b061404578958962",
+      "image": {},
+      "video": {
+        "controls": true,
+        "volume": 0.5
+      },
+      "src": null,
+      "system": {},
+      "sort": 0,
+      "ownership": {
+        "default": -1
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "12.327",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": 1772521143227,
+        "modifiedTime": 1772521143227,
+        "lastModifiedBy": null
+      },
+      "_key": "!journal.pages!759d150307aa0ba1.b061404578958962"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "cibola8": {
+      "category": "documentation"
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.327",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": 1772521143227,
+    "modifiedTime": 1772521143227,
+    "lastModifiedBy": null
+  },
+  "categories": [],
+  "_key": "!journal!759d150307aa0ba1"
+}
