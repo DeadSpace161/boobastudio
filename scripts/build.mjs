@@ -80,6 +80,17 @@ const createPackPromptCallbackReplacement = `callback:(a,b,d)=>(b?.form??d?.elem
 // so the window failed to render. Fall back to the actor image folder.
 const tokenHordeOutFolder = 'e.tokenizeractive&&(e.outFolder=game.settings.get("vtta-tokenizer","npc-image-upload-directory"),';
 const tokenHordeOutFolderReplacement = 'e.tokenizeractive&&(e.outFolder=game.modules.get("vtta-tokenizer")?.active?game.settings.get("vtta-tokenizer","npc-image-upload-directory"):game.settings.get("boobastudio","ActorPath"),';
+// Wall detection asked for OpenCV at lib/opencv/opencv.js, but the library
+// ships under bundle/lib/opencv, so the worker's importScripts hit a 404. The
+// worker also set its "loading" flag before importing, so after one failure
+// every retry waited on a load that would never finish. Fix the path, and
+// clear the flag when the import throws.
+const opencvPath = '"modules/boobastudio/lib/opencv/opencv.js"';
+const opencvPathReplacement = '"modules/boobastudio/bundle/lib/opencv/opencv.js"';
+const opencvImportE = 'globalThis.__boobastudio_opencv_loading=!0,importScripts(e);';
+const opencvImportEReplacement = 'globalThis.__boobastudio_opencv_loading=!0;try{importScripts(e)}catch(z){globalThis.__boobastudio_opencv_loading=!1;throw z}';
+const opencvImportT = 'globalThis.__boobastudio_opencv_loading=!0,importScripts(T);';
+const opencvImportTReplacement = 'globalThis.__boobastudio_opencv_loading=!0;try{importScripts(T)}catch(z){globalThis.__boobastudio_opencv_loading=!1;throw z}';
 // Public help links shown in onboarding and help buttons. The hosted `app`
 // URL stays: it is the upstream backend origin, not a user-facing link.
 const upstreamPublicUrls = 'patreon:"https://patreon.com/Cibola",homepage:"https://cibola.world",app:"https://app.cibola.world",faq:"https://cibola.world/faq",discord:"https://discord.gg/TYbUBfzzqN"';
@@ -91,10 +102,10 @@ const boobaHelpUrl = 'b(P,"helpURL","https://github.com/DeadSpace161/boobastudio
 // (404). Pass an absolute URL instead.
 const radialCenterImage = 'i.setProperty("--radial-center-image",`url(\'${e.centerImage}\')`)';
 const radialCenterImageCss = 'i.setProperty("--radial-center-image",`url(\'${new URL(e.centerImage,document.baseURI).href}\')`)';
-for (const signature of [upstreamPublicUrls, upstreamHelpUrl, radialCenterImage, createDialogCall, prepareModelsLoop, upscaleModelsInit, localImageModelAllowList, checkMaskModel, localImageOperation, ttsManaGuess, createPackPromptCallback, tokenHordeOutFolder]) {
+for (const signature of [upstreamPublicUrls, upstreamHelpUrl, radialCenterImage, createDialogCall, prepareModelsLoop, upscaleModelsInit, localImageModelAllowList, checkMaskModel, localImageOperation, ttsManaGuess, createPackPromptCallback, tokenHordeOutFolder, opencvPath, opencvImportE, opencvImportT]) {
   if (!entrySource.includes(signature)) throw new Error(`Expected public URL signature was not found: ${signature.slice(0, 40)}`);
 }
-const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replaceAll("never sent to Cibola", "only sent to your configured provider").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")').replace(upstreamPublicUrls, boobaPublicUrls).replace(upstreamHelpUrl, boobaHelpUrl).replace(radialCenterImage, radialCenterImageCss).replace(createDialogCall, createDialogCallReplacement).replace(prepareModelsLoop, prepareModelsLoopReplacement).replace(upscaleModelsInit, upscaleModelsInitReplacement).replace(localImageModelAllowList, localImageModelAllowListReplacement).replace(checkMaskModel, checkMaskModelReplacement).replace(localImageOperation, localImageOperationReplacement).replace(ttsManaGuess, ttsManaGuessReplacement).replace(createPackPromptCallback, createPackPromptCallbackReplacement).replace(tokenHordeOutFolder, tokenHordeOutFolderReplacement);
+const brandedEntry = entrySource.replace(privateApi, publicApi).replaceAll("Cibola 8", "BoobaStudio").replaceAll("never sent to Cibola", "only sent to your configured provider").replace(hostedAppOpen, 'window.open("https://github.com/DeadSpace161/boobastudio","_blank")').replace(upstreamPublicUrls, boobaPublicUrls).replace(upstreamHelpUrl, boobaHelpUrl).replace(radialCenterImage, radialCenterImageCss).replace(createDialogCall, createDialogCallReplacement).replace(prepareModelsLoop, prepareModelsLoopReplacement).replace(upscaleModelsInit, upscaleModelsInitReplacement).replace(localImageModelAllowList, localImageModelAllowListReplacement).replace(checkMaskModel, checkMaskModelReplacement).replace(localImageOperation, localImageOperationReplacement).replace(ttsManaGuess, ttsManaGuessReplacement).replace(createPackPromptCallback, createPackPromptCallbackReplacement).replace(tokenHordeOutFolder, tokenHordeOutFolderReplacement).replaceAll(opencvPath, opencvPathReplacement).replace(opencvImportE, opencvImportEReplacement).replace(opencvImportT, opencvImportTReplacement);
 if (brandedEntry.includes(hostedAppOpen)) throw new Error("Hosted onboarding app link was not rebranded");
 const narrationHookRegistration = 'Hooks.on("renderJournalPageSheet",(t,e,i)=>{Le.prepareNarration(t.object,"text.content",e)}),Hooks.on("renderJournalEntryPageSheet",(t,e,i)=>{e instanceof jQuery||(e=$(e)),Le.prepareNarration(t.document,"text.content",e)}),';
 const chatNarrationHookRegistration = 'Hooks.on("renderChatMessage",(t,e,i)=>{e instanceof jQuery||(e=$(e));let a=e.find(".message-content");a.length||(a=e);if(!a.find(".boobastudio-narrationbox").length)return;let s={text:{content:t.content},update:async o=>t.update(o)};Le.prepareNarration(s,"content",a)}),';
