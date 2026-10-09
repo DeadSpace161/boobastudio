@@ -260,7 +260,10 @@ const galleryToggleReplacement = "static async togglePublic(t,e){if(typeof globa
 const packActionMethod = "async quickAddToPack(e,i){e.stopPropagation();let s=$(i).closest(\".gallery-item\").data(\"id\");!s||Se.showAddToPack(i,s,e)}";
 const packActionReplacement = packActionMethod;
 const packCatalogMethod = "async showPackCatalog(){this.packView=\"catalog\"";
-const packCatalogReplacement = "async showPackCatalog(){if(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()){ui.notifications?.warn(\"Hosted packs are unavailable in BoobaStudio local mode.\");return}this.packView=\"catalog\"";
+// In local mode there is no hosted pack catalog, so opening the Packs tab (or
+// "Back to Catalog") shows the user's own local packs instead of a dead-end
+// "unavailable" notice.
+const packCatalogReplacement = "async showPackCatalog(){if(typeof globalThis.__boobastudioLocalProviderConfigured===\"function\"&&globalThis.__boobastudioLocalProviderConfigured()){return this.showMyPacks()}this.packView=\"catalog\"";
 const packMyPacksMethod = 'static async myPacks(){let{AuthService:t}=await Promise.resolve().then(()=>(B(),H)),e=new URL(t.route("my/packs"));return t.fetchJsonWithTimeout(e,t.getRequestObject())}';
 const packMyPacksReplacement = 'static async myPacks(){let e=await globalThis.__boobastudioLocalPackMyPacks?.();if(e)return e;let{AuthService:t}=await Promise.resolve().then(()=>(B(),H)),a=new URL(t.route("my/packs"));return t.fetchJsonWithTimeout(a,t.getRequestObject())}';
 const packAddImageMethod = 'static async addImage(t,e){let{AuthService:i}=await Promise.resolve().then(()=>(B(),H)),a=new URL(i.route(`my/packs/${t}/images`));return i.fetchJsonWithTimeout(a,{...i.postRequestObject(),body:JSON.stringify({llmjob_id:e})})}';

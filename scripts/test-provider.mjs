@@ -127,32 +127,36 @@ assert.match(galleryShare.errors[0], /unavailable in local mode/i);
 values.set("boobastudio.imageProvider", "replicate");
 values.set("boobastudio.replicateApiToken", "replicate-test-token");
 values.set("boobastudio.replicateModel", "black-forest-labs/flux-schnell");
+const replicateImageBase = requests.length;
 const replicateImageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "black-forest-labs/flux-fill-pro", prompt: "a tavern", image: "data:image/png;base64,abc", mask: "data:image/png;base64,mask" }) });
 assert.equal((await replicateImageResponse.json()).data[0].url, "https://cdn.test/generated.png");
-assert.equal(requests[3].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-fill-pro/predictions");
-assert.equal(requests[3].init.headers.Authorization, "Bearer replicate-test-token");
-assert.equal(JSON.parse(requests[3].init.body).input.image, "data:image/png;base64,abc");
-assert.equal(JSON.parse(requests[3].init.body).input.mask, "data:image/png;base64,mask");
+assert.equal(requests[replicateImageBase].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-fill-pro/predictions");
+assert.equal(requests[replicateImageBase].init.headers.Authorization, "Bearer replicate-test-token");
+assert.equal(JSON.parse(requests[replicateImageBase].init.body).input.image, "data:image/png;base64,abc");
+assert.equal(JSON.parse(requests[replicateImageBase].init.body).input.mask, "data:image/png;base64,mask");
 
 values.set("boobastudio.replicateBaseUrl", "https://replicate-proxy.test/v1");
 values.set("boobastudio.replicateModel", "bria/eraser");
+const eraseBase = requests.length;
 const eraseResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "ignored", image: "data:image/png;base64,abc", mask: "data:image/png;base64,mask" }) });
 assert.equal((await eraseResponse.json()).data[0].url, "https://cdn.test/generated.png");
-assert.equal(requests[5].input, "https://replicate-proxy.test/v1/models/bria/eraser/predictions");
-const eraseInput = JSON.parse(requests[5].init.body).input;
+assert.equal(requests[eraseBase].input, "https://replicate-proxy.test/v1/models/bria/eraser/predictions");
+const eraseInput = JSON.parse(requests[eraseBase].init.body).input;
 assert.equal(eraseInput.image, "data:image/png;base64,abc");
 assert.equal(eraseInput.mask, "data:image/png;base64,mask");
 assert.equal(eraseInput.preserve_alpha, true);
 assert.equal(Object.hasOwn(eraseInput, "prompt"), false);
 
 values.set("boobastudio.replicateModel", "cjwbw/rembg");
+const rembgBase = requests.length;
 await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "ignored", image: "data:image/png;base64,abc", mask: "data:image/png;base64,mask" }) });
-const rembgInput = JSON.parse(requests[7].init.body).input;
+const rembgInput = JSON.parse(requests[rembgBase].init.body).input;
 assert.deepEqual(rembgInput, { image: "data:image/png;base64,abc" });
 
 values.set("boobastudio.replicateModel", "bria/expand-image");
+const expandBase = requests.length;
 await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "expand", image: "data:image/png;base64,abc", aspect_ratio: "16:9", canvas_size: 1024 }) });
-const expandInput = JSON.parse(requests[9].init.body).input;
+const expandInput = JSON.parse(requests[expandBase].init.body).input;
 assert.equal(expandInput.image, "data:image/png;base64,abc");
 assert.equal(expandInput.aspect_ratio, "16:9");
 assert.equal(expandInput.canvas_size, 1024);
@@ -162,18 +166,20 @@ values.set("boobastudio.replicateApiToken", "");
 values.set("boobastudio.replicateBaseUrl", "https://api.replicate.com/v1");
 values.set("boobastudio.replicateModel", "black-forest-labs/flux-schnell");
 values.set("boobastudio.openaiApiKey", "r8_fallback-token");
+const fallbackBase = requests.length;
 const fallbackImageResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "a fallback tavern" }) });
 assert.equal((await fallbackImageResponse.json()).data[0].url, "https://cdn.test/generated.png");
-assert.equal(requests[11].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions");
-assert.equal(requests[11].init.headers.Authorization, "Bearer r8_fallback-token");
+assert.equal(requests[fallbackBase].input, "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions");
+assert.equal(requests[fallbackBase].init.headers.Authorization, "Bearer r8_fallback-token");
 
 values.set("boobastudio.imageProvider", "comfyui");
 values.set("boobastudio.comfyuiBaseUrl", "http://comfyui.test");
 values.set("boobastudio.comfyuiWorkflow", JSON.stringify({ "6": { inputs: { text: "{{prompt}}" } } }));
+const comfyBase = requests.length;
 const comfyResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ prompt: "a forest shrine" }) });
 assert.equal((await comfyResponse.json()).data[0].url, "http://comfyui.test/view?filename=generated.png&subfolder=&type=output");
-assert.equal(requests[13].input, "http://comfyui.test/prompt");
-assert.equal(JSON.parse(requests[13].init.body).prompt["6"].inputs.text, "a forest shrine");
+assert.equal(requests[comfyBase].input, "http://comfyui.test/prompt");
+assert.equal(JSON.parse(requests[comfyBase].init.body).prompt["6"].inputs.text, "a forest shrine");
 
 values.set("boobastudio.imageProvider", "stability");
 values.set("boobastudio.stabilityBaseUrl", "https://stability.test/v2beta/stable-image/generate");
@@ -427,9 +433,10 @@ values.set("boobastudio.replicateBaseUrl", "https://replicate-upscale.test/v1");
 values.set("boobastudio.replicateModel", "nightmareai/real-esrgan");
 values.set("boobastudio.replicateApiToken", "upscale-token");
 values.set("boobastudio.replicateImageInput", JSON.stringify({ num_inference_steps: 12, prompt: "{{prompt}}" }));
+const upscaleBase = requests.length;
 const upscaleResponse = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", body: JSON.stringify({ model: "nightmareai/real-esrgan", prompt: "data:image/png;base64,abc", basePrompt: "upscale this map", factor: 2 }) });
 assert.equal((await upscaleResponse.json()).data[0].url, "https://cdn.test/generated.png");
-const upscaleRequest = requests.at(-2);
+const upscaleRequest = requests[upscaleBase];
 assert.equal(upscaleRequest.input, "https://replicate-upscale.test/v1/models/nightmareai/real-esrgan/predictions");
 assert.equal(JSON.parse(upscaleRequest.init.body).input.image, "data:image/png;base64,abc");
 // real-esrgan's schema is image/scale/face_enhance: factor maps to scale.
@@ -458,3 +465,6 @@ const versionedStart = requests.find((request) => String(request.input).endsWith
 assert.equal(JSON.parse(versionedStart.init.body).version, "c".repeat(64));
 
 console.log("BoobaStudio provider smoke test passed");
+// Background image/song persistence fires a fire-and-forget fetch whose mock
+// leaves an open handle; exit explicitly so the smoke test does not hang.
+process.exit(0);
